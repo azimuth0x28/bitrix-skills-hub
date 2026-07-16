@@ -15,6 +15,8 @@ There are **two event models**: new (OOP, `Event` + `EventResult`) and old (stri
 php bitrix/bitrix.php make:event PostCreated -m vendor.blog
 ```
 
+**Since main 25.900** for `make:*`. On older versions, scaffold the class manually.
+
 File: `/local/modules/vendor.blog/lib/Public/Event/Post/PostCreatedEvent.php`.
 
 ```php
@@ -64,29 +66,31 @@ php bitrix/bitrix.php make:eventhandler NotifyAuthor \
     --event-module=vendor.blog --handler-module=vendor.notify
 ```
 
+EventManager invokes handlers via `call_user_func_array` (class + method). Handlers are **not** created by `ServiceLocator` — do not rely on constructor DI. Resolve services inside the handler method.
+
 ```php
 <?php declare(strict_types=1);
 
 namespace Vendor\Notify\Internals\Integration\Blog\EventHandler;
 
+use Bitrix\Main\DI\ServiceLocator;
 use Bitrix\Main\Event;
 use Bitrix\Main\EventResult;
 use Vendor\Blog\Public\Event\Post\PostCreatedEvent;
+use Vendor\Notify\Application\Service\Notifier;
 
 final class NotifyAuthorHandler
 {
-    public function __construct(
-        private readonly \Vendor\Notify\Application\Service\Notifier $notifier,
-    ) {}
-
-    public function __invoke(Event $event): EventResult
+    public static function handle(Event $event): EventResult
     {
         if (!$event instanceof PostCreatedEvent)
         {
             return new EventResult(EventResult::UNDEFINED);
         }
 
-        $result = $this->notifier->notifyAuthor($event->authorId, $event->title);
+        /** @var Notifier $notifier */
+        $notifier = ServiceLocator::getInstance()->get(Notifier::class);
+        $result = $notifier->notifyAuthor($event->authorId, $event->title);
 
         return new EventResult(
             $result->isSuccess() ? EventResult::SUCCESS : EventResult::ERROR,
@@ -104,7 +108,7 @@ final class NotifyAuthorHandler
     eventType: \Vendor\Blog\Public\Event\Post\PostCreatedEvent::class,
     toModuleId: 'vendor.notify',
     toClass: \Vendor\Notify\Internals\Integration\Blog\EventHandler\NotifyAuthorHandler::class,
-    toMethod: '__invoke',
+    toMethod: 'handle',
 );
 ```
 
@@ -132,24 +136,11 @@ EventManager::getInstance()->registerEventHandlerCompatible(
 
 The new `registerEventHandler` also works with old events but adapts them to the `Event $event` signature — parameters are retrieved via `$event->getParameter('fields')`, modification via `EventResult`.
 
-## Dependency Injection into Handler
-
-Bitrix creates the handler via `ServiceLocator` if the class is registered there. Otherwise — via `new` (without constructor parameters).
-
-```php
-'services' => [
-    'value' => [
-        \Vendor\Notify\Internals\Integration\Blog\EventHandler\NotifyAuthorHandler::class => [
-            'className' => \Vendor\Notify\Internals\Integration\Blog\EventHandler\NotifyAuthorHandler::class,
-        ],
-    ],
-    'readonly' => true,
-],
-```
-
 ## Order and Chain of Handlers
 
-- Handlers are called in order of registration. Weight can be specified via `$sort` in `addEventHandler`/`registerEventHandler` (5th/7th parameter).
+- Handlers run in ascending `$sort` order (default `100`).
+- `addEventHandler($fromModuleId, $eventType, $callback, $includeFile = false, $sort = 100)` — `$sort` is the **5th** parameter.
+- `registerEventHandler($fromModuleId, $eventType, $toModuleId, $toClass = '', $toMethod = '', $sort = 100, ...)` — `$sort` is the **6th** parameter.
 - The new API (`Event::send()`) collects results from all handlers — the chain is not interrupted even if one returns `ERROR`.
 - In the old API, a single `false` can interrupt the action (depends on the calling code in the kernel).
 
@@ -173,5 +164,6 @@ Such registration lives until the end of the request.
 - [ ] Handlers of other modules' events — in `/lib/Internals/Integration/<OtherModule>/EventHandler/`.
 - [ ] Registration and unregistration of handlers as a pair in `DoInstall`/`DoUninstall`.
 - [ ] Custom events use `Bitrix\Main\Event` + `EventResult` instead of returning arrays.
+- [ ] Handler has no constructor DI — resolve services inside the method via `ServiceLocator::get()`.
 - [ ] Handler is idempotent and does not crash — wrap everything in `try/catch` with logging.
 - [ ] Heavy logic is moved to a queue (`Messenger` via `$message->send()`), handler only dispatches a task.

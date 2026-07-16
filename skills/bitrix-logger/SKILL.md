@@ -1,6 +1,6 @@
 ---
 name: bitrix-logger
-description: Covers PSR-3 logging in Bitrix — Bitrix\Main\Diag\Logger, FileLogger, SysLogger, NullLogger, LogFormatter, loggers section in .settings.php, named kernel loggers (main.HttpClient, main.Default, main.Mail, main.Engine), integration with Monolog and third-party PSR-3 loggers. Applied when configuring module logs, debugging integrations, gathering errors from specific kernel components and log rotation. Key terms — Logger, FileLogger, SysLogger, LogFormatter, PSR-3, Monolog, loggers config, log level.
+description: Covers PSR-3 logging in Bitrix — Bitrix\Main\Diag\Logger, FileLogger, SysLogger, NullLogger, LogFormatter, loggers section in .settings.php, named kernel loggers (main.Default, main.HttpClient, main.GeoIpManager, main.EventLog.*), integration with Monolog and third-party PSR-3 loggers. Applied when configuring module logs, debugging integrations, gathering errors from specific kernel components and log rotation. Key terms — Logger, FileLogger, SysLogger, LogFormatter, PSR-3, Monolog, loggers config, log level.
 ---
 
 # Logging in Bitrix (PSR-3)
@@ -163,9 +163,13 @@ return [
 
 | ID | Used In | Factory Parameters |
 | --- | --- | --- |
-| `main.Default` | `AddMessage2Log`, `CEventLog`, general default | `LOG_FILENAME`, `$showArgs` |
+| `main.Default` | `AddMessage2Log`, general default | `LOG_FILENAME`, `$showArgs` |
 | `main.HttpClient` | `Bitrix\Main\Web\HttpClient` (including legacy and PSR-18) | `DebugInterface $debug`, `RequestInterface $request` |
 | `main.GeoIpManager` | `Bitrix\Main\Service\GeoIp\Manager` | — |
+| `main.EventLog.SysLogger` | `CEventLog` → syslog path | — |
+| `main.EventLog.FileLogger` | `CEventLog` → file path | `$path`, `$maxSize` |
+
+There are **no** named loggers `main.Mail` or `main.Engine`. Prefer `constructor` closures for `FileLogger` (see examples above) over `className`/`settings` arrays.
 
 Configuring these loggers redirects all kernel calls — convenient for auditing external calls (see example in `bitrix-http-client`).
 

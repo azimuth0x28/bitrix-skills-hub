@@ -109,13 +109,7 @@ $taggedCache->endTagCache();
 $taggedCache->clearByTag('posts_list');
 ```
 
-### ORM Tags
-
-Any `*Table` class with `isCacheable() === true` automatically publishes the tag `ORM_<TABLE_NAME>` upon write. This allows linking dependent HTML caches to the table:
-
-```php
-$taggedCache->registerTag('ORM_VENDOR_MODULE_POST'); // cache will clear when table changes
-```
+Use your own tag names for HTML/component caches. There are **no** automatic TaggedCache tags like `ORM_<TABLE_NAME>`.
 
 ## ORM Query Cache
 
@@ -130,7 +124,14 @@ PostTable::getList([
 ]);
 ```
 
-Reset: `PostTable::cleanCache()`.
+ORM auto-cache is stored under ManagedCache directories `orm_<table_name>` (see `Entity::getCacheDir()`). Invalidate via:
+
+```php
+PostTable::cleanCache();           // DataManager / Table
+PostTable::getEntity()->cleanCache(); // Entity — ManagedCache::cleanDir('orm_...')
+```
+
+Writes that change cacheable rows also call `cleanCache()` from the ORM layer. To clear related TaggedCache HTML, register and invalidate **your own** tags in event handlers — do not invent `ORM_*` tag names.
 
 ## Component Cache
 
@@ -155,12 +156,7 @@ Component parameters controlling cache:
 
 ## Composite Cache
 
-For composite — enable the `compression` module and add to required components:
-
-```php
-\CBitrixComponent::includeComponentClass($componentName);
-\Bitrix\Main\Page\Asset::getInstance()->addString(...);
-```
+Enable and configure Composite Site in Admin → Settings → Composite Site (or programmatically via `Bitrix\Main\Composite\Engine`). There is no separate "compression module" requirement for composite.
 
 Consider composite constraints: dynamic blocks are marked via `$APPLICATION->SetPageProperty('composite_frame_mode', 'Y')` / `setFrameMode`, personal data should not be in the static part, AJAX components are fetched with a separate request.
 
@@ -173,24 +169,9 @@ Consider composite constraints: dynamic blocks are marked via `$APPLICATION->Set
 
 For ORM/SQL optimization see skill `bitrix-performance`.
 
-```php
-'cache' => [
-    'value' => [
-        'type' => [
-            'class_name' => \Bitrix\Main\Data\CacheEngineRedis::class,
-            'extension' => 'redis',
-            'host' => '127.0.0.1',
-            'port' => 6379,
-        ],
-    ],
-],
-```
-
-For ORM/SQL optimization see skill `bitrix-performance`.
-
 ## Invalidation by Events
 
-Typical scheme: `OnAfterUpdate`/`OnAfter*` handler in the tablet calls `$taggedCache->clearByTag(...)`. Use new ORM events via `EventResult` instead of `$GLOBALS['USER_FIELD_MANAGER']->...`.
+Typical scheme: `OnAfterUpdate`/`OnAfter*` handler in the tablet calls `$taggedCache->clearByTag(...)` for your tags, and/or `Table::cleanCache()` for ORM query cache. Use new ORM events via `EventResult` instead of `$GLOBALS['USER_FIELD_MANAGER']->...`.
 
 ## Antipatterns
 
@@ -198,12 +179,14 @@ Typical scheme: `OnAfterUpdate`/`OnAfter*` handler in the tablet calls `$taggedC
 - Using global `$_SESSION`/`$USER` inside the cache key instead of explicit variables.
 - One shared `cacheDir` for all modules — hard to clear selectively.
 - Missing `abortDataCache()` for empty/error results.
-- Enabling `composite` without testing dynamic blocks.
+- Enabling composite without testing dynamic blocks.
+- Assuming TaggedCache tags `ORM_<TABLE>` exist — use `cleanCache()` / `orm_*` ManagedCache dirs instead.
 
 ## Checklist
 
 - [ ] Cache level selected: short-lived → unmanaged; rarely changing and critical → managed + tags.
 - [ ] Cache key includes all parameters affecting the result (filters, language, permissions).
 - [ ] Cache invalidation is automated via tags/events, not manual `cleanDir('/')`.
+- [ ] ORM query cache cleared via `Table::cleanCache()` / `Entity::cleanCache()`, not fictional `ORM_*` tags.
 - [ ] Component cache accounts for user groups where important.
 - [ ] Production environment uses Redis/Memcached instead of file cache.

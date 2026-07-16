@@ -9,8 +9,8 @@ description: Covers creation and maintenance of a custom Bitrix module in /local
 
 - Identifier: `<vendor>.<module>` (lowercase, no `_`, no digit at start).
 - Installer class: `<vendor>_<module>` (dot → `_`).
-- Namespace: `\<Vendor>\<Module>\...` (dot → `\`, CamelCase).
-- "Own" module without partnership — a single word, e.g., `mytest`, class — `mytest`, namespace — `\Mytest`.
+- Namespace: `\<Vendor>\<Module>\...` (dot → `\`, CamelCase) for partner modules with a dot in the id.
+- One-word module id (no partner prefix), e.g. `mymodule`: installer class `mymodule`, PSR-4 namespace **`\Bitrix\Mymodule`** (Loader uses `Bitrix\` + `ucfirst($moduleName)`), not `\Mymodule`.
 
 ## Quick Creation
 
@@ -18,7 +18,16 @@ description: Covers creation and maintenance of a custom Bitrix module in /local
 php bitrix/bitrix.php make:module vendor.module
 ```
 
-The command creates a skeleton with `install/index.php`, `version.php`, `lang/en/install/index.php`, `.settings.php`, and a `/lib/` folder. Available from main 25.900.0.
+**Since main 25.900.** On older versions, scaffold files manually.
+
+`make:module` creates a **minimal** skeleton only:
+
+- `install/index.php`, `install/version.php`
+- `install/mysql/install.sql`, `install/mysql/uninstall.sql` (empty stubs)
+- `default_option.php`
+- `lang/ru/install/index.php`
+
+It does **not** create `.settings.php`, `/lib/`, routes, or controllers. Add those yourself or via further `make:*` / `dev:module-skeleton`.
 
 ## Minimal Structure
 
@@ -26,13 +35,32 @@ The command creates a skeleton with `install/index.php`, `version.php`, `lang/en
 /local/modules/vendor.module/
 ├── install/
 │   ├── index.php
-│   └── version.php
-├── lang/en/install/index.php
-├── lib/                         # PSR-4, Vendor\Module\...
+│   ├── version.php
+│   └── mysql/                   # optional SQL stubs from make:module
+├── lang/ru/install/index.php
+├── default_option.php
+├── lib/                         # PSR-4, Vendor\Module\... (add manually)
 ├── views/                       # PHP views for renderView() in controllers
-├── routes/                      # Module routing files
-├── .settings.php                # controllers, services, console, routing
+├── routes/                      # Module route files — require from /local/routes/web.php
+├── .settings.php                # controllers, services, console (add manually)
 └── include.php                  # optional, for registerNamespace/registerAutoLoadClasses
+```
+
+## Module Routing
+
+Routing is **global-only**. The kernel loads route files listed in global `routing.config` from `/local/routes/` and `/bitrix/routes/` only.
+
+A `routing` section in the module's `.settings.php` is **not** auto-loaded. Connect module routes by `require` from `/local/routes/web.php`:
+
+```php
+// /local/routes/web.php
+return function (\Bitrix\Main\Routing\RoutingConfigurator $routes): void {
+    $moduleRoutes = $_SERVER['DOCUMENT_ROOT'] . '/local/modules/vendor.module/routes/web.php';
+    if (is_file($moduleRoutes))
+    {
+        (require $moduleRoutes)($routes);
+    }
+};
 ```
 
 ## `install/version.php`
@@ -182,13 +210,15 @@ final class vendor_module extends CModule
 
 ## Language Files
 
-`/local/modules/vendor.module/lang/en/install/index.php`:
+`/local/modules/vendor.module/lang/ru/install/index.php` (created by `make:module`):
 
 ```php
 <?php
 $MESS['VENDOR_MODULE_NAME'] = 'Vendor Module';
 $MESS['VENDOR_MODULE_DESCRIPTION'] = 'Module description';
 ```
+
+Add `lang/en/` (and other locales) as needed for multi-language admin UI.
 
 ## DB Tables
 
@@ -206,6 +236,8 @@ For deletion:
 ```
 
 ## Module Options (`options.php`)
+
+Module options (`Option` + `default_option.php`) are for **permanent** settings. For TTL runtime state vs cache vs Option, see skill `bitrix-storage`.
 
 If you need a settings page in Admin Panel (*Settings → Module Settings → Vendor Module*):
 
@@ -239,17 +271,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && check_bitrix_sessid())
 Nothing needs to be registered manually in `include.php` if:
 1. Module is in `/local/modules/vendor.module/`.
 2. Classes are in `/lib/`.
-3. Namespace follows `\Vendor\Module\...`.
+3. Namespace follows `\Vendor\Module\...` (or `\Bitrix\Mymodule\...` for a one-word id).
 
 Bitrix `Loader` handles this automatically when `includeModule` is called.
 
 ## Checklist
 
-- [ ] Module identifier follows `vendor.module` format.
+- [ ] Module identifier follows `vendor.module` format (or one-word → `\Bitrix\...` namespace).
+- [ ] After `make:module`, `.settings.php` / `lib/` added if needed (generator is minimal).
+- [ ] Module routes are `require`d from `/local/routes/web.php` — not expected from module `.settings.php` `routing`.
 - [ ] `DoInstall`/`DoUninstall` are implemented and idempotent.
 - [ ] Event handlers and agents are registered upon installation and removed upon uninstallation.
 - [ ] DB tables are managed via ORM or `SqlHelper` (DDL).
-- [ ] Language files are mirrored in `lang/ru/` and `lang/en/`.
+- [ ] Language files exist where needed (`lang/ru/` from generator; add `lang/en/` etc.).
 - [ ] Services and controllers are registered in `.settings.php`.
 - [ ] No hardcoded strings in `index.php` (use `Loc`).
 - [ ] Module is compatible with PSR-4.

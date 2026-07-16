@@ -1,6 +1,6 @@
 ---
 name: bitrix-http-client
-description: Covers Bitrix\Main\Web\HttpClient HTTP client — legacy mode and PSR-18 (sendRequest), asynchronous requests via sendAsyncRequest and Promise, proxies and timeouts, global http_client_options in .settings.php, main.HttpClient logger, SSRF protection and redirects. Applied in integrations with external APIs, webhook clients, asynchronous calls and configuring general HTTP client behavior in a project. Key terms — HttpClient, PSR-18, sendAsyncRequest, Promise, proxy, SSRF, webhook, http_client_options.
+description: Covers Bitrix\Main\Web\HttpClient HTTP client — legacy mode and PSR-18 (sendRequest), async Promise, proxies/timeouts, http_client_options, main.HttpClient logger, SSRF, redirects, and GeoIp\Manager lookups. Applied in external API integrations, webhooks, async calls and geolocation. Key terms — HttpClient, PSR-18, Promise, SSRF, GeoIp, Manager, webhook.
 ---
 
 # HttpClient
@@ -22,7 +22,8 @@ Default values are in `/local/.settings.php`, `http_client_options` section:
         'redirectMax'    => 5,
         'bodyLengthMax'  => 10 * 1024 * 1024,
         'disableSslVerification' => false,
-        'privateIp'      => false,         // block requests to private IPs
+        // Default privateIp is TRUE (private IPs allowed). Set false for SSRF protection:
+        'privateIp'      => false,
     ],
     'readonly' => false,
 ],
@@ -40,7 +41,7 @@ The same keys are accepted by `new HttpClient([...])` constructor — constructo
 - `redirect`, `redirectMax` — follow redirects (legacy only).
 - `useCurl` — use cURL instead of sockets (faster for asynchrony and https).
 - `disableSslVerification` — disable SSL verification (use only for debugging).
-- `privateIp` — allow requests to private IPs (SSRF protection: disable for client URLs).
+- `privateIp` — **default `true`** = private IPs **allowed**. Set to `false` to block private/link-local addresses (SSRF protection for user-provided URLs).
 - `bodyLengthMax` — response body size limit.
 - `waitResponse` — `false` if only headers need to be parsed and connection closed.
 - `proxyHost`, `proxyPort`, `proxyUser`, `proxyPassword` — proxy settings.
@@ -225,9 +226,16 @@ Promise::all($promises)->then(
 'loggers' => [
     'value' => [
         'main.HttpClient' => [
-            'className' => \Bitrix\Main\Diag\FileLogger::class,
-            'level'     => \Psr\Log\LogLevel::DEBUG,
-            'settings'  => ['file' => 'http_client.log'],
+            'constructor' => static function (
+                \Bitrix\Main\Web\Http\DebugInterface $debug,
+                \Psr\Http\Message\RequestInterface $request,
+            ) {
+                $debug->setDebugLevel(\Bitrix\Main\Web\HttpDebug::ALL);
+                return new \Bitrix\Main\Diag\FileLogger(
+                    '/var/log/bitrix/http-' . spl_object_hash($request) . '.log',
+                );
+            },
+            'level' => \Psr\Log\LogLevel::DEBUG,
         ],
     ],
 ],
@@ -235,9 +243,43 @@ Promise::all($promises)->then(
 
 ## SSRF Protection
 
-Enabled by default in cloud and modern installations.
-- `privateIp` = `false` blocks requests to `127.0.0.1`, `192.168.*`, `10.*`, `169.254.*` (AWS/GCP metadata).
-- If your integration requires calling an internal service — explicitly set `'privateIp' => true` in the constructor.
+`HttpClient` property `$privateIp` defaults to **`true`** (private IPs are allowed).
+
+- For SSRF protection on user-controlled URLs, set `'privateIp' => false` — blocks `127.0.0.1`, `192.168.*`, `10.*`, `169.254.*` (AWS/GCP metadata), etc.
+- Only keep the default (`true`) when the client must call trusted internal services.
+
+## GeoIP
+
+Canonical entry: `Bitrix\Main\Service\GeoIp\Manager` — do not call built-in handler classes directly.
+
+| Need | API |
+| --- | --- |
+| One attribute; empty string on miss OK | `getCountryCode()`, `getCityName()`, `getTimezoneName()`, … |
+| Lat/lon pair; `null` on miss | `getGeoPosition()` |
+| Several fields + `isSuccess()` / handler metadata | `getDataResult($ip, $lang, $required)` |
+| Client IP with `X-Forwarded-For` awareness | `getRealIp()` |
+
+```php
+use Bitrix\Main\Service\GeoIp\Manager;
+
+$code = Manager::getCountryCode(); // current request IP
+$result = Manager::getDataResult($storedIp, 'en', ['cityName', 'latitude']);
+if ($result && $result->isSuccess())
+{
+    $data = $result->getGeoData();
+}
+```
+
+Rules:
+
+- Pass explicit `$ip` for stored/proxied addresses; empty `$ip` only as shorthand for current request (`getRealIp()`).
+- Use `$required` in `getDataResult` when you depend on specific fields so unsuitable handlers are skipped.
+- Miss semantics differ: `getDataResult` → `null`; convenience getters → `''`; `getGeoPosition` → `null`.
+- In-request cache covers IPv4/IPv6; ManagedCache path in `Manager` is IPv4-oriented — do not assume identical IPv6 persistence.
+- Invalidate via `Manager::cleanCache()` (or handler cascade), not ad hoc deletes under `geoip_manager`.
+- Custom provider: event `onMainGeoIpHandlersBuildList` + subclass of `GeoIp\Base`. Post-process only via `onGeoIpGetResult`.
+
+Logger id for this subsystem: `main.GeoIpManager` (see `bitrix-logger`).
 
 ## Checklist
 
@@ -245,7 +287,8 @@ Enabled by default in cloud and modern installations.
 - [ ] Timeouts (`socketTimeout`, `streamTimeout`) are set and reasonable.
 - [ ] Response status is checked for `2xx` before decoding.
 - [ ] SSL verification is **not** disabled in production.
-- [ ] SSRF protection is considered when working with user-provided URLs.
+- [ ] For user-provided URLs, `privateIp => false` (default is `true` = private IPs allowed).
 - [ ] Binary data/files are downloaded via `download()` or streams, not read entirely into memory.
+- [ ] GeoIP goes through `GeoIp\Manager` with explicit IP when not the current request.
 
 See skill `bitrix-security` for SSRF protection details.

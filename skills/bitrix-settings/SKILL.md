@@ -5,7 +5,9 @@ description: Covers kernel configuration — .settings.php sections (connections
 
 # Kernel Configuration (.settings.php)
 
-Primary config: `/bitrix/.settings.php` or `/local/.settings.php` (from main 24.100+). Overrides: `/bitrix/.settings_extra.php` or `/local/.settings_extra.php`.
+Baseline: **main 23.0+**. Features newer than baseline are marked **Since**.
+
+Primary config: `/bitrix/.settings.php` or `/local/.settings.php` (**Since main 24.100**). Overrides: `/bitrix/.settings_extra.php` or `/local/.settings_extra.php` (**Since main 24.100**).
 
 > Errors in `.settings.php` can break the site. Back up before changes.
 
@@ -22,40 +24,100 @@ Each section:
 ],
 ```
 
+## Global vs Module `.settings.php`
+
+| Scope | Typical sections | Behavior |
+| --- | --- | --- |
+| **Global** (`/local/.settings.php`) | `connections`, `cache`, `cache_flags`, `session`, `cookies`, `crypto`, `exception_handling`, `routing`, `messenger`, `loggers`, `composer`, `http_client_options`, `pull`, `smtp`, `default_language`, `rest` | Loaded as kernel `Configuration` |
+| **Module** (`/local/modules/<id>/.settings.php`) | `controllers`, `services`, `console` (`commands` key — not `cli`) | On `Loader::includeModule`, **`services`** are registered into ServiceLocator. Other module sections are not a full merge into global config |
+
+**Routing is global-only:** the router loads files listed in global `routing.config` from `/local/routes/` and `/bitrix/routes/` only. Module route files must be `require`d from `/local/routes/web.php` — a module `.settings.php` `routing` section does **not** auto-load them.
+
+There is **no** `validation` section in `.settings.php`. Use `ValidationService` via ServiceLocator (`main.validation.service` in `main` module services). See skill `bitrix-validation`.
+
 ## Key Sections
 
 | Section | Purpose |
 | --- | --- |
 | `connections` | **Required.** DB and additional connections |
-| `cache` | Cache engine (files/redis/memcache) |
+| `cache` | Cache engine (files / redis / memcache / …) |
+| `cache_flags` | Per-entity / named TTL caps (e.g. `config_options`, `b_<table>_max_ttl` / `_min_ttl` for ORM) |
 | `session` | Session handlers, lifetime, separated mode |
+| `cookies` | Cookie flags (`secure`, `http_only`) |
 | `crypto` | Encryption keys for cookies and fields |
-| `exception_handling` | `debug`, error masks, `log` file |
+| `exception_handling` | Debug, error masks, log (see below) |
 | `routing` | Route config files (`web.php`, etc.) |
-| `messenger` | Queue brokers and handlers |
+| `messenger` | Queue brokers and handlers (**Since main 25.100.300**, alpha) |
 | `loggers` | PSR-3 logger registration |
-| `controllers` | Controller namespaces |
-| `services` | DI container (global services) |
-| `console` | CLI commands |
+| `http_client_options` | Default options for `Bitrix\Main\Web\HttpClient` |
+| `rest` | REST controller defaults (e.g. `defaultNamespace` in `main/.settings.php`) |
+| `controllers` | Controller namespaces (often module-level) |
+| `services` | DI container entries |
+| `console` | CLI commands (`commands` => FQCN list) |
 | `composer` | Path to `composer.json` |
 | `pull` | Push/pull server settings |
 | `smtp` | Mail transport |
 | `default_language` | Default language code |
 
-Module `.settings.php` files merge into global config after `includeModule`.
-
 ## exception_handling
+
+Keys applied in `Application::initializeExceptionHandler()` (verified):
+
+| Key | Role |
+| --- | --- |
+| `debug` | Show errors on screen — **never `true` in production** |
+| `handled_errors_types` | PHP error bitmask logged / handled |
+| `exception_errors_types` | Subset that becomes exceptions |
+| `ignore_silence` | If true, ignore `@` operator |
+| `assertion_throws_exception` | Assertions throw |
+| `assertion_error_type` | Assertion error level |
+| `track_modules` | Optional list of modules to track |
+| `log` | Logger config: optional `class_name` / `extension` / `required_file`, plus `settings` (`file`, `log_size`, …) |
 
 ```php
 'exception_handling' => [
     'value' => [
-        'debug' => false,  // NEVER true in production
+        'debug' => false,
+        'handled_errors_types' => E_ALL & ~E_NOTICE & ~E_USER_NOTICE,
+        'exception_errors_types' => E_ALL & ~E_NOTICE & ~E_WARNING & ~E_USER_NOTICE & ~E_USER_WARNING & ~E_COMPILE_WARNING & ~E_DEPRECATED,
+        'ignore_silence' => false,
+        'assertion_throws_exception' => true,
+        'assertion_error_type' => E_USER_ERROR,
         'log' => [
             'settings' => [
                 'file' => 'bitrix/modules/error.log',
                 'log_size' => 1000000,
             ],
         ],
+    ],
+    'readonly' => false,
+],
+```
+
+## cookies / http_client_options / cache_flags (examples)
+
+```php
+'cookies' => [
+    'value' => [
+        'secure' => false,
+        'http_only' => true,
+    ],
+    'readonly' => false,
+],
+
+'http_client_options' => [
+    'value' => [
+        // merged into every new HttpClient — redirect, timeouts, etc.
+        'socketTimeout' => 30,
+        'streamTimeout' => 60,
+    ],
+    'readonly' => false,
+],
+
+'cache_flags' => [
+    'value' => [
+        'config_options' => 3600,
+        // ORM: "b_tablename_max_ttl" / "b_tablename_min_ttl" (see Entity::getCacheTtl)
     ],
     'readonly' => false,
 ],
@@ -85,4 +147,5 @@ Encryption keys for `CryptoField`, encrypted cookies. Store keys outside git —
 - [ ] `debug => false` on production.
 - [ ] Secrets in `.settings_extra.php` or env vars.
 - [ ] `readonly => true` for connections and services.
-- [ ] Module settings in module `.settings.php`, not global unless cross-module.
+- [ ] Module `services` / `controllers` / `console` in module `.settings.php`; routing only via global + `/local/routes/`.
+- [ ] No fictional `validation` section — use `main.validation.service`.

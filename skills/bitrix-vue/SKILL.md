@@ -1,6 +1,6 @@
 ---
 name: bitrix-vue
-description: Covers BitrixVue 3 — ui.vue3 extension, createApp, integration with Bitrix localization and REST, migration from Vue 2. Applied when building reactive admin/public UI with Vue inside Bitrix. Key terms — BitrixVue, ui.vue3, Vue 3, createApp.
+description: Covers BitrixVue 3 — ui.vue3 / ui.vue3.bitrixvue, createApp, integration with Bitrix localization and REST, migration from Vue 2. Applied when building reactive admin/public UI with Vue inside Bitrix. Key terms — BitrixVue, ui.vue3.bitrixvue, Vue 3, createApp, Loc.
 ---
 
 # BitrixVue 3
@@ -17,7 +17,8 @@ Features:
 ### In extension (preferred)
 
 ```javascript
-import { BitrixVue } from 'ui.vue3';
+import { BitrixVue } from 'ui.vue3.bitrixvue';
+import { Loc } from 'main.core';
 
 BitrixVue.createApp({
     data() {
@@ -37,7 +38,9 @@ BitrixVue.createApp({
 }).mount('#app');
 ```
 
-`bundle.config.js` — add `ui.vue3` to `rel` in `config.php`.
+- Import **`BitrixVue` from `ui.vue3.bitrixvue`** (not bare `ui.vue3`).
+- Import Vue primitives (`ref`, `computed`, `h`, …) from `ui.vue3` when needed.
+- Put `ui.vue3` / `ui.vue3.bitrixvue` in `config.php` `rel`.
 
 ### On PHP page (legacy)
 
@@ -55,13 +58,18 @@ BitrixVue.createApp({
 ## Localization
 
 ```javascript
-import { Loc } from 'ui.vue3';
+import { Loc } from 'main.core';
+import { BitrixVue } from 'ui.vue3.bitrixvue';
 
 // Messages from lang files loaded via Extension
 Loc.getMessage('VENDOR_MODULE_ITEM_TITLE');
+
+// Filter phrases by prefix (BitrixVue helper):
+BitrixVue.getFilteredPhrases(vueInstance, phrasePrefix, phrases);
+// signature: (vueInstance, phrasePrefix, phrases?) — phrases optional (defaults to instance messages)
 ```
 
-Register messages in extension `lang/` and load via `Extension::load`.
+Register messages in extension `lang/` and load via `Extension::load`. Do **not** import `Loc` from `ui.vue3`.
 
 ## REST Integration
 
@@ -85,7 +93,8 @@ IDE definitions: `bitrix/modules/ui/install/js/ui/vue3/ui.vue3.d.ts` — add as 
 ## Checklist
 
 - [ ] BitrixVue 3 only — no Vue 2.
+- [ ] `BitrixVue` from `ui.vue3.bitrixvue`; Vue APIs from `ui.vue3`; `Loc` from `main.core`.
 - [ ] Code in `/local/js/` extension, not inline in templates when possible.
-- [ ] `ui.vue3` in `config.php` `rel` dependencies.
+- [ ] `ui.vue3` / `ui.vue3.bitrixvue` in `config.php` `rel` dependencies.
 - [ ] AJAX via `BX.ajax.runAction` or REST, not raw fetch without CSRF.
 - [ ] Localization via `Loc`, not hardcoded strings.

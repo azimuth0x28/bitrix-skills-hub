@@ -1,9 +1,11 @@
 ---
 name: bitrix-project-structure
-description: Covers Bitrix project structure — /local vs /bitrix, PSR-4 autoloading, .settings.php and .settings_extra.php, Loader::includeModule, placement of components, templates, modules, routes and php_interface, namespaces like Vendor\Module. Applied for "where to put code" questions, initial setup of a new module or component, moving code from /bitrix to /local and configuring autoloading. Key terms — /local, /bitrix, PSR-4, .settings.php, Loader, includeModule, autoload, vendor.module.
+description: Covers Bitrix project structure — /local vs /bitrix, PSR-4 autoloading, .settings.php, Loader includeModule vs requireModule, placement of components, templates, modules, routes and php_interface, namespaces like Vendor\Module. Applied for "where to put code" questions, module loading boundaries and configuring autoloading. Key terms — /local, /bitrix, PSR-4, .settings.php, Loader, requireModule, includeModule, autoload.
 ---
 
 # Project Structure and Autoloading in Bitrix
+
+Baseline: **main 23.0+**. Features newer than baseline are marked **Since**.
 
 ## Three Root Sections
 
@@ -18,37 +20,58 @@ description: Covers Bitrix project structure — /local vs /bitrix, PSR-4 autolo
 ├── modules/<vendor>.<module>/   # Custom modules (PSR-4 autoloading)
 ├── components/<vendor>/<name>/  # Components (class.php, templates/.default/)
 ├── templates/<id>/              # Site templates + /components/, /page_templates/
-├── routes/web.php               # Routing routes
+├── routes/
+│   └── web.php                  # Routing entry (Since main 21.400)
 ├── activities/                  # Business process actions
 ├── gadgets/                     # Desktop gadgets
 ├── blocks/                      # Sites24 blocks
-├── js/                          # Custom JS
+├── js/                          # Custom JS extensions
 ├── php_interface/
 │   ├── init.php                 # Loaded on every hit
-│   ├── dbconn.php               # From main 24.100 — can be kept here
+│   ├── after_connect_d7.php     # After DB connect (charset, sql_mode, TZ)
+│   ├── dbconn.php               # Since main 24.100 — can live here
 │   └── user_lang/               # User interface translations
-├── .settings.php                # Kernel configuration (from main 24.100)
-└── .settings_extra.php          # Overrides (from main 24.100)
+├── .settings.php                # Kernel configuration (Since main 24.100)
+└── .settings_extra.php          # Overrides (Since main 24.100)
 ```
 
 Set the same permissions for `/local/php_interface/` as for `/bitrix/php_interface/` — it may contain sensitive files.
 
-## Including a Module
+## Including a Module (`Loader`)
 
-Before accessing classes of any module:
+Prefer `Bitrix\Main\Loader` in new code. Treat `CModule::IncludeModule*` as legacy compatibility.
+
+| Situation | API |
+| --- | --- |
+| Module is mandatory; failure must abort | `Loader::requireModule('vendor.module')` |
+| Optional integration with a real `false` branch | `Loader::includeModule(...)` and handle `false` |
+| Shareware/demo status codes | `Loader::includeSharewareModule()` / legacy `CModule::IncludeModuleEx()` — not plain `includeModule` |
 
 ```php
-if (!\Bitrix\Main\Loader::includeModule('vendor.module'))
+use Bitrix\Main\Loader;
+
+// Mandatory — fail-fast (preferred when no fallback exists)
+Loader::requireModule('vendor.module');
+
+// Optional — must handle false explicitly
+if (Loader::includeModule('vendor.analytics'))
 {
-    throw new \Bitrix\Main\SystemException('Module vendor.module is not installed');
+    // enrich behaviour
 }
 ```
 
-The method:
+`includeModule` / `requireModule`:
 
 - Includes `include.php` and `/lib/autoload.php` of the module.
 - Registers the module namespace for PSR-4 autoloading.
-- Returns `false` if the module is not installed or missing — always check the result.
+- Registers module **`services`** into `ServiceLocator`.
+
+Rules:
+
+- Do not call `includeModule` without handling `false` when the dependency is actually required — use `requireModule`.
+- Load a required module once near the scenario boundary; do not repeat the same check deep in call stacks.
+- Do not flip global behaviour with `Loader::setRequireThrowException(false)` to fake a bool API — call `includeModule` instead.
+- Do not introduce new `CModule::IncludeModule()` in greenfield code.
 
 ## PSR-4 Autoloading of Classes in `/lib/`
 
@@ -62,7 +85,10 @@ The rule is simple: **folder name = namespace part, file name = class name** (bo
 └── Cli/Command/Feature/RebuildCommand.php      # \Vendor\Module\Cli\Command\Feature\RebuildCommand
 ```
 
-The module namespace is formed from the identifier: `vendor.module` → `\Vendor\Module`. If the identifier consists of one word (`mymodule`), then the namespace is `\Mymodule`, but such modules are considered "own" (not partner).
+Namespace from module id:
+
+- Partner module `vendor.module` → `\Vendor\Module`
+- One-word module `mymodule` → **`\Bitrix\Mymodule`** (kernel rule in `Loader`)
 
 If the PSR-4 structure is followed — **nothing needs to be registered manually**.
 
@@ -96,12 +122,12 @@ In `.settings.php`:
 ],
 ```
 
-Required for `bitrix/bitrix.php` (`make:*` commands). Do not install packages in `/bitrix/vendor/` — they disappear on kernel update.
+Required for `bitrix/bitrix.php` (`make:*` commands, **Since main 25.900**). Do not install packages in `/bitrix/vendor/` — they disappear on kernel update.
 
 ## Additional Files
 
 - `/bitrix/routing_index.php` — entry point for new routing (configure web server to forward here).
-- `/local/php_interface/after_connect_d7.php` — runs after DB connection (migrations, session tweaks).
+- `/local/php_interface/after_connect_d7.php` — included after successful DB connection (`ConnectionPool` → `include_after_connected`). Typical uses: `SET NAMES`, `sql_mode`, DB timezone.
 - `/local/php_interface/virtual_file_system.php` — virtual filesystem overrides.
 
 ## JS Extensions
@@ -114,19 +140,44 @@ Custom frontend code lives in `/local/js/<module>/<extension>/`. Load via `Exten
 - `/bitrix/.settings_extra.php` or `/local/.settings_extra.php` — overrides without API.
 - `/bitrix/php_interface/dbconn.php` or `/local/php_interface/dbconn.php` — constants for old kernel and compatibility.
 
-In a module's `.settings.php` (`/local/modules/vendor.module/.settings.php`), the `services`, `controllers`, `routing`, and `console` sections are specified. Its content is automatically merged into the global container after `includeModule`.
+### Global vs module `.settings.php`
+
+| Section | Where | Notes |
+| --- | --- | --- |
+| `connections`, `cache`, `session`, `routing`, `crypto`, `exception_handling`, `loggers`, `messenger` | **Global** only | Read by kernel config |
+| `controllers`, `services`, `console` | **Module** (and optionally global for `services`) | Module `services` register on `includeModule` |
+| `routing` in module `.settings.php` | **Not used by router** | See below |
+
+### Module routes (not auto-loaded)
+
+The router loads only files listed in **global** `routing.config` from `/local/routes/` and `/bitrix/routes/`.
+
+Canonical pattern — keep module route file and require it from `/local/routes/web.php`:
+
+```php
+// /local/routes/web.php
+return function (\Bitrix\Main\Routing\RoutingConfigurator $routes): void {
+    $file = $_SERVER['DOCUMENT_ROOT'] . '/local/modules/vendor.module/routes/web.php';
+    if (is_file($file)) {
+        (require $file)($routes);
+    }
+};
+```
+
+See skill `bitrix-routing`.
 
 ## File Priority
 
 - Components: `/local/components/<vendor>/<name>/` override `/bitrix/components/<vendor>/<name>/`.
 - Component templates in a site template: `/local/templates/<id>/components/...` override everything else.
 - System files (e.g., `header.php`) are searched first in `/local/`, then in `/bitrix/`.
+- Modules: `/local/modules/<id>/` takes precedence over `/bitrix/modules/<id>/` when both exist.
 
 ## When `php_interface/init.php` is Needed
 
 Only for:
 
-- Registering **dynamic** event handlers (`registerEventHandler`) that cannot be tied to the installation of a specific module.
+- Registering **dynamic** event handlers that cannot be tied to the installation of a specific module.
 - Project constants that must be available before modules are included.
 - Compatibility hooks.
 

@@ -5,6 +5,8 @@ description: Covers Bitrix localization — Bitrix\Main\Localization\Loc, lang/<
 
 # Localization
 
+Baseline: **main 23.0+**.
+
 ## Language File
 
 - Encoding **UTF-8 without BOM**.
@@ -27,7 +29,7 @@ $MESS['VENDOR_MODULE_POST_EMPTY_TITLE'] = 'Post title is empty';
 
 Prefix rules: `<VENDOR>_<MODULE>_<CONTEXT>_<CODE>` — a short unique key. Without a prefix, conflicts with other modules are likely.
 
-## `Loc::getMessage` and `Loc::loadMessages`
+## `Loc::getMessage` and Loading Phrases
 
 ```php
 use Bitrix\Main\Localization\Loc;
@@ -41,6 +43,8 @@ echo Loc::getMessage('VENDOR_MODULE_POST_PUBLISHED', ['#NAME#' => 'x'], 'en');
 - Signature: `Loc::getMessage(string $code, ?array $replace = null, ?string $language = null)`.
 - Substitutions — via `#PLACEHOLDER#` templates (historical convention). Keys in `$replace` — with hash marks.
 - `$language` — language ID (`ru`, `en`). If not passed — current site language.
+
+`Loc::loadMessages(__FILE__)` resolves the neighboring `lang/<lang>/<same_file>.php` from the caller path. `Loc::loadLanguageFile($path)` loads phrases for an arbitrary PHP file path (when the mapping is not “same name next to `__FILE__`”).
 
 ### When Explicit Loading is Needed
 
@@ -164,11 +168,11 @@ const welcome = BX.message('WELCOME_TEXT').replace('#NAME#', userName);
 // programmatically
 this.$Bitrix.Loc.setMessage({ DEMO_COUNTER: 'Counter: #COUNTER#' });
 
-// optimization for heavy templates
+// optimization for heavy templates — (vueInstance, phrasePrefix, phrases?)
 import { BitrixVue } from 'ui.vue3';
 
 computed: {
-    localize() { return BitrixVue.getFilteredPhrases('MYCOMP_'); }
+    localize() { return BitrixVue.getFilteredPhrases(this, 'MYCOMP_'); }
 }
 ```
 

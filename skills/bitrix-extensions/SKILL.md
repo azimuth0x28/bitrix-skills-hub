@@ -5,12 +5,13 @@ description: Covers Bitrix JS/CSS extensions — /local/js/ structure, bundle.co
 
 # Bitrix JS/CSS Extensions
 
-Extensions organize JavaScript and CSS into bundles loaded by the kernel.
+Baseline: **main 23.0+**. Extensions organize JavaScript and CSS into bundles loaded by the kernel.
 
 ## Location
 
 - System: `/bitrix/js/<module>/<extension>/`
 - User: `/local/js/<module>/<extension>/`
+- Module package (copied on install): `/local/modules/<module>/install/js/<module>/<extension>/` → deployed under `/bitrix/js/...` (or keep runtime sources in `/local/js/`)
 
 `/local/` takes precedence over `/bitrix/`.
 
@@ -94,6 +95,8 @@ npx bitrix build
 `dist/` bundles are committed and deployed. Source lives in `src/`.
 
 ## Controller Integration
+
+`renderExtension` is a method on `\Bitrix\Main\Engine\Controller` (not on `\Bitrix\Main\UI\Extension`):
 
 ```php
 return $this->renderExtension('vendor.module.myextension', ['items' => $items]);

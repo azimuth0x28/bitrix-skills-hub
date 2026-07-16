@@ -5,11 +5,11 @@ description: Covers Bitrix performance — composite site, query optimization, r
 
 # Performance Optimization
 
-Complements `bitrix-caching` and `bitrix-sessions` with site-wide and infrastructure patterns.
+Baseline: **main 23.0+**. Complements skills `bitrix-caching`, `bitrix-sessions`, and `bitrix-database`.
 
 ## Composite Site
 
-Technology caching static HTML while loading dynamic blocks via AJAX.
+Technology caching static HTML while loading dynamic blocks via AJAX. Kernel entry points: `\Bitrix\Main\Composite\Engine`, `\Bitrix\Main\Composite\Responder`.
 
 1. Mark dynamic zones: `<div data-dynamic="true">...</div>` or frame mode APIs.
 2. Enable in Admin → Settings → Composite Site (Autocomposite or Composite mode).
@@ -36,7 +36,7 @@ Do not put personalized data in static zone (cart, user name, permissions).
 ## Replication and Clustering
 
 - MySQL master-slave for read scaling.
-- Additional connections in `.settings.php` `connections` section.
+- Extra connections via `.settings.php` `connections` and `\Bitrix\Main\Data\ConnectionPool` (`Application::getConnectionPool()` / `Application::getConnection('name')`).
 - Read-only analytics queries → separate connection.
 
 ## Sharding

@@ -136,8 +136,8 @@ Specified in `/local/.settings.php` (or `/bitrix/.settings.php`) in the `session
                 'serializer' => \Redis::SERIALIZER_IGBINARY,
                 'persistent' => false,
                 'failover'   => \RedisCluster::FAILOVER_DISTRIBUTE,
-                'timeout'      => null,
-                'read_timeout' => null,
+                'timeout'     => null,
+                'readTimeout' => null, // camelCase (session Redis handler)
             ],
         ],
     ],

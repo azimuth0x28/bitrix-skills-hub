@@ -5,6 +5,8 @@ description: Covers Bitrix unified operation results — Bitrix\Main\Result, Err
 
 # Result and Errors in Bitrix
 
+Baseline: **main 23.0+**.
+
 ## Philosophy
 
 - **User Errors → `Result` + `Error`**. Validation, business rules, "entity not found," "insufficient permissions."
@@ -135,6 +137,12 @@ if (!$add->isSuccess())
 }
 $id = $add->getId();
 ```
+
+## `EventResult`
+
+Handlers of `\Bitrix\Main\Event` return `\Bitrix\Main\EventResult` with type `EventResult::SUCCESS`, `EventResult::ERROR`, or `EventResult::UNDEFINED` (not a drop-in for service `Result`). Details: skill `bitrix-events`.
+
+Attribute / `ValidationService` checks yield `\Bitrix\Main\Validation\ValidationResult` (also `isSuccess()` + errors) — skill `bitrix-validation`. Merge those errors into a service `Result` when crossing the module boundary.
 
 ## Returning Errors in Controller
 

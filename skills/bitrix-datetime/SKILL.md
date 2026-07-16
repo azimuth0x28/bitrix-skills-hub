@@ -5,6 +5,8 @@ description: Covers date and time in Bitrix — Bitrix\Main\Type\Date and DateTi
 
 # Date and Time in Bitrix
 
+Baseline: **main 23.0+**.
+
 Bitrix does not use raw `\DateTime` — there are two wrappers that take into account **site regional settings** and **user time zone**.
 
 - `Bitrix\Main\Type\Date` — date only (time is always `00:00:00`).
@@ -200,4 +202,4 @@ $lastYear = (clone $now)->add('-P1Y');
 );
 ```
 
-Use `Culture::getFormat()` / `Context::getCurrent()->getCulture()` for locale-aware date formatting instead of hardcoded `date()` masks.
+Use `Culture::getDateFormat()` / `getDateTimeFormat()` (via `Context::getCurrent()->getCulture()`) for locale-aware date formatting instead of hardcoded `date()` masks.

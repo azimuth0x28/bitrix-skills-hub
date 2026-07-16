@@ -5,7 +5,7 @@ description: Covers direct database work in Bitrix — Application::getConnectio
 
 # Direct Database Work
 
-ORM is the first choice (`bitrix-orm`). Direct SQL is needed for:
+Baseline: **main 23.0+**. ORM is the first choice (`bitrix-orm` — prefer `query()` / `ConditionTree`, and ORM write APIs including batch / merge / `deleteByFilter` before dropping to SQL). Direct SQL is needed for:
 
 - Migrations/DDL in `install/index.php` / `updater.php`,
 - Bulk operations (`UPSERT`, `REPLACE`, windows/CTE),
@@ -211,17 +211,17 @@ Keep transactions short. ORM operations inside a transaction are supported — u
 
 ## SqlTracker
 
-Enable SQL query logging for debugging:
+Enable SQL query logging for debugging. Call `startTracker()`, then `startFileLog($path)` to dump queries to a file in development:
 
 ```php
-$tracker = \Bitrix\Main\Application::getInstance()->getConnectionPool()
-    ->getConnection()->startTracker();
+$tracker = \Bitrix\Main\Application::getConnection()->startTracker();
+$tracker->startFileLog($_SERVER['DOCUMENT_ROOT'] . '/mysql_debug.sql');
 // ... queries ...
 $queries = $tracker->getQueries();
 $tracker->stop();
 ```
 
-Use only in development.
+Use only in development (same pattern as kernel `$DBDebugToFile` in `start.php`).
 
 ## PostgreSQL
 
@@ -229,4 +229,4 @@ Use only in development.
 
 ## after_connect_d7.php
 
-Place in `/local/php_interface/after_connect_d7.php` for code that must run immediately after DB connection (timezone, session variables, compatibility hooks).
+Place post-connect hooks in `/local/php_interface/after_connect_d7.php` (charset, `sql_mode`, DB timezone). Included by `ConnectionPool` after a successful connect — see skill `bitrix-project-structure`.

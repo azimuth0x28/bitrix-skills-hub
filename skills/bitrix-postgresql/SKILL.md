@@ -5,7 +5,7 @@ description: Covers PostgreSQL support in Bitrix — PgsqlConnection, migration 
 
 # PostgreSQL in Bitrix
 
-Supported in **Enterprise for PostgreSQL** licenses (B24 and CMS). Connection class: `\Bitrix\Main\DB\PgsqlConnection`.
+Baseline: **main 23.0+**. Supported in **Enterprise for PostgreSQL** licenses (B24 and CMS). Connection class: `\Bitrix\Main\DB\PgsqlConnection`.
 
 ## Configuration
 
@@ -39,7 +39,7 @@ Not all kernel and marketplace modules support PostgreSQL. Incompatible modules 
 
 Check custom code:
 - MySQL-specific SQL (`LIMIT` syntax differences handled by SqlHelper, but raw SQL may break).
-- `install/mysql/` vs `install/pgsql/` — modules need pgsql install scripts.
+- MySQL install scripts under `install/mysql/` or `install/db/mysql/` need matching PostgreSQL scripts under `install/pgsql/` or `install/db/pgsql/`.
 
 Find modules missing pgsql install:
 
@@ -50,7 +50,7 @@ for mysql in bitrix/modules/*/install/mysql/install.sql bitrix/modules/*/install
 done
 ```
 
-Check kernel module install folders: each module should have matching `install/pgsql/` scripts if it supports PostgreSQL. Inspect `bitrix/modules/<module>/install/` in the project.
+Check kernel module install folders: each supporting module should have matching `install/pgsql/` **or** `install/db/pgsql/` scripts. Inspect `bitrix/modules/<module>/install/` in the project.
 
 ## Migration Methods
 
@@ -61,7 +61,7 @@ Check kernel module install folders: each module should have matching `install/p
 
 - Use ORM and `SqlHelper` — avoid MySQL-specific functions in raw SQL.
 - Use `SqlExpression` placeholders instead of string concatenation.
-- Test DDL in both `install/mysql/` and `install/pgsql/` if module supports both.
+- Test DDL in both MySQL (`install/mysql/` or `install/db/mysql/`) and PostgreSQL (`install/pgsql/` or `install/db/pgsql/`) if the module supports both.
 - Avoid `ENGINE=InnoDB`, backticks-specific syntax, `UNSIGNED`.
 
 ## Checklist
