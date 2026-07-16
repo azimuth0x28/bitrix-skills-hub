@@ -78,7 +78,7 @@ npx skills add bxmaximum/bitrix-framework-skills --list   # список без 
 npx skills update
 ```
 
-После установки скиллы попадают в `.agents/skills/` целевого проекта. Lock-файл `skills-lock.json` фиксирует версии для команды.
+После установки скиллы попадают в `.agents/skills/` целевого проекта.
 
 ## Связанные проекты
 
