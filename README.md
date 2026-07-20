@@ -1,6 +1,6 @@
 # Bitrix Framework Skills
 
-Набор AI-скиллов для разработки на **1С-Битрикс / Bitrix Framework** (D7): ORM, контроллеры, роутинг, кеш, безопасность, компоненты, REST, Sale и другие темы ядра.
+Набор AI-скиллов для разработки на **1С-Битрикс / Bitrix Framework** (D7): ORM, контроллеры, роутинг, кеш, безопасность, компоненты, REST, Sale, миграции (`sprint.migration`) и другие темы ядра.
 
 Скиллы собирает и поддерживает сообщество **[BXMax](https://bxmax.ru)** — платформа для разработчиков 1С-Битрикс: практические материалы, разборы ядра, эксперименты с AI и обмен опытом между коллегами. Это не официальная документация Битрикс, а концентрированные operational-правила для AI-агентов при проектировании и написании кода в `/local/`.
 
@@ -23,7 +23,7 @@
 
 «Толстые» скиллы используют progressive disclosure: агент открывает `SKILL.md` (роутер), затем только нужные файлы из `rules/*.md`. Полный индекс — в [AGENTS.md](AGENTS.md).
 
-Каталог (38 skills):
+Каталог:
 
 | Область | Skill |
 | --- | --- |
@@ -65,6 +65,7 @@
 | UI kit (popup, sidepanel) | `bitrix-ui` |
 | BitrixVue 3 | `bitrix-vue` |
 | CMS: sites, menus, templates | `bitrix-cms-basics` |
+| Миграции БД/схемы ([sprint.migration](https://marketplace.1c-bitrix.ru/solutions/sprint.migration/)) | `bitrix-sprint-migration` |
 
 ### Как добавить
 
