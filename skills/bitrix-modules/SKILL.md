@@ -220,6 +220,8 @@ $MESS['VENDOR_MODULE_DESCRIPTION'] = 'Module description';
 
 Add `lang/en/` (and other locales) as needed for multi-language admin UI.
 
+Lang file paths must **mirror the source file path** relative to the module root: `/install/index.php` → `/lang/<code>/install/index.php`, `/admin/my_page.php` → `/lang/<code>/admin/my_page.php`. `MODULE_NAME` / `MODULE_DESCRIPTION` are read from these phrases in the installer constructor and shown in Admin → *Settings → Product settings → Modules*; if the lang file path or phrase codes don't match, the module appears there with an empty name/description.
+
 ## DB Tables
 
 Do not use raw SQL for table creation. Describe the entity in `/lib/Model/PostTable.php` and create the table via ORM:

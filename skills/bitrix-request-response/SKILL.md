@@ -48,6 +48,23 @@ Read `rules/uri-uuid.md` (`Uri and UuidGenerator`) when the task involves:
 - Uri
 - UuidGenerator
 
+## Converter (not covered by rule files)
+
+`Bitrix\Main\Engine\Response\Converter` converts strings/arrays via bitmask flags: `TO_SNAKE`, `TO_SNAKE_DIGIT`, `TO_CAMEL`, `TO_UPPER`, `TO_LOWER`, `LC_FIRST`, `UC_FIRST`, `KEYS`, `VALUES`, `RECURSIVE`. Methods: `process($data)`, `getFormat()` / `setFormat($format)`, static `toJson()`.
+
+`Converter::OUTPUT_JSON_FORMAT` = `KEYS | RECURSIVE | TO_CAMEL | LC_FIRST` — it camelCases array **keys only** (no `VALUES` flag); values keep their original case:
+
+```php
+use Bitrix\Main\Engine\Response\Converter;
+
+(new Converter(Converter::LC_FIRST | Converter::TO_CAMEL))->process('la_la_land'); // laLaLand
+
+(new Converter(Converter::OUTPUT_JSON_FORMAT))->process([
+    'CATEGORIES' => [['ID' => 1, 'NAME' => 'Foods']],
+]);
+// ['categories' => [['id' => 1, 'name' => 'Foods']]] — 'Foods' stays untouched (no VALUES flag)
+```
+
 ## Checklist
 
 - [ ] Opened only the rule file(s) needed for this task.

@@ -53,7 +53,21 @@ if ($rights < 'W') { /* ... */ }
 
 ### Controller Checks
 
-Use `ActionFilter\Authentication` and your own filter based on `Bitrix\Main\Engine\ActionFilter\Base`. Example:
+Prefer kernel filters over globals:
+
+- `ActionFilter\Authentication` for “must be logged in”.
+- `#[ActionAccess]` + `AccessCheckControllerInterface` when the module has an `access` controller (`AccessibleController` / `BaseAccessController`). Details: skill `bitrix-controllers` → `rules/filters.md`.
+- Otherwise a small `ActionFilter\Base` — do **not** copy `$USER` checks into every action.
+
+```php
+use Bitrix\Main\Engine\ActionFilter\Attribute\Access\ActionAccess;
+use Bitrix\Main\Engine\Contract\AccessCheckControllerInterface;
+
+#[ActionAccess(action: 'post_edit', strategyArgs: ['itemIdRequestKey' => 'id'])]
+public function updateAction(int $id): array { /* ... */ }
+```
+
+Custom filter example (only when there is no access controller):
 
 ```php
 final class RequireRole extends \Bitrix\Main\Engine\ActionFilter\Base
@@ -62,8 +76,8 @@ final class RequireRole extends \Bitrix\Main\Engine\ActionFilter\Base
 
     public function onBeforeAction(\Bitrix\Main\Event $event)
     {
-        global $USER;
-        if (!$USER->IsAuthorized() || !in_array($this->role, $USER->GetUserGroupArray(), true))
+        $user = \Bitrix\Main\Engine\CurrentUser::get();
+        if (!$user->getId() || !in_array($this->role, $user->getUserGroups(), true))
         {
             $this->errorCollection->add([new \Bitrix\Main\Error('Forbidden', 'ACCESS_DENIED')]);
             return new \Bitrix\Main\EventResult(\Bitrix\Main\EventResult::ERROR, null, null, $this);
@@ -113,7 +127,7 @@ Use `HttpOnly` + `Secure` + `SameSite=Lax/Strict`. Do not put access tokens in `
 - [ ] In ORM queries, field names and operators are taken from a whitelist, not from the request.
 - [ ] There is no concatenation with user input in `SqlExpression`/`ExpressionField`/`runtime`.
 - [ ] In templates, everything coming from the user is via `htmlspecialcharsbx`.
-- [ ] Administrative actions check `$USER->IsAdmin()` or specific `CanDoOperation`.
+- [ ] Administrative actions check `$USER->IsAdmin()` or specific `CanDoOperation`; controller ACL prefers `#[ActionAccess]` when the module has an access controller.
 - [ ] Cookies with tokens are `HttpOnly`, `Secure`, `SameSite`.
 - [ ] JWT uses `JWT::encode`/`decode` with an explicit algorithm allowlist; JWKS via `JWK::parseKeySet`.
 - [ ] Secrets are not committed; access to `.settings_extra.php` is restricted.

@@ -1,6 +1,6 @@
 ---
 name: bitrix-console-commands
-description: Covers Bitrix CLI tools — php bitrix/bitrix.php, generators make:module/make:controller/make:tablet/make:entity/make:service/make:event/make:eventhandler/make:message/make:messagehandler/make:component/make:request, kernel commands (orm:annotate, messenger:consume, translate:index), creating custom commands on Symfony Console and registering them in the console section of module .settings.php. Applied for scaffolding new code, cron tasks, writing custom CLI commands, and running queue workers. Key terms — bitrix.php, make command, Symfony Console, CLI, command, console namespace.
+description: Covers Bitrix CLI tools — php bitrix/bitrix.php, generators make:module/make:controller/make:tablet/make:entity/make:service/make:event/make:eventhandler/make:message/make:messagehandler/make:component/make:request, kernel commands (orm:annotate, messenger:consume, translate:index, update:*, dev:locator-codes, dev:module-skeleton), creating custom commands on Symfony Console and registering them in the console section of module .settings.php. Applied for scaffolding new code, cron tasks, writing custom CLI commands, and running queue workers. Key terms — bitrix.php, make command, Symfony Console, CLI, command, console namespace.
 ---
 
 # Bitrix Console Commands
@@ -47,9 +47,13 @@ Commands are interactive but support `-n` and mandatory parameters.
 | `make:message <Name> -m vendor.module` | Queue message (Messenger) |
 | `make:messagehandler <Name> --message-module=... --handler-module=...` | Message handler |
 | `make:agent <Name> -m vendor.module` | Agent + hint for `CAgent::AddAgent` |
-| `make:component Vendor:Name --module=vendor.module` | Component inside a module |
-| `make:component Vendor:Name --local` | Component in `/local/components/` |
-| `dev:module-skeleton` | Extra module skeleton pieces beyond `make:module` |
+| `make:component my:user.card --module=vendor.module` | Component inside a module |
+| `make:component user.card --no-module` | Component in `/bitrix/components/bitrix/` |
+| `make:component my:user.card --no-module --local` | Component in `/local/components/my/` |
+| `dev:module-skeleton <module> [dir]` | Extra module skeleton pieces beyond `make:module` (optional `dir` under `lib/`) |
+| `dev:locator-codes <module> [code] [--show]` | `.phpstorm.meta.php` for `ServiceLocator::get()` autocomplete from module `services` |
+
+`make:component` name format is `namespace:component_name` (e.g. `my:user.card`). The part before the colon is the **component** namespace (folder under `components/`), not a PHP namespace. If omitted, the command uses `bitrix`. Placement rule: any non-`bitrix` namespace lands under `/local/` even without `--local`; `--local` forces `/local/` for the `bitrix` namespace too. Without `--no-module` the component goes into a module's `install/components/` (module id from `--module`, default — the part of the name before the first dot). Extra options: `--root` (target document root), `--show` (print without writing).
 
 **Placement / naming options** (where the generator supports them):
 
@@ -69,10 +73,12 @@ php bitrix.php orm:annotate -m vendor.blog
 
 After `make:module`, add `.settings.php`, `/lib/`, routes, etc. yourself or via further `make:*` / `dev:module-skeleton`.
 
+`dev:locator-codes vendor.module` writes `/local/modules/vendor.module/.phpstorm.meta.php` (or `/bitrix/modules/<id>/` if that path exists). `--show` prints to stdout without saving (`php bitrix.php dev:locator-codes vendor.module --show > ./phpstorm.meta.php`).
+
 ## Built-in Utility Commands
 
 - `orm:annotate [-m modules] [--clean]` — generates PHPDoc annotations for ORM entities for IDE autocompletion.
-- `messenger:consume [queues] [--sleep N] [--time-limit N]` — message queue processing. Can be run via cron or Supervisor.
+- `messenger:consume [queues...] [--sleep N] [--time-limit N]` — message queue processing. Queue names are **separate arguments** (`messenger:consume first second`), not a comma-separated string. There is **no** CLI `--limit` in main 26.650.100 (the option is commented out in the command); batch size is the queue config key `limit`. Requires `messenger.run_mode = cli`. Can be run via cron or Supervisor.
 - `translate:index [--path=...]` — indexing translations. Requires the **`translate`** module installed and loaded.
 - `update:modules [-m modules]`, `update:versions <file.json>`, `update:languages [-l codes]` — updates.
 
@@ -141,19 +147,21 @@ CLI loads commands from **installed modules only**: it reads each module's `.set
 
     > Section is named **`console`**, key is **`commands`**. Old name `cli` should not be used for new modules.
 
-3. After this, the command will appear in `php bitrix.php list` and will be named by its attribute/name: `feature:rebuild`.
+3. After this, the command will appear in `php bitrix.php list`. Set the name with `#[AsCommand(name: '...')]` or `$this->setName()` in `configure()` — the kernel does `new $commandClass()` and does **not** derive the name from the PHP namespace.
 
 ## Running via Cron
 
+`www/bitrix/bitrix.php` computes `DOCUMENT_ROOT` from `getcwd()` + `SCRIPT_NAME`. Run from the document root or from `/bitrix/`, not via an absolute `php /.../bitrix.php` from an unrelated cwd.
+
 ```cron
 # Every 5 minutes — queue processing
-*/5 * * * * php /var/www/site/bitrix/bitrix.php messenger:consume --sleep=1 --time-limit=270 --no-interaction
+*/5 * * * * cd /var/www/site/bitrix && php bitrix.php messenger:consume --sleep=1 --time-limit=270 --no-interaction
 
 # Every hour — feature cache cleanup
-0 * * * *   php /var/www/site/bitrix/bitrix.php feature:rebuild --no-interaction
+0 * * * *   cd /var/www/site/bitrix && php bitrix.php feature:rebuild --no-interaction
 ```
 
-Always use `--no-interaction` in cron.
+Equivalent: `cd /var/www/site && php bitrix/bitrix.php ...`. Always use `--no-interaction` in cron.
 
 ## Checklist for a Good Command
 

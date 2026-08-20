@@ -147,8 +147,10 @@ Attribute / `ValidationService` checks yield `\Bitrix\Main\Validation\Validation
 ## Returning Errors in Controller
 
 ```php
-public function createAction(#[ValidationParameter] CreatePostRequest $request): array
+public function createAction(CreatePostRequest $request): array
 {
+    // Wire CreatePostRequest via ValidationParameter in getAutoWiredParameters()
+    // (AutoWire Parameter, not a PHP attribute) — see bitrix-validation.
     $result = $this->postService->create($request);
 
     if (!$result->isSuccess())

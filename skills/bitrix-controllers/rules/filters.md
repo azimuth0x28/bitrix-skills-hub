@@ -17,8 +17,48 @@ Predefined filters:
 - `ActionFilter\ContentType(['application/json'])` — allowed `Content-Type`.
 - `ActionFilter\Scope($scope)` — restricts call to a specific scope (ajax/rest/cli).
 - `ActionFilter\Cors` — CORS headers for cross-origin AJAX.
+- `ActionFilter\AccessCheck` / `#[ActionAccess]` — module ACL via `AccessibleController` (see below).
+- `ActionFilter\Token` — signed entity token in request headers (`X-Bitrix-Sign-Entity` / `X-Bitrix-Sign-Token` via `ActionFilter\Service\Token`). Niche; prefer CSRF + rights for ordinary AJAX.
 
 If a built-in filter is missing, write a custom `ActionFilter\Base` — do not copy-paste checks into every action.
+
+## `#[ActionAccess]` (module ACL)
+
+When the module already has an `access` controller (`Bitrix\Main\Access\AccessibleController` / `BaseAccessController`), check the action with `#[ActionAccess]` instead of a hand-rolled rights filter.
+
+The controller **must** implement `Bitrix\Main\Engine\Contract\AccessCheckControllerInterface` and return the access controller from `getAccessController()`. Otherwise `AccessCheck` throws `SystemException`.
+
+Default strategy is `ItemIdFromRequestStrategy`: it reads a request key (default `id`) and calls `checkByItemId($action, $itemId)`. Override the key with `strategyArgs`.
+
+```php
+use Bitrix\Main\Access\AccessibleController;
+use Bitrix\Main\Engine\ActionFilter\Access\ItemIdFromRequestStrategy;
+use Bitrix\Main\Engine\ActionFilter\Attribute\Access\ActionAccess;
+use Bitrix\Main\Engine\Contract\AccessCheckControllerInterface;
+use Bitrix\Main\Engine\CurrentUser;
+
+final class Post extends Controller implements AccessCheckControllerInterface
+{
+    public function getAccessController(): AccessibleController
+    {
+        return PostAccessController::getInstance((int)CurrentUser::get()->getId());
+    }
+
+    #[ActionAccess(
+        action: PostActionDictionary::VIEW, // string or UnitEnum (BackedEnum → value, else → name)
+        strategy: ItemIdFromRequestStrategy::class,
+        strategyArgs: ['itemIdRequestKey' => 'id'],
+    )]
+    public function getAction(int $id, PostService $postService): array
+    {
+        // ...
+    }
+}
+```
+
+`#[ActionAccess]` does **not** set HTTP 403 by default (`setHttpStatus` is only on `AccessCheck` itself, default `false`). The action is rejected with an engine error; set status yourself in a custom strategy/`AccessCheck` if the HTTP code matters.
+
+Custom strategies implement `AccessCheckStrategyInterface::create()` + `check()`. Do not use `#[ActionAccess]` unless the module actually has an access controller — for simple auth keep `Authentication` / a small `ActionFilter\Base`.
 
 ## PHP 8 Attribute Filters (preferred)
 

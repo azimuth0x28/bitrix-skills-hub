@@ -28,7 +28,7 @@ Each section:
 
 | Scope | Typical sections | Behavior |
 | --- | --- | --- |
-| **Global** (`/local/.settings.php`) | `connections`, `cache`, `cache_flags`, `session`, `cookies`, `crypto`, `exception_handling`, `routing`, `messenger`, `loggers`, `composer`, `http_client_options`, `pull`, `smtp`, `default_language`, `rest` | Loaded as kernel `Configuration` |
+| **Global** (`/local/.settings.php`) | `connections`, `cache`, `cache_flags`, `session`, `cookies`, `crypto`, `exception_handling`, `routing`, `messenger`, `loggers`, `composer`, `http_client_options`, `pull`, `smtp`, `ui`, `default_language`, `rest` | Loaded as kernel `Configuration` |
 | **Module** (`/local/modules/<id>/.settings.php`) | `controllers`, `services`, `console` (`commands` key — not `cli`) | On `Loader::includeModule`, **`services`** are registered into ServiceLocator. Other module sections are not a full merge into global config |
 
 **Routing is global-only:** the router loads files listed in global `routing.config` from `/local/routes/` and `/bitrix/routes/` only. Module route files must be `require`d from `/local/routes/web.php` — a module `.settings.php` `routing` section does **not** auto-load them.
@@ -56,7 +56,8 @@ There is **no** `validation` section in `.settings.php`. Use `ValidationService`
 | `console` | CLI commands (`commands` => FQCN list) |
 | `composer` | Path to `composer.json` |
 | `pull` | Push/pull server settings |
-| `smtp` | Mail transport |
+| `smtp` | Mail via SMTP (see section below) |
+| `ui` | UI extension flags (currently `a11y.restoreLostFocus`, `a11y.useFocusTrapInDialogs`) |
 | `default_language` | Default language code |
 
 ## exception_handling
@@ -94,6 +95,49 @@ Keys applied in `Application::initializeExceptionHandler()` (verified):
 ],
 ```
 
+## smtp (mail via SMTP)
+
+**Since main 21.900.0.** Two roles of the `smtp` section:
+
+**1. Enable local SMTP connections.** Per-sender SMTP connections are created in Admin → *Settings → Product settings → Mail and SMS events → SMTP settings*, but they are used for sending **only** if the `smtp` section with `enabled => true` exists in `.settings.php` — `enabled` is mandatory and checked strictly (`=== true`, boolean, not `'Y'`/`1`).
+
+```php
+'smtp' => [
+    'value' => [
+        'enabled' => true,  // required — without it admin-created SMTP connections are ignored
+        'debug' => true,    // optional: log SMTP dialogue
+        'log_file' => '/home/bitrix/www/bitrix/mailer.log', // optional (BitrixVM example path)
+    ],
+    'readonly' => true,
+],
+```
+
+**2. Default SMTP server** — add connection parameters to the same section:
+
+```php
+'smtp' => [
+    'value' => [
+        'enabled' => true,
+        'host' => 'smtp.host.domain',
+        'port' => 465,
+        'login' => 'user',
+        'password' => 'password',
+        'from' => 'user@example.com',   // sender address
+        'connection_timeout' => 10,     // seconds
+        'encryption_type' => 'smtps',   // SMTPS for port 465, STARTTLS for other ports
+        'debug' => true,                // optional
+        'logFile' => '/home/bitrix/www/bitrix/mailer.log', // optional
+    ],
+    'readonly' => true,
+],
+```
+
+- **`log_file` vs `logFile`** (kernel `Smtp\Mailer::getActualConfiguration`): when a per-sender SMTP connection is used (role 1), the kernel reads `log_file` from the section; when the section itself is the default server (role 2), the raw section array is used and the key read is `logFile`. Set the matching key for your case (or both). If omitted, the log goes to `mailer.log` in `DOCUMENT_ROOT`; `debug` is the same key in both cases.
+- The default server (role 2) is used only when both `host` and `login` are filled; `port` defaults to 465, `connection_timeout` to 30 s.
+- `encryption_type`: `'smtps'` (lowercase) — kernel picks SMTPS on port 465, STARTTLS on other ports; `'smtp'` = no encryption. There is no separate `'starttls'` value.
+- Extra key `force_from => true` — rewrite the `From:` header of every message with the section's `from`.
+- Use encryption with a **valid CA-signed certificate** matching the server name — a self-signed certificate fails TLS verification.
+
 ## cookies / http_client_options / cache_flags (examples)
 
 ```php
@@ -118,6 +162,16 @@ Keys applied in `Application::initializeExceptionHandler()` (verified):
     'value' => [
         'config_options' => 3600,
         // ORM: "b_tablename_max_ttl" / "b_tablename_min_ttl" (see Entity::getCacheTtl)
+    ],
+    'readonly' => false,
+],
+
+'ui' => [
+    'value' => [
+        'a11y' => [
+            'restoreLostFocus' => false,
+            'useFocusTrapInDialogs' => false,
+        ],
     ],
     'readonly' => false,
 ],

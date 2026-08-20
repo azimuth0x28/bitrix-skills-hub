@@ -95,7 +95,7 @@ Action parameters are collected by the engine in the following order:
 1. **Scalar types** (`int`, `string`, `bool`, `float`, `array`) → from `GET`/`POST`/`FILES`.
 2. **Service objects** → from `ServiceLocator` by name/type.
 3. **`HttpRequest`, `Session`, `CurrentUser`** → from context.
-4. **Request DTO** with `#[Bitrix\Main\Validation\Engine\ValidationParameter]` → mapping + validation (see `bitrix-validation`).
+4. **Request DTO** via `Bitrix\Main\Validation\Engine\AutoWire\ValidationParameter` in `getAutoWiredParameters()` → mapping + validation (see `bitrix-validation`). This is an AutoWire `Parameter` subclass, **not** a PHP attribute.
 5. **ORM objects**, if the action accepts `EntityObject` — loaded by `id`.
 
 Missing mandatory parameter → automatic error.

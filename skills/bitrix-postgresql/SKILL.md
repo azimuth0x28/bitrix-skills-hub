@@ -27,11 +27,12 @@ Baseline: **main 23.0+**. Supported in **Enterprise for PostgreSQL** licenses (B
 
 ## Before Migration
 
-1. Obtain Enterprise for PostgreSQL license (test key available for 6 months).
-2. Update **Performance Monitor** module to 24.0.0+.
-3. Project must use UTF-8 encoding.
-4. Close site to visitors during migration.
-5. Test on staging first — **return to MySQL after production PostgreSQL launch requires manual work**.
+1. Check that the **current** license stays valid through the whole test period (up to 6 months) and the final switch — renew it first if it expires earlier.
+2. Obtain Enterprise for PostgreSQL license. It provides a coupon (activate it only **after** migration testing) and a test key for a separate test install; testing window is max 6 months from purchase. During testing the production site keeps running on MySQL under the current license — the test key is for the test environment only.
+3. Update **Performance Monitor** module to 24.0.0+.
+4. Project must use UTF-8 encoding.
+5. Close site to visitors during migration.
+6. Test on staging first — **return to MySQL after production PostgreSQL launch requires manual work**.
 
 ## Module Compatibility
 

@@ -34,7 +34,7 @@ $files = $request->getFileList();
 ```
 
 - `$request['x']` returns a value processed by system filters (proactive). This **does not** protect against SQL injections/XSS — escape yourself.
-- For typed input, Request-DTO + `#[ValidationParameter]` is preferred (see `bitrix-validation`).
+- For typed input, a Request DTO wired with `ValidationParameter` in `getAutoWiredParameters()` is preferred (see `bitrix-validation`). It is an AutoWire rule, not a parameter attribute.
 
 ### JSON body
 

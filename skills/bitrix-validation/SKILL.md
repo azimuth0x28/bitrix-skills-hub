@@ -1,6 +1,6 @@
 ---
 name: bitrix-validation
-description: "Covers input data validation in Bitrix — ValidationService (main.validation.service), attributes #[NotEmpty], #[Email], #[Length], #[Range], #[RegExp], #[InArray], Request DTO with #[ValidationParameter], custom validators via AbstractPropertyValidationAttribute + ValidatorInterface, aggregation of errors in ErrorCollection. Applied when checking input of controllers, services and CLI commands, validation of forms, DTO and action method parameters. Key terms — ValidationService, NotEmpty, Email, Length, ValidationParameter, Request DTO, validator, constraint."
+description: "Covers input data validation in Bitrix — ValidationService (main.validation.service), attributes #[NotEmpty], #[Email], #[Length], #[Range], #[RegExp], #[InArray], Request DTO via ValidationParameter autowire, rule attributes on controller action parameters, custom validators via AbstractPropertyValidationAttribute + ValidatorInterface, aggregation of errors in ErrorCollection. Applied when checking input of controllers, services and CLI commands, validation of forms, DTO and action method parameters. Key terms — ValidationService, NotEmpty, Email, Length, ValidationParameter, Request DTO, validator, constraint."
 ---
 
 # Validation in Bitrix
@@ -13,20 +13,23 @@ Service id in `ServiceLocator`: **`main.validation.service`** (kernel registrati
 
 | Attribute | What it checks |
 | --- | --- |
-| `#[NotEmpty]` | Not empty (`!empty`) |
+| `#[NotEmpty]` | Not empty (`!empty`); options `allowZero`, `allowSpaces` |
 | `#[Length(min, max)]` | String length |
 | `#[Min(n)]` / `#[Max(n)]` / `#[Range(min, max)]` | Numeric constraints |
-| `#[PositiveNumber]` | Number > 0 |
-| `#[Email]` / `#[Phone]` / `#[PhoneOrEmail]` | Format |
-| `#[Url]` | URL (with optional schemes) |
-| `#[RegExp('/pattern/')]` | Regular expression (attribute name is **`RegExp`**, not `Regex`) |
-| `#[InArray($validValues)]` | Value is one of the allowed list items |
+| `#[PositiveNumber]` | Numeric value >= 1 (internally `MinValidator(1)`, so `0.5` fails) |
+| `#[Email]` / `#[Phone]` / `#[PhoneOrEmail]` | Format; `Email` options: `strict`, `domainCheck` (passed to `check_email()`) |
+| `#[Url]` | URL (no options besides `errorMessage`) |
+| `#[RegExp('/pattern/')]` | Regular expression (attribute name is **`RegExp`**, not `Regex`); options `flags`, `offset` are passed to `preg_match()` |
+| `#[InArray($validValues)]` | Value is one of the allowed list items; options `strict` (strict `in_array`), `showValues` (list allowed values in the error) |
 | `#[Json]` | String is valid JSON |
-| `#[Validatable]` | Recursively validate nested object |
-| `#[ElementsType(Type::class)]` | Type of collection/array elements |
+| `#[Validatable]` | Recursively validate nested object; `iterable: true` validates each element of an array of objects |
+| `#[ElementsType(...)]` | Type of array elements: `className: Dto::class` or a `Type` enum case (`Bitrix\Main\Validation\Rule\Enum\Type::Integer` / `String` / `Float` / `Numeric`; `Numeric` = anything `is_numeric()`, incl. numeric strings) |
 | `#[AtLeastOnePropertyNotEmpty(['name', 'email'])]` | At least one of the fields is filled (on class) |
+| `#[OnlyOneOfPropertyRequired(['name', 'email'])]` | Exactly one of the listed fields is filled (on class) |
 
-Each attribute accepts an optional **`errorMessage`** for a custom error text (not `message`).
+Each attribute accepts an optional **`errorMessage`** for a custom error text (not `message`). For localized texts pass a `Bitrix\Main\Localization\LocalizableMessage('PHRASE_CODE', phraseSrcFile: __FILE__)` instead of a string — the phrase is defined in the matching `lang/<code>/` file (`phraseSrcFile` is optional: when omitted it is guessed from the backtrace). Every rule also accepts `groups: [...]`; `ValidationService::validate($object, $group)` then runs rules of that group plus all ungrouped rules; without a group everything runs.
+
+Nullable handling: an **uninitialized** nullable property is skipped by validation; an uninitialized **non-nullable** property produces an error (`MAIN_VALIDATION_EMPTY_PROPERTY`); a property explicitly assigned `null` counts as initialized and `null` is passed to its validators.
 
 ## DTO with Attributes
 
@@ -83,10 +86,10 @@ final class UserService
         {
             foreach ($validation->getErrors() as $error)
             {
+                // getCode() holds the property path: 'email', 'items.0.name'
                 $result->addError(new \Bitrix\Main\Error(
                     $error->getMessage(),
                     $error->getCode(),
-                    ['field' => $error->getField()],
                 ));
             }
             return $result;
@@ -100,21 +103,46 @@ final class UserService
 
 Or inject via `constructorParams` / factory when registering the service, still resolving `'main.validation.service'`.
 
-## Request DTO in Controller (`#[ValidationParameter]`)
+## Scalar Action Parameters
 
-The controller engine can automatically create a DTO from `GET`/`POST` and validate it.
+Rule attributes can be placed directly on controller action parameters — argument binding validates the value **before** the action is called:
 
 ```php
 use Bitrix\Main\Engine\Controller;
-use Bitrix\Main\Validation\Engine\ValidationParameter;
+use Bitrix\Main\Validation\Rule\PositiveNumber;
+
+final class User extends Controller
+{
+    public function getAction(#[PositiveNumber] int $id): array
+    {
+        return ['id' => $id];
+    }
+}
+```
+
+## Request DTO in Controller (`ValidationParameter` autowire)
+
+For a set of related values create a DTO and register it via `getAutoWiredParameters()` with `Bitrix\Main\Validation\Engine\AutoWire\ValidationParameter` (an AutoWire rule, **not** a parameter attribute). It builds the DTO through the given factory and validates it before it reaches the action; on validation errors the action is not called and the controller returns the errors.
+
+```php
+use Bitrix\Main\Engine\Controller;
+use Bitrix\Main\Validation\Engine\AutoWire\ValidationParameter;
 use Vendor\Module\Application\Service\PostService;
 
 final class Post extends Controller
 {
-    public function createAction(
-        #[ValidationParameter] CreatePostRequest $request,
-        PostService $postService,
-    ): array {
+    public function getAutoWiredParameters(): array
+    {
+        return [
+            new ValidationParameter(
+                CreatePostRequest::class,
+                fn () => CreatePostRequest::createFromRequest($this->getRequest()),
+            ),
+        ];
+    }
+
+    public function createAction(CreatePostRequest $request, PostService $postService): array
+    {
         // We only get here if validation was successful.
         // Otherwise, the controller will return errors automatically.
         $result = $postService->create($request);
@@ -140,12 +168,22 @@ final class CreatePostRequest
 {
     public function __construct(
         #[NotEmpty, Length(min: 1, max: 255)]
-        public readonly string $title,
+        public readonly ?string $title = null,
 
         public readonly ?string $body = null,
     ) {}
+
+    public static function createFromRequest(\Bitrix\Main\Request $request): self
+    {
+        return new self(
+            $request->get('title'),
+            $request->get('body'),
+        );
+    }
 }
 ```
+
+Keep DTO properties nullable with `null` defaults so construction from a raw request never fails — the rules (`NotEmpty`, etc.) report missing values instead.
 
 Generation: `php bitrix/bitrix.php make:request CreatePost -m vendor.blog --fields=title,body` (**Since main 25.900**).
 
@@ -167,7 +205,7 @@ final readonly class ContactRequest
 ## Collections
 
 ```php
-use Bitrix\Main\Validation\Rule\Validatable;
+use Bitrix\Main\Validation\Rule\Recursive\Validatable;
 use Bitrix\Main\Validation\Rule\ElementsType;
 
 final class OrderDto
@@ -175,8 +213,8 @@ final class OrderDto
     /**
      * @var OrderItemDto[]
      */
-    #[Validatable]
-    #[ElementsType(OrderItemDto::class)]
+    #[ElementsType(className: OrderItemDto::class)]
+    #[Validatable(iterable: true)]
     public array $items = [];
 }
 ```
@@ -193,40 +231,41 @@ There is **no** `.settings.php` `validation` section. Custom rules are PHP attri
     namespace Vendor\Module\Validation\Rule;
 
     use Attribute;
+    use Bitrix\Main\Localization\LocalizableMessageInterface;
     use Bitrix\Main\Validation\Rule\AbstractPropertyValidationAttribute;
     use Bitrix\Main\Validation\Validator\ValidatorInterface;
     use Bitrix\Main\Validation\ValidationResult;
     use Bitrix\Main\Validation\ValidationError;
 
-    #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER | Attribute::IS_REPEATABLE)]
+    #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER)]
     final class EvenNumber extends AbstractPropertyValidationAttribute
     {
         public function __construct(
-            protected ?string $errorMessage = null,
+            // type must match the inherited trait property exactly
+            protected string|LocalizableMessageInterface|null $errorMessage = null,
         ) {}
 
         protected function getValidators(): array
         {
+            // $this->errorMessage is applied automatically by the base class
+            // (replaceWithCustomError from ValidationErrorTrait)
             return [
-                new EvenNumberValidator($this->errorMessage),
+                new EvenNumberValidator(),
             ];
         }
     }
 
     final class EvenNumberValidator implements ValidatorInterface
     {
-        public function __construct(
-            private readonly ?string $errorMessage = null,
-        ) {}
-
         public function validate(mixed $value): ValidationResult
         {
             $result = new ValidationResult();
             if (!is_int($value) || $value % 2 !== 0)
             {
                 $result->addError(new ValidationError(
-                    $this->errorMessage ?? 'Number must be even',
-                    'EVEN_NUMBER',
+                    'Number must be even',
+                    'EVEN_NUMBER', // the property path is prepended later: 'age.EVEN_NUMBER'
+                    failedValidator: $this,
                 ));
             }
 
@@ -244,20 +283,25 @@ There is **no** `.settings.php` `validation` section. Custom rules are PHP attri
 
 `ValidatorInterface::validate(mixed $value): ValidationResult` — **no** `Rule` parameter.
 
+In attributes extending the abstract classes, `$errorMessage` **must** be typed `string|LocalizableMessageInterface|null` — the base `ValidationErrorTrait` declares the property with exactly this type, and PHP property types are invariant (a narrower `?string` is a fatal error). Class attributes (checks across several properties) extend `AbstractClassValidationAttribute` / implement `ClassValidationAttributeInterface::validateObject(object $object)`.
+
 ## Retrieving Validation Result
 
-The `ValidationResult` object contains a list of `ValidationError`. Each error has:
+`ValidationResult` extends `Bitrix\Main\Result` and contains `ValidationError` objects (extend `Bitrix\Main\Error`). Each error has:
 - `getMessage()`: localized message.
-- `getCode()`: error code (e.g., `NOT_EMPTY`).
-- `getField()`: property name that failed validation.
+- `getCode()`: **property path** that failed — the service prefixes the property name (and array index for iterables), e.g. `email`, `items.0.name`; a code set inside a validator is appended after a dot (`age.EVEN_NUMBER`).
+- `getFailedValidator()`: the `ValidatorInterface` instance that produced the error (or `null`).
+
+There is **no** `getField()` method — the field name lives in the code.
 
 ## Checklist
 
 - [ ] Validation is handled via PHP 8 attributes.
 - [ ] DTOs are used for complex input structures.
-- [ ] `#[ValidationParameter]` is used in controllers to automate DTO creation and validation.
+- [ ] Request DTOs are wired via `ValidationParameter` in `getAutoWiredParameters()`; scalar action params carry rule attributes directly.
+- [ ] DTO properties are nullable with `null` defaults; remember: uninitialized nullable props are skipped, explicit `null` is validated.
 - [ ] Custom rules extend `AbstractPropertyValidationAttribute` and implement `getValidators()` — no `.settings.php` `validation` section.
 - [ ] Attribute names use `RegExp` / `errorMessage` (not `Regex` / `message`).
 - [ ] `ValidationService` is retrieved as `main.validation.service`.
 - [ ] Error messages are localized or descriptive.
-- [ ] Collections are validated recursively using `#[Validatable]` and `#[ElementsType]`.
+- [ ] Collections of DTOs are validated with `#[ElementsType(className: ...)]` + `#[Validatable(iterable: true)]`.

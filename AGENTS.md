@@ -13,7 +13,7 @@ Upstream sync (optional): `npx skills add bxmaximum/bitrix-framework-skills --al
 ## Version policy
 
 - **Baseline:** main **23.0+** (default patterns).
-- **Verified against:** main **26.150.0** in this repository.
+- **Verified against:** main **26.650.100** in this repository.
 - Newer features: mark **`Since main X.Y`** and document fallback for older projects.
 
 | Feature | Since |
@@ -54,15 +54,6 @@ Upstream sync (optional): `npx skills add bxmaximum/bitrix-framework-skills --al
 - Controllers: prefer PHP 8 filter **attributes**; `configureActions()` for compatibility.
 
 Details: skills `bitrix-project-structure`, `bitrix-routing`, `bitrix-settings`, `bitrix-controllers`.
-
-### Optional: sprint.migration
-
-Schema/content Version-migrations use Marketplace module **`sprint.migration`** (free: [marketplace](https://marketplace.1c-bitrix.ru/solutions/sprint.migration/)). It is **not** on every project.
-
-Before creating or applying migrations:
-
-1. Confirm the module exists (`/local/modules/sprint.migration/` or `/bitrix/modules/sprint.migration/`) and `Loader::includeModule('sprint.migration')` succeeds.
-2. If missing — **do not** invent a custom migration framework; propose installing `sprint.migration`, then use skill `bitrix-sprint-migration`.
 
 ## Pre-Submit Checklist
 
@@ -120,10 +111,9 @@ Open the skill for the task. If it has `rules/`, read **only** matching rule fil
 | Option / Persistent storage | `bitrix-storage` |
 | Extensions / UI / Vue | `bitrix-extensions`, `bitrix-ui`, `bitrix-vue` |
 | CMS basics | `bitrix-cms-basics` |
-| Migrations (`sprint.migration`, optional) | `bitrix-sprint-migration` |
 
 ## Environment
 
-- Bitrix main **23.0+** (baseline); verified **26.150.0**.
+- Bitrix main **23.0+** (baseline); verified **26.650.100**.
 - PHP **8.2+**. Composer required for `bitrix.php` / generators.
 - DB: MySQL/MariaDB default; PostgreSQL via `PgsqlConnection` (check module compatibility).

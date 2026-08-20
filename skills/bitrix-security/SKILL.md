@@ -39,6 +39,7 @@ Read `rules/jwt-crypto-access.md` (`JWT, crypto, access, cookies`) when the task
 
 - JWT / JWK
 - Access Rights
+- `#[ActionAccess]` / `AccessCheckControllerInterface`
 - Secure Cookies
 - Value Encryption
 - Miscellaneous

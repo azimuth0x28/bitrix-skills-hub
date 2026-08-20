@@ -151,7 +151,7 @@ Module config (`/local/modules/vendor.module/.settings.php`) — module-specific
             'vendor_module_queue' => [
                 'handler' => \Vendor\Module\Internals\Messenger\Receiver\SendWelcomeEmailHandler::class,
                 'limit' => 10,                    // messages per batch (default 50)
-                'total_processing_limit' => 50,     // max concurrent (must be >= limit)
+                'total_processing_limit' => 50,     // max concurrent, default 100; must be >= limit (else ArgumentOutOfRangeException at consume)
                 'retry_strategy' => [
                     'max_retries' => 3,
                     'delay' => 5,
@@ -171,6 +171,7 @@ Notes:
 - Put queues in the module `.settings.php` they belong to; global config only for cross-module queues.
 - Custom broker table: extend `MessengerMessageTable`, register in `brokers`, create table in module installer.
 - Queue `handler` FQCN must also exist under module `services` (see above).
+- `limit` default **50**, `total_processing_limit` default **100**. Consume throws `ArgumentOutOfRangeException` if `limit > total_processing_limit`.
 
 ### 5. Consumer (CLI mode)
 
@@ -184,6 +185,8 @@ php bitrix/bitrix.php messenger:consume vendor_module_queue \
 Flags:
 - `-t, --time-limit` — process lifetime in seconds.
 - `--sleep` — pause between iterations when queue is empty (default 1).
+
+Queue names are separate CLI arguments (`messenger:consume q1 q2`), not a comma-separated string. There is **no** `--limit` option in main 26.650.100 (it is commented out in `ConsumeMessagesCommand`); set `limit` / `total_processing_limit` on the queue in `.settings.php`.
 
 For production with heavy queues, prefer `cli` mode with a supervisor over `web` mode.
 
