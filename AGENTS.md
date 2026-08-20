@@ -55,6 +55,15 @@ Upstream sync (optional): `npx skills add bxmaximum/bitrix-framework-skills --al
 
 Details: skills `bitrix-project-structure`, `bitrix-routing`, `bitrix-settings`, `bitrix-controllers`.
 
+### Optional: sprint.migration
+
+Schema/content Version-migrations use Marketplace module **`sprint.migration`** (free: [marketplace](https://marketplace.1c-bitrix.ru/solutions/sprint.migration/)). It is **not** on every project.
+
+Before creating or applying migrations:
+
+1. Confirm the module exists (`/local/modules/sprint.migration/` or `/bitrix/modules/sprint.migration/`) and `Loader::includeModule('sprint.migration')` succeeds.
+2. If missing — **do not** invent a custom migration framework; propose installing `sprint.migration`, then use skill `bitrix-sprint-migration`.
+
 ## Pre-Submit Checklist
 
 1. Code in `/local/`, not `/bitrix/`.
@@ -111,6 +120,7 @@ Open the skill for the task. If it has `rules/`, read **only** matching rule fil
 | Option / Persistent storage | `bitrix-storage` |
 | Extensions / UI / Vue | `bitrix-extensions`, `bitrix-ui`, `bitrix-vue` |
 | CMS basics | `bitrix-cms-basics` |
+| Migrations (`sprint.migration`, optional) | `bitrix-sprint-migration` |
 
 ## Environment
 
