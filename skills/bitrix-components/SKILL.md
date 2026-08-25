@@ -1,6 +1,6 @@
 ---
 name: bitrix-components
-description: Bitrix components: class.php, templates, cache, SEF, Controllerable AJAX. Use when building or editing components.
+description: "Bitrix components: class.php, templates, cache, SEF, Controllerable AJAX. Use when building or editing components."
 ---
 
 # Bitrix Components
