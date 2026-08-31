@@ -1,19 +1,19 @@
 ---
 name: bitrix-skill-creator
-description: Covers house conventions for authoring Bitrix Framework skills in this repository — morphology choice (router vs monolith), router template, frontmatter description templates, baseline/Since versioning, mandatory content layers (API-choice matrix, kernel-fact precision, negative knowledge, code standards, prohibition placement), final checklists, cross-linking, kernel verification, and the quality bar with the line-density metric. Applied when creating or editing a skill under skills/, reviewing a skill draft for house-style compliance, or adapting Bitrix documentation into a skill. Key terms — SKILL.md, rules/, progressive disclosure, router, baseline, Since, API matrix, negative knowledge, checklist, antipatterns, house style, density.
+description: Covers house conventions for authoring skills — morphology (router vs monolith), frontmatter templates, baseline/Since versioning, mandatory content layers, negative knowledge, cross-linking, kernel verification, line-density quality bar. Applied when creating, editing, or reviewing a skill for house-style compliance. Key terms — SKILL.md, rules/, router, baseline, Since, API matrix, density.
 ---
 
 # Bitrix Skill Authoring Conventions
 
-House rules for skills in this repository. The generic skill-creator owns the process (draft, test prompts, eval loop, description optimization); this file defines the product spec a finished Bitrix skill must satisfy. It does not explain what skills are.
+House rules for skills in this repository. The generic skill-creator owns the process (draft, test prompts, eval loop, description optimization) — its canonical source is [anthropics/skills › skill-creator](https://github.com/anthropics/skills/tree/main/skills/skill-creator); this file refines it with the product spec a finished Bitrix skill must satisfy. It does not explain what skills are.
 
-Goal: an agent following only this spec plus `AGENTS.md` must produce a skill at the quality of the existing collection — structure, precision, and density included.
+Goal: an agent following only this spec must produce a skill at the quality of the existing collection — structure, precision, and density included.
 
 | Concern | Owner |
 | --- | --- |
 | Draft → test → eval loop, packaging, description optimization | System skill-creator |
 | Structure, content layers, style, quality bar of a Bitrix skill | This skill |
-| Agent canons: DI boundaries, `/local/`, security, version policy | `AGENTS.md` — skills reference them, never repeat them |
+| Agent canons: DI boundaries, `/local/`, security, version policy | Project rulebooks — skills reference them, never repeat them |
 
 A skill lives at `skills/<name>/SKILL.md` (+ optional `rules/*.md`); `name` equals the folder name.
 
@@ -66,14 +66,14 @@ Read `rules/<file>.md` (`<Short Title>`) when the task involves:
 ## Checklist
 
 - [ ] Opened only the rule file(s) needed for this task.
-- [ ] Followed DI / `/local/` / security canons from `AGENTS.md`.
+- [ ] Followed DI / `/local/` / security canons.
 ```
 
 Router invariants:
 
 - Bullets under "When to read" are the H2 titles of that rules file, word for word — the agent routes by matching wording.
 - The parenthetical after the path repeats the rules file's H1.
-- The checklist is meta-only (discipline + AGENTS.md canons), never domain content.
+- The checklist is meta-only (discipline + canons), never domain content.
 - Rules files carry no frontmatter; H1 = the short title quoted in the router.
 
 ## 3. Frontmatter
@@ -95,6 +95,8 @@ Router:
 
 Rules: English only; concrete identifiers as key terms (they are what a user prompt matches); if the description contains `#` or `[` (attribute names like `#[NotEmpty]`), quote the whole value.
 
+Length: **soft limit 400 characters** — at 400+, trim before hand-off (drop redundant key terms, merge subtopics); **hard limit 500** — a draft over it fails review. The agent-skills spec allows 1024; this collection stays deliberately tighter.
+
 ## 4. Baseline and versioning
 
 - First line under the H1: `Baseline: **main 23.0+**. Features newer than baseline are marked **Since**.`
@@ -102,6 +104,8 @@ Rules: English only; concrete identifiers as key terms (they are what a user pro
 - Module-specific versions go inline too (`ui module 22.100+`).
 - Never invent version numbers. If unverifiable, omit the marker and write "verify in your kernel".
 - **Project-local module** (`local/modules/<vendor>.<module>/`): the version anchor is the module's own `install/version.php` (`$arModuleVersion['VERSION']`) plus its changelog; kernel markers (`main 23.0+`, `Since main X.Y`) do not apply — state the module version the skill was verified against instead.
+
+Semantics — every `main X.Y` marker is a dependency claim: it names the `main` module version from which the described functionality becomes available (`Baseline: **main 23.0+**` = minimum; `**Since main 25.900.**` = newer than baseline). Pre-check when applying a skill to a project: compare the project's `main` module version (its `install/version.php`) against the markers — below a marker the API may be missing or different, so use the fallback advice the skill carries.
 
 ## 5. Mandatory content layers (monolith)
 
@@ -124,7 +128,7 @@ Final `## Checklist` with `- [ ]` items that are verifiable completion criteria,
 
 - Inline references at topic boundaries: "see skill `bitrix-performance`".
 - Optional `## Related skills` section at the end (deep domains like sale).
-- Exact skill names in backticks; never invent names outside the AGENTS.md index.
+- Exact skill names in backticks; never invent names — cross-link only existing skills.
 
 ## 8. Style
 
@@ -157,15 +161,27 @@ A draft is accepted when all of the following hold. These are the criteria for c
 | Q6 | Safety | Bold prohibitions at the error site; all echoed in the checklist |
 | Q7 | Checklist | Verifiable items incl. negative ones; 6–11 for a monolith |
 | Q8 | Density (efficiency) | Lines of skill per knowledge point. A **knowledge point** = one discrete actionable item: an API pattern/recipe, a table row, an option default, a prohibition, a negative fact. The shipped collection measures ~4.5–5 lines per point; a draft must match or beat the reference density (fewer lines per point = better). A draft may not exceed 1.2× the reference line count unless it covers measurably more points |
-| Q9 | Consistency | Cross-links use exact sibling names; AGENTS.md canons referenced, never duplicated; English imperative style throughout |
+| Q9 | Consistency | Cross-links use exact sibling names; canons referenced, never duplicated; English imperative style throughout |
 | Q10 | Generation time | Wall-clock for the authoring pass; faster is better at equal quality; targeted verification per §9 keeps it within minutes |
 
 Counting rule for Q8: count knowledge points as you write; if a section spends more lines than the points it delivers, compress it into a table or a bullet list. Blank lines and code examples count toward lines; code inside examples delivers points only when it teaches a pattern beyond boilerplate. The budget applies per file: every `rules/*.md` stays within its 45–135 line budget — when a file overruns, merge adjacent examples, trim table columns, or split the file before widening it.
 
+## Validation after authoring
+
+A finished draft must pass the format check before hand-off — run it even if the `skill-validator` skill is unavailable. The instruction below is self-contained: the script is fetched straight from the canonical repo of the base skill this file refines, so a missing system skill-creator blocks nothing.
+
+```bash
+uv run --with pyyaml https://raw.githubusercontent.com/anthropics/skills/main/skills/skill-creator/scripts/quick_validate.py skills/<name>/
+```
+
+Exit code 0 = pass. The script enforces the agent-skills spec: `SKILL.md` present, valid YAML frontmatter, allowed frontmatter keys only, `name` kebab-case ≤64 chars, `description` ≤1024 chars without angle brackets. Fix every reported error at the source and re-run until clean — never bypass or weaken a check. The full mechanical gate (format + security scan) is packaged as the `skill-validator` skill.
+
 ## Pre-submit checklist for the skill author
 
 - [ ] `name` = folder name; description matches the template and carries key terms.
+- [ ] Description length: soft ≤400 chars, hard ≤500 chars.
 - [ ] Line count within budget after the reconciliation pass (cut, never pad).
+- [ ] Format check passes on the final draft ("Validation after authoring"): exit code 0, errors fixed at the source.
 - [ ] Morphology matches the decision rule; sizes within budget.
 - [ ] Baseline line present; `Since` markers only where verified, with fallback advice.
 - [ ] API-choice matrix present where multiple API layers exist.
@@ -175,7 +191,7 @@ Counting rule for Q8: count knowledge points as you write; if a section spends m
 - [ ] Prohibitions bold at the error site and echoed in the checklist.
 - [ ] Final checklist has verifiable items incl. negatives; router checklists stay meta-only.
 - [ ] Router bullets = rules-file H2 titles verbatim (router morphology).
-- [ ] Cross-links use exact skill names from the AGENTS.md index.
-- [ ] AGENTS.md canons referenced, never duplicated.
+- [ ] Cross-links use exact names of existing collection skills.
+- [ ] Canons referenced, never duplicated.
 - [ ] Density checked: ≤ reference density (~4.5–5 lines per knowledge point); line count within budget.
 - [ ] English, imperative, tables, no marketing or product definitions.
