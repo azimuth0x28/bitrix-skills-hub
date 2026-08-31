@@ -44,7 +44,7 @@ After installation the skills land in `.agents/skills/` of the target project. T
 
 ## The catalog
 
-41 skills covering D7 core topics and adjacent areas. Each one is a self-contained reference an agent can apply immediately.
+42 skills covering D7 core topics and adjacent areas. Each one is a self-contained reference an agent can apply immediately.
 
 | Area | Skill |
 | --- | --- |
@@ -90,12 +90,13 @@ After installation the skills land in `.agents/skills/` of the target project. T
 
 ### Meta-skills
 
-Skills about the skills themselves: authoring conventions and quality control.
+Skills about the skills themselves: authoring conventions, quality control, and mechanical validation.
 
 | Task | Skill |
 | --- | --- |
 | Creating and refactoring skills following repo conventions | `bitrix-skill-creator` |
 | Quality evaluation before acceptance: blind test, Q1–Q10 rubric | `bitrix-skill-eval` |
+| Mechanical pre-PR validation of a skill folder: format + security | `skill-validator` |
 
 ## Skill anatomy
 
@@ -109,7 +110,7 @@ Fat skills use progressive disclosure: the agent opens `SKILL.md` first, then on
 
 ## Adding your own
 
-Author a new skill through `bitrix-skill-creator`: it knows the repo conventions — structure, frontmatter, mandatory content layers, checklists. Run the finished draft through `bitrix-skill-eval`: the blind test and the Q1–Q10 rubric filter out weak skills before they enter the catalog.
+Author a new skill through `bitrix-skill-creator`: it knows the repo conventions — structure, frontmatter, mandatory content layers, checklists. Run the finished draft through `skill-validator` (format + security) and `bitrix-skill-eval`: the blind test and the Q1–Q10 rubric filter out weak skills before they enter the catalog.
 
 ## Links
 
