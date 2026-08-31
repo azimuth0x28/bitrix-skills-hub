@@ -1,6 +1,6 @@
 ---
 name: bitrix-sessions
-description: Covers Bitrix sessions — Application::getSession(), getKernelSession(), getLocalSession(), BX_SECURITY_SESSION_READONLY and BX_SECURITY_SESSION_VIRTUAL modes, storages (cache, database, redis, null session handler), separated session mode in .settings.php. Applied instead of direct $_SESSION access, when optimizing AJAX session locks, configuring alternative storages, and separating kernel/local sessions. Key terms — session, getSession, session storage, BX_SECURITY_SESSION_READONLY, separated session, getKernelSession, getLocalSession.
+description: "Covers Bitrix sessions — Application::getSession(), getKernelSession(), getLocalSession(), BX_SECURITY_SESSION_READONLY/VIRTUAL modes, alternative storages, separated mode, UserAuthActionTable::addLogoutAction(). Applied instead of direct $_SESSION access, for AJAX lock tuning, and revoking sessions across devices. Key terms — separated session, UserAuthActionTable, AUTH_ACTION_SKIP_LOGOUT."
 ---
 
 # Bitrix Sessions
@@ -198,3 +198,31 @@ if ($msg = $session->get('flash.success'))
 
 - After successful login/password change — `$session->regenerateId()`. Or `regenerateIdAfterLogin = true` in config.
 - Session cookies should be `HttpOnly`, `Secure`, `SameSite=Lax|Strict` — configured in main module or via `session.cookie_*` in php.ini. See `bitrix-security`.
+
+## Forced Logout and Session Refresh
+
+`$USER->Logout()` ends only the current device. To kill sessions on **all** devices, queue a deferred auth action via `Bitrix\Main\UserAuthActionTable` — never `DELETE` from `b_user_session` directly: the kernel keeps several auth types (browser, remember-me, REST with `APPLICATION_ID`), and desynchronization leaves live access.
+
+```php
+use Bitrix\Main\UserAuthActionTable;
+
+UserAuthActionTable::addLogoutAction($userId);                  // logout everywhere: browser + REST apps
+UserAuthActionTable::addLogoutAction($userId, 'my.module.api'); // only sessions of this APPLICATION_ID
+UserAuthActionTable::addUpdateAction($userId);                  // refresh rights in session without logout (e.g. after group change)
+UserAuthActionTable::addUpdateAction($userId, new DateTime('2026-06-01 00:00:00')); // delayed until a date (e.g. group activation)
+```
+
+Logout everywhere **except** the current device:
+
+```php
+global $USER;
+$USER->SetParam('AUTH_ACTION_SKIP_LOGOUT', true);
+UserAuthActionTable::addLogoutAction($USER->GetID());
+```
+
+- Actions fire on the user's **next request** — a record added after `include.php` will not trigger logout in the same hit.
+- With `APPLICATION_ID` set, browser sessions skip the record (id mismatch → `continue`).
+- The action check caches its `getList()` for 3600 s — urgent revocation may lag by up to the ORM query cache TTL.
+- After the user changes their own password, the kernel sets `AUTH_ACTION_SKIP_LOGOUT` so they are not kicked immediately.
+- REST/desktop clients authenticate with their own application passwords — for a full account revoke, also delete the `ApplicationPasswordTable` rows (as the admin "Execute logout" flow does).
+- Stale records are cleaned by the `CUser::AuthActionsCleanUpAgent()` agent (older than a day).
