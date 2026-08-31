@@ -16,7 +16,7 @@ skills/<name>/SKILL.md        # router: what the skill covers, which rules/*.md 
 skills/<name>/rules/*.md      # progressive-disclosure layers
 skills/bitrix-skill-creator/  # meta-skill: authoring spec for new skills
 skills/bitrix-skill-eval/     # meta-skill: Q1–Q10 rubric, blind-test protocol, hard gates
-AGENTS.orig.md                # Bitrix canons for skill consumers (D7, DI, /local/, security)
+agents/bitrix-coder.md        # Bitrix canons for skill consumers (D7, DI, /local/, security)
 README.md / README.ru.md      # project docs + skill catalog
 ```
 
@@ -25,7 +25,7 @@ README.md / README.ru.md      # project docs + skill catalog
 | File | Governs |
 | --- | --- |
 | This file | Contribution workflow in this repo |
-| `AGENTS.orig.md` | Bitrix canons for agents on Bitrix projects (skill consumers) |
+| `agents/bitrix-coder.md` | Bitrix canons for agents on Bitrix projects (skill consumers) |
 | `skills/bitrix-skill-creator/` | Product spec a finished skill must satisfy |
 | `skills/bitrix-skill-eval/` | Quality gate for skill drafts |
 
@@ -42,7 +42,7 @@ A new skill passes six steps; the owner of every step is a house skill — read 
 | 3. Draft (router first, then `rules/*.md` one by one) | `bitrix-skill-creator` §2–§8 | Partial delivery stays useful |
 | 4. Kernel verification (targeted greps, sibling cross-check) | `bitrix-skill-creator` §9 | Every identifier confirmed |
 | 5. Evaluation (blind test, Q1–Q10, hard gates) | `bitrix-skill-eval` | Grades with `file:line` evidence |
-| 6. Acceptance + catalog registration | This file | PR with catalog rows |
+| 6. Acceptance + catalog registration | This file | PR green in CI (smoke + security), with catalog rows |
 
 **Acceptance bar** (from `bitrix-skill-eval` §4): mean ≥8.5 across Q1–Q10, zero invented identifiers, coverage ≥85% of the scenario-scoped domain surface, within the time cap. Below any of these — iterate (max three runs), then report the trend.
 
@@ -64,7 +64,7 @@ Editing an existing skill: follow `bitrix-skill-creator` (§1, §4, §8) and re-
 
 ## Automated skill checks (new skills, before PR)
 
-A new skill passes two automated checks before a PR is opened; the procedure is packaged as the `skill-validator` skill. Both are local, read-only, and run against the final skill folder.
+A new skill passes two automated checks before a PR is opened; the procedure is packaged as the `skill-validator` skill. Both are local, read-only, and run against the final skill folder. The same gates run in CI on every PR (`.github/workflows/validate.yml`): the catalog smoke job and the prism security scan (`fail-on high`, action pinned by SHA).
 
 ### Format: skill-creator scripts
 
@@ -95,8 +95,8 @@ Gate: `--fail-on high` exits 0. Grade C (medium findings only) — attach a writ
 - [ ] Line counts within budget (monolith 100–310; router ≤60; each `rules/*.md` 45–135). Cut, never pad.
 - [ ] Every changed identifier kernel-verified; 2+ negative-knowledge statements present.
 - [ ] Prohibitions bold at the error site and echoed in the checklist; checklist items verifiable.
-- [ ] Cross-links use exact catalog names; AGENTS.orig.md canons referenced, never duplicated.
-- [ ] Catalog rows added to `README.md`, `README.ru.md`, and the skills index in `AGENTS.orig.md`.
+- [ ] Cross-links use exact catalog names; AGENTS.md canons referenced, never duplicated.
+- [ ] Catalog rows added to `README.md`, `README.ru.md`, and the skills index in `agents/bitrix-coder.md`.
 - [ ] Eval drafts live in the eval archive only; `skills/` untouched by runs.
 
 ## Hard prohibitions
@@ -104,7 +104,7 @@ Gate: `--fail-on high` exits 0. Grade C (medium findings only) — attach a writ
 - Never invent skill names, class identifiers, service ids, or version numbers.
 - Never let an eval draft overwrite a reference skill.
 - Never grade a skill from its author's self-assessment — grades need `file:line` evidence.
-- Never duplicate AGENTS.orig.md canons inside skills or this file.
+- Never duplicate AGENTS.md canons inside skills or this file.
 - Never widen a rubric criterion mid-series to fit a draft.
 
 ## Environment
