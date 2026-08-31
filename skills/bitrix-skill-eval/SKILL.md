@@ -1,6 +1,6 @@
 ---
 name: bitrix-skill-eval
-description: Covers quality evaluation of Bitrix Framework skills in this repository — the blind authoring test protocol (frozen spec snapshot, verbatim prompt, per-run isolation, external time cap), the Q1–Q10 grading rubric (structure, triggerability, coverage, precision, code quality, safety, checklist, density, consistency, generation time), hard gates, knowledge-point density metric, kernel verification of draft identifiers, spec-caused vs agent-caused gap classification, and the iteration loop. Applied when grading a skill draft against a reference skill, running a blind test of `bitrix-skill-creator` output, comparing an AI-generated skill with a human-written one, or deciding whether a skill draft is accepted into the collection. Key terms — Q1–Q10, knowledge point, density, hard gates, blind test, frozen snapshot, tier-N isolation, kernel verification, reference calibration, above-average bar.
+description: Covers quality evaluation of Bitrix Framework skills in this repository — the blind authoring test protocol (frozen spec snapshot, verbatim prompt, per-run isolation, external time cap), the Q1–Q10 grading rubric (structure, triggerability, coverage, precision, code quality, safety, checklist, density, consistency, generation time), hard gates, knowledge-point density metric, kernel verification of draft identifiers, spec-caused vs agent-caused gap classification, and the iteration loop. Applied when grading a skill draft against a reference skill, running a blind test of `bitrix-skill-creator` output, comparing an AI-generated skill with a human-written one, evaluating a first-of-its-kind skill when no reference exists, or deciding whether a skill draft is accepted into the collection. Key terms — Q1–Q10, knowledge point, density, hard gates, blind test, frozen snapshot, tier-N isolation, kernel verification, reference calibration, absolute mode, above-average bar.
 ---
 
 # Bitrix Skill Quality Evaluation
@@ -68,11 +68,11 @@ Q10 scale, as fractions of the cap: 10 = ≤70%; 8 = ≤80%; 6 = ≤100%; 0 = ov
 
 ## 6. Kernel verification of drafts
 
-Never trust a draft's identifiers on their face — verify against the kernel source: the running project's `bitrix/modules/<module>/lib/...`, a user-provided local docs mirror, or official online docs (in that order; `/local/` overrides win).
+Never trust a draft's identifiers on their face — verify against source, strongest first: the running project's `bitrix/modules/<module>/lib/...` — or, for a project-local module skill, the module's own code `local/modules/<vendor>.<module>/` — then a user-provided local docs mirror, then official online docs (`/local/` overrides win).
 
 1. Targeted greps over full-file reads; ~15–20 checks per draft is typical. Record every check as `file:line`.
 2. Verify: class names and parents, constructor signatures (argument types matter under `strict_types`), constants and bitmask values, service ids, settings sections, generator behavior, event names, thrown exception classes.
-3. Claims like "Since main X.Y" are usually unverifiable from source alone — flag them, never treat them as verified.
+3. Kernel claims like "Since main X.Y" are usually unverifiable from source alone — flag them, never treat them as verified. Project-local module skills anchor versions to the module's `install/version.php`; verify version claims there instead.
 4. Absence claims ("there is no X") need a positive search for X before acceptance.
 5. Any identifier the mirror cannot confirm goes into the report as unverifiable — it still blocks the 0-invented gate if the draft presents it as fact.
 
@@ -92,7 +92,17 @@ Keep an iteration log per task:
 
 Measure the reference before grading anything: total lines, knowledge points, density. Then grade the reference itself against the rubric — real references carry defects (a missing baseline line, an off-template H1, an over-budget file). Knowing them prevents over-penalizing the draft for diverging from an imperfect reference and anchors every "10 =" column in §3.
 
-## 9. Evidence discipline
+## 9. Evaluation without a reference (absolute mode)
+
+When no reference skill exists for the domain (a first-of-its-kind skill), grade against the domain itself. The rubric and hard gates stay; the comparators swap:
+
+- **Coverage (Q3)**: enumerate the domain surface first — run the spec's discover-full-surface procedure over the kernel modules (or the project-local module) the skill targets: classes, services, settings sections, events, UI integration points. **Scope the list to the skill's declared scenarios** (its trigger description / task statement); points outside those scenarios are excluded before counting. Coverage means "≥85% of what the scenarios need" — the whole-module reading of "surface" is wrong, and rewriting the full module is a failure mode, held back by the density band and file budgets. That list is the expected knowledge-point set. Floors stay: ≥85% target, <60% hard gate.
+- **Density (Q8)**: compare against absolute budgets: rules files 45–135 lines, router per spec §1; L/pt sanity band **3–5** (calibrated across this collection: http-client 4.8, controllers 3.3). Flag drafts outside the band — padding above it, fragmenting below it.
+- **Quality bar (§4)**: "above average" becomes **accept**: mean ≥8.5 AND 0 invented identifiers AND domain-surface coverage ≥85% AND within the time cap.
+- **Blind test (§2) still runs**: the spec snapshot remains the treatment and the canonical prompt works unchanged; the pass condition shifts from "matches reference quality" to "passes absolute gates".
+- **Skip §8**; record in the report that the run was reference-less and which surface enumeration anchored coverage.
+
+## 10. Evidence discipline
 
 - Grades cite evidence: `file:line` for kernel checks, mtimes for delivery times, wc for sizes.
 - The final report per iteration: grades table, gate status, gaps classified spec-caused vs agent-caused, verdict, patches applied.
@@ -108,6 +118,7 @@ Measure the reference before grading anything: total lines, knowledge points, de
 - [ ] Unique `tier-<N>/` output dir; archive dir prepared.
 - [ ] Time cap + poll cadence set; cancel at cap; directory re-checked after cancel (flushed writes).
 - [ ] Reference measured (lines, points, density) and self-graded before grading the draft.
+- [ ] No reference? Domain surface enumerated before launch; density graded against the 3–5 L/pt band.
 - [ ] Kernel checks recorded with `file:line`; unverifiable claims listed separately.
 - [ ] Gaps classified spec-caused vs agent-caused before any spec patch.
 - [ ] Iteration log updated after every run.
