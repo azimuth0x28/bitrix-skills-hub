@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "bitrix-skills-hub",
+  "description": "AI skills for developing with 1C-Bitrix / Bitrix Framework (D7) — 42 kernel-verified skills for agents.",
+  "owner": {
+    "name": "azimuth0x28",
+    "url": "https://github.com/azimuth0x28"
+  },
+  "plugins": [
+    {
+      "name": "bitrix-skills-hub",
+      "version": "1.0.0",
+      "source": {
+        "source": "github",
+        "repo": "azimuth0x28/bitrix-skills-hub"
+      },
+      "description": "42 Bitrix D7 skills for AI coding agents: ORM, iblocks, sale, sessions, security, migrations and more."
+    }
+  ]
+}
