@@ -12,91 +12,257 @@ Every skill here is a plain markdown file: readable in a couple of minutes, open
 
 ## Why a hub
 
-Skills multiply like mushrooms after rain: every engineer ends up with a personal stash of prompts, rules, and wrappers. Six months later that is skills-hell — dozens of scattered files with no versions, no quality checks, no shared standard. The AvitoTech team made the case for centralization in their article [«Агентская разработка: как обеспечить качество»](https://habr.com/ru/companies/avito/articles/1060190/) (in Russian): a skills-hub keeps vetted skills in one place, versioned and quality-checked, built for exactly that moment.
+Skills multiply like mushrooms after rain: every engineer ends up with a personal stash of prompts, rules, and wrappers. Six months later that is skills-hell, dozens of scattered files with no versions, no quality checks, no shared standard. The AvitoTech team made the case for centralization in their article [«Агентская разработка: как обеспечить качество»](https://habr.com/ru/companies/avito/articles/1060190/) (in Russian): a skills-hub keeps vetted skills in one place, versioned and quality-checked, built for exactly that moment.
 
 This repo plays the hub role: one Bitrix skill collection, shared authoring conventions, and an evaluation gate before a skill enters the catalog.
 
-## Installation
+## Quick Start
 
-### Via npx skills
+**Fastest path** — any agent, one command. The open [skills CLI](https://github.com/vercel-labs/skills) installs into 70+ agents:
 
 ```bash
-npx skills add azimuth0x28/bitrix-skills-hub --all   # all skills at once
-npx skills add azimuth0x28/bitrix-skills-hub --list  # preview the list
+npx skills add azimuth0x28/bitrix-skills-hub --all   # all 42 skills at once
+npx skills add azimuth0x28/bitrix-skills-hub --list  # browse before installing
 npx skills add azimuth0x28/bitrix-skills-hub --skill bitrix-orm bitrix-controllers
 npx skills update                                    # update installed ones
 ```
 
-### Clone and copy
+Or grab individual skills:
+
+```bash
+npx skills add azimuth0x28/bitrix-skills-hub --skill bitrix-orm
+npx skills add azimuth0x28/bitrix-skills-hub --skill bitrix-components
+npx skills add azimuth0x28/bitrix-skills-hub --skill bitrix-rest
+```
+
+Prefer a native integration? Pick your tool below.
+
+<details>
+<summary><b>Claude Code</b></summary>
+
+Install via the marketplace:
+
+```
+/plugin marketplace add azimuth0x28/bitrix-skills-hub
+/plugin install bitrix-skills-hub
+```
+
+Or clone locally:
 
 ```bash
 git clone https://github.com/azimuth0x28/bitrix-skills-hub.git
-cp -r skills/bitrix-orm your-project/.agents/skills/
+claude --plugin-dir /path/to/bitrix-skills-hub
 ```
 
-### Ask your agent
+Skills land in `~/.claude/skills/` when installed via marketplace.
 
-```txt
-Add the skills from https://github.com/azimuth0x28/bitrix-skills-hub to this project
+</details>
+
+<details>
+<summary><b>Cursor</b></summary>
+
+Copy skill folders into `.cursor/skills/` and short policies into `.cursor/rules/*.mdc`. Do not paste full skills into rules.
+
+```bash
+git clone https://github.com/azimuth0x28/bitrix-skills-hub.git
+cp -r bitrix-skills-hub/skills/bitrix-orm .cursor/skills/
+cp -r bitrix-skills-hub/skills/bitrix-components .cursor/skills/
 ```
 
-After installation the skills land in `.agents/skills/` of the target project. The rules and skill index from the original project live in [AGENTS.orig.md](AGENTS.orig.md): wire it up as a rule in Cursor or use it as the base for your own `AGENTS.md`.
+</details>
+
+<details>
+<summary><b>Gemini CLI</b></summary>
+
+Install as native skills for auto-discovery:
+
+```bash
+gemini skills install https://github.com/azimuth0x28/bitrix-skills-hub.git --path skills
+```
+
+Or from a local clone:
+
+```bash
+git clone https://github.com/azimuth0x28/bitrix-skills-hub.git
+gemini skills install ./bitrix-skills-hub/skills/
+```
+
+</details>
+
+<details>
+<summary><b>OpenCode</b></summary>
+
+Copy skills to `.opencode/skills/` (or `~/.config/opencode/skills/`), add a project-local `AGENTS.md`, and use the built-in skill tool for agent-driven execution.
+
+```bash
+git clone https://github.com/azimuth0x28/bitrix-skills-hub.git
+cp -r bitrix-skills-hub/skills/bitrix-orm .opencode/skills/
+```
+
+</details>
+
+<details>
+<summary><b>GitHub Copilot</b></summary>
+
+Point Copilot at the agent in [agents/bitrix-coder.md](agents/bitrix-coder.md) and add the skill rules you need to your project's `.github/copilot-instructions.md`.
+
+```bash
+git clone https://github.com/azimuth0x28/bitrix-skills-hub.git
+# Reference skill paths from the cloned repo in your copilot instructions
+```
+
+</details>
+
+<details>
+<summary><b>Windsurf</b></summary>
+
+Add skill contents to your Windsurf rules configuration under `.windsurf/rules/`.
+
+```bash
+git clone https://github.com/azimuth0x28/bitrix-skills-hub.git
+cp bitrix-skills-hub/skills/bitrix-orm/SKILL.md .windsurf/rules/bitrix-orm.mdc
+```
+
+</details>
+
+<details>
+<summary><b>Codex</b></summary>
+
+Install as a native Codex plugin (Codex CLI v0.122+):
+
+```bash
+codex plugin marketplace add azimuth0x28/bitrix-skills-hub
+codex plugin add bitrix-skills-hub@bitrix-skills-hub
+```
+
+The first command registers the marketplace; the second installs the plugin. Codex reads the root `skills/` directory through `.codex-plugin/plugin.json`. Once installed, invoke skills in chat using `@`.
+
+</details>
+
+<details>
+<summary><b>Kiro IDE</b></summary>
+
+Skills for Kiro reside under `.kiro/skills/` and can be stored at project or global level. Kiro also supports `AGENTS.md`.
+
+```bash
+git clone https://github.com/azimuth0x28/bitrix-skills-hub.git
+cp -r bitrix-skills-hub/skills/bitrix-orm .kiro/skills/
+```
+
+See [Kiro docs](https://kiro.dev/docs/skills/) for details.
+
+</details>
+
+<details>
+<summary><b>Antigravity CLI</b></summary>
+
+Install as a native plugin for skills, subagents, and slash commands:
+
+```bash
+agy plugin install https://github.com/azimuth0x28/bitrix-skills-hub.git
+```
+
+Or from a local clone:
+
+```bash
+git clone https://github.com/azimuth0x28/bitrix-skills-hub.git
+agy plugin install ./bitrix-skills-hub
+```
+
+</details>
+
+<details>
+<summary><b>Other Agents</b></summary>
+
+Skills are plain Markdown — they work with any agent that accepts system prompts or instruction files.
+
+```bash
+git clone https://github.com/azimuth0x28/bitrix-skills-hub.git
+cp -r bitrix-skills-hub/skills/bitrix-orm your-project/.agents/skills/
+```
+
+</details>
+
+After installation, the rules and skill index from the original project live in [agents/bitrix-coder.md](agents/bitrix-coder.md): wire it up as a rule in Cursor or use it as the base for your own `AGENTS.md`.
 
 ## The catalog
 
 42 skills covering D7 core topics and adjacent areas. Each one is a self-contained reference an agent can apply immediately.
 
-| Area | Skill |
-| --- | --- |
-| Project structure, Loader, `/local` | `bitrix-project-structure` |
-| Core `.settings.php` sections | `bitrix-settings` |
-| Creating modules, install/uninstall | `bitrix-modules` |
-| CLI, `make:*`, cron, commands | `bitrix-console-commands` |
-| Controllers, actions, filters | `bitrix-controllers` |
-| Routing, URL generation | `bitrix-routing` |
-| ORM, tablets, queries | `bitrix-orm` |
-| Events (new + legacy) | `bitrix-events` |
-| Validation, DTO attributes | `bitrix-validation` |
-| ServiceLocator, DI | `bitrix-service-locator` |
-| Caching, composite | `bitrix-caching` |
-| Performance | `bitrix-performance` |
-| CSRF, XSS, SQLi, JWT | `bitrix-security` |
-| Agents, background jobs, Messenger | `bitrix-background-jobs` |
-| Result, Error, ErrorCollection | `bitrix-result-and-errors` |
-| Components, templates, SEF | `bitrix-components` |
-| Iblocks, properties, SEO | `bitrix-iblocks` |
-| Highload blocks | `bitrix-highloadblock` |
-| Commerce catalog, prices, SKU | `bitrix-catalog` |
-| E-commerce, orders, payments | `bitrix-sale` |
-| REST API, OAuth | `bitrix-rest` |
-| Pull server, real-time | `bitrix-pull` |
-| Landing, page builder | `bitrix-landing` |
-| SEO, meta, sitemap | `bitrix-seo` |
-| Business processes (bizproc) | `bitrix-bizproc` |
-| HttpClient, SSRF, GeoIP | `bitrix-http-client` |
-| PSR-3 logging | `bitrix-logger` |
-| Localization, Loc | `bitrix-localization` |
-| Date/DateTime, timezones | `bitrix-datetime` |
-| Application, Context, Request/Response | `bitrix-request-response` |
-| Sessions, separated mode | `bitrix-sessions` |
-| SQL, transactions, SqlHelper | `bitrix-database` |
-| PostgreSQL migration | `bitrix-postgresql` |
-| Persistent Storage (25.1100+) | `bitrix-storage` |
-| JS/CSS extensions | `bitrix-extensions` |
-| UI kit (popup, sidepanel) | `bitrix-ui` |
-| BitrixVue 3 | `bitrix-vue` |
-| CMS: sites, menus, templates | `bitrix-cms-basics` |
-| DB/schema migrations ([sprint.migration](https://marketplace.1c-bitrix.ru/solutions/sprint.migration/)) | `bitrix-sprint-migration` |
+### Core & D7
 
-### Meta-skills
+| Skill | What It Does | Use When |
+| --- | --- | --- |
+| [bitrix-project-structure](skills/bitrix-project-structure/SKILL.md) | `/local` vs `/bitrix`, PSR-4, `.settings.php`, Loader | Placing code, module loading, autoloading config |
+| [bitrix-settings](skills/bitrix-settings/SKILL.md) | Kernel `.settings.php` sections: connections, cache, session, routing, messenger | Configuring kernel behavior |
+| [bitrix-modules](skills/bitrix-modules/SKILL.md) | CModule, install/index.php, DoInstall/DoUninstall, make:module | Creating new modules, registration |
+| [bitrix-console-commands](skills/bitrix-console-commands/SKILL.md) | CLI tools, make:* generators, Symfony Console commands | Scaffolding, cron, queue workers |
+| [bitrix-controllers](skills/bitrix-controllers/SKILL.md) | Engine Controller/JsonController, actions, filters, CurrentUser | AJAX/REST/routed endpoints |
+| [bitrix-routing](skills/bitrix-routing/SKILL.md) | RoutingConfigurator, /local/routes, PublicPageController, urlrewrite | Public/API URL setup |
+| [bitrix-orm](skills/bitrix-orm/SKILL.md) | D7 ORM tablets, ConditionTree, Objectify, batch/merge/deleteByFilter | Entity design, reads, persistence |
+| [bitrix-events](skills/bitrix-events/SKILL.md) | Event system: new model (EventManager) + legacy (OnBefore*/OnAfter*) | Module integration, lifecycle hooks |
+| [bitrix-validation](skills/bitrix-validation/SKILL.md) | ValidationService, #[NotEmpty]/#[Email]/#[Length], Request DTO | Input validation for controllers/services |
+| [bitrix-service-locator](skills/bitrix-service-locator/SKILL.md) | DI container (PSR-11), autowire, constructor injection | Wiring dependencies, avoiding statics |
+| [bitrix-result-and-errors](skills/bitrix-result-and-errors/SKILL.md) | Result, Error, ErrorCollection, AddResult, UpdateResult | Service APIs, error handling without exceptions |
+| [bitrix-database](skills/bitrix-database/SKILL.md) | Connection, SqlHelper, SqlExpression, raw SQL, transactions, bulk ops | When ORM is insufficient, raw SQL, migrations |
+| [bitrix-postgresql](skills/bitrix-postgresql/SKILL.md) | PgsqlConnection, MySQL migration, compatible code, support matrix | PostgreSQL Enterprise configuration |
+| [bitrix-datetime](skills/bitrix-datetime/SKILL.md) | Date/DateTime, kernel masks, time zones, Culture, DateField | Schedules, timezone conversion, date arithmetic |
+| [bitrix-request-response](skills/bitrix-request-response/SKILL.md) | HttpRequest/HttpResponse, Json/AjaxJson/Redirect, Uri | Replacing $_GET/$_POST, raw headers |
+| [bitrix-storage](skills/bitrix-storage/SKILL.md) | PersistentStorageInterface, DeferredStorageDecorator, Option | Config vs TTL state vs derived cache |
+| [bitrix-caching](skills/bitrix-caching/SKILL.md) | Cache, ManagedCache, TaggedCache, ORM auto-cache, Composite | Performance, invalidation, TTL, warm-up |
+| [bitrix-performance](skills/bitrix-performance/SKILL.md) | Composite site, query optimization, replication, sharding | High-load optimization beyond caching |
+| [bitrix-background-jobs](skills/bitrix-background-jobs/SKILL.md) | CAgent, addBackgroundJob, Messenger brokers/queues | Deferred and async processing |
+| [bitrix-sprint-migration](skills/bitrix-sprint-migration/SKILL.md) | sprint.migration: Version, HelperManager, builders, CLI migrate.php | DB/schema/content migrations |
 
-Skills about the skills themselves: authoring conventions, quality control, and mechanical validation.
+### Content & UI
 
-| Task | Skill |
-| --- | --- |
-| Creating and refactoring skills following repo conventions | `bitrix-skill-creator` |
-| Quality evaluation before acceptance: blind test, Q1–Q10 rubric | `bitrix-skill-eval` |
-| Mechanical pre-PR validation of a skill folder: format + security | `skill-validator` |
+| Skill | What It Does | Use When |
+| --- | --- | --- |
+| [bitrix-iblocks](skills/bitrix-iblocks/SKILL.md) | Iblock types/elements/sections, ORM compileEntity, properties, SEO | Content iblock work, structured data |
+| [bitrix-highloadblock](skills/bitrix-highloadblock/SKILL.md) | HighloadBlockTable, compileEntity, DataManager CRUD, UF, ORM events | Custom entities, dynamic data models |
+| [bitrix-components](skills/bitrix-components/SKILL.md) | class.php, templates, cache, SEF, Controllerable AJAX | Building or editing components |
+| [bitrix-extensions](skills/bitrix-extensions/SKILL.md) | /local/js/ structure, bundle.config.js, Extension::load, @bitrix/cli | Adding frontend code to modules |
+| [bitrix-ui](skills/bitrix-ui/SKILL.md) | Popup, SidePanel, MessageBox, entity-selector, grid, alerts, toasts | Admin interfaces, public UI components |
+| [bitrix-vue](skills/bitrix-vue/SKILL.md) | BitrixVue 3, ui.vue3.bitrixvue, createApp, REST integration | Reactive admin/public UI with Vue |
+| [bitrix-cms-basics](skills/bitrix-cms-basics/SKILL.md) | Sites, templates, menus, includes, breadcrumbs, styles, user fields | Site structure, content management |
+| [bitrix-landing](skills/bitrix-landing/SKILL.md) | Landing sites, blocks repository, publish/unpublish, hooks | Sites24 pages, storefronts, knowledge bases |
+| [bitrix-seo](skills/bitrix-seo/SKILL.md) | Sitemap, robots.txt, webmaster integration, IPROPERTY | Crawl maps, search engine wiring |
+
+### Commerce
+
+| Skill | What It Does | Use When |
+| --- | --- | --- |
+| [bitrix-catalog](skills/bitrix-catalog/SKILL.md) | Products, SKU/offers, prices, inventory, discounts, bundles | E-commerce: prices, stock, catalog API |
+| [bitrix-sale](skills/bitrix-sale/SKILL.md) | Basket, Order, FUSER, payments, delivery, discounts, coupons | Cart/checkout, order lifecycle, pay/ship |
+| [bitrix-bizproc](skills/bitrix-bizproc/SKILL.md) | CBPDocument, CBPRuntime, workflow templates, custom activities | Approvals, document workflows, automation |
+
+### Integrations & Platform
+
+| Skill | What It Does | Use When |
+| --- | --- | --- |
+| [bitrix-rest](skills/bitrix-rest/SKILL.md) | REST methods, scopes, webhook/OAuth, rest settings | Exposing APIs to apps/webhooks/marketplace |
+| [bitrix-pull](skills/bitrix-pull/SKILL.md) | Pull module: realtime events, JS subscription, watch tags | Live UI updates, notifications |
+| [bitrix-http-client](skills/bitrix-http-client/SKILL.md) | HttpClient, PSR-18, async Promise, SSRF, GeoIp | External API integrations, webhooks |
+| [bitrix-logger](skills/bitrix-logger/SKILL.md) | PSR-3: FileLogger, SysLogger, LogFormatter, Monolog | Module logs, debugging, log rotation |
+| [bitrix-localization](skills/bitrix-localization/SKILL.md) | Loc, lang files, loadMessages, BX.message, translate:index | i18n, multi-language sites, JS translations |
+| [bitrix-security](skills/bitrix-security/SKILL.md) | CSRF, XSS, SQLi, SSRF, JWT/JWK, access rights, encryption | Input handling, security auditing |
+| [bitrix-sessions](skills/bitrix-sessions/SKILL.md) | Application::getSession(), read-only/virtual modes, separated mode | Session management, AJAX lock tuning |
+
+### Meta
+
+| Skill | What It Does | Use When |
+| --- | --- | --- |
+| [bitrix-skill-creator](skills/bitrix-skill-creator/SKILL.md) | Authoring conventions: morphology, frontmatter, baseline/Since, density | Creating or editing skills |
+| [bitrix-skill-eval](skills/bitrix-skill-eval/SKILL.md) | Blind test protocol, Q1-Q10 rubric, hard gates, density metric | Grading skill drafts |
+| [skill-validator](skills/skill-validator/SKILL.md) | quick_validate.py (format), prism-scanner (security), grade gates | Pre-PR mechanical validation |
+
+## Agent Personas
+
+Pre-configured specialist personas for Bitrix development:
+
+| Agent | Role | Perspective |
+| --- | --- | --- |
+| [bitrix-coder](agents/bitrix-coder.md) | Bitrix Framework Specialist | Deep D7 knowledge, DI boundaries, `/local/` conventions, security patterns, version policy |
 
 ## Skill anatomy
 
@@ -110,7 +276,7 @@ Fat skills use progressive disclosure: the agent opens `SKILL.md` first, then on
 
 ## Adding your own
 
-Author a new skill through `bitrix-skill-creator`: it knows the repo conventions — structure, frontmatter, mandatory content layers, checklists. Run the finished draft through `skill-validator` (format + security) and `bitrix-skill-eval`: the blind test and the Q1–Q10 rubric filter out weak skills before they enter the catalog.
+Author a new skill through `bitrix-skill-creator`: it knows the repo conventions, structure, frontmatter, mandatory content layers, checklists. Run the finished draft through `skill-validator` (format + security) and `bitrix-skill-eval`: the blind test and the Q1-Q10 rubric filter out weak skills before they enter the catalog.
 
 ## Links
 

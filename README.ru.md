@@ -16,87 +16,253 @@ English version: [README.md](README.md)
 
 Роль хаба здесь выполняет сам репозиторий: одна коллекция скиллов по Bitrix, общие конвенции авторства и оценка перед попаданием в каталог.
 
-## Установка
+## Быстрый старт
 
-### Через npx skills
+**Самый быстрый путь** — любой агент, одна команда. Открытый [skills CLI](https://github.com/vercel-labs/skills) устанавливается в 70+ агентов:
 
 ```bash
-npx skills add azimuth0x28/bitrix-skills-hub --all   # все скиллы сразу
+npx skills add azimuth0x28/bitrix-skills-hub --all   # все 42 скилла сразу
 npx skills add azimuth0x28/bitrix-skills-hub --list  # посмотреть список
 npx skills add azimuth0x28/bitrix-skills-hub --skill bitrix-orm bitrix-controllers
 npx skills update                                    # обновить установленные
 ```
 
-### Клонировать и скопировать
+Или по одному:
+
+```bash
+npx skills add azimuth0x28/bitrix-skills-hub --skill bitrix-orm
+npx skills add azimuth0x28/bitrix-skills-hub --skill bitrix-components
+npx skills add azimuth0x28/bitrix-skills-hub --skill bitrix-rest
+```
+
+Предпочитаете нативную интеграцию? Выберите свой инструмент ниже.
+
+<details>
+<summary><b>Claude Code</b></summary>
+
+Установка через маркетплейс:
+
+```
+/plugin marketplace add azimuth0x28/bitrix-skills-hub
+/plugin install bitrix-skills-hub
+```
+
+Или локально:
 
 ```bash
 git clone https://github.com/azimuth0x28/bitrix-skills-hub.git
-cp -r skills/bitrix-orm ваш-проект/.agents/skills/
+claude --plugin-dir /path/to/bitrix-skills-hub
 ```
 
-### Попросить агента
+При установке через маркетплейс скиллы попадают в `~/.claude/skills/`.
 
-```txt
-Добавь в проект скиллы из репозитория https://github.com/azimuth0x28/bitrix-skills-hub
+</details>
+
+<details>
+<summary><b>Cursor</b></summary>
+
+Скопируйте папки скиллов в `.cursor/skills/`, короткие политики — в `.cursor/rules/*.mdc`. Не вставляйте полные скиллы в правила.
+
+```bash
+git clone https://github.com/azimuth0x28/bitrix-skills-hub.git
+cp -r bitrix-skills-hub/skills/bitrix-orm .cursor/skills/
+cp -r bitrix-skills-hub/skills/bitrix-components .cursor/skills/
 ```
 
-После установки скиллы попадают в `.agents/skills/` целевого проекта. Правила и индекс скиллов из исходного проекта лежат в [AGENTS.orig.md](AGENTS.orig.md): подключите файл как rule в Cursor или возьмите за основу собственного `AGENTS.md`.
+</details>
+
+<details>
+<summary><b>Gemini CLI</b></summary>
+
+Установка как нативные скиллы для автообнаружения:
+
+```bash
+gemini skills install https://github.com/azimuth0x28/bitrix-skills-hub.git --path skills
+```
+
+Или из локального клона:
+
+```bash
+git clone https://github.com/azimuth0x28/bitrix-skills-hub.git
+gemini skills install ./bitrix-skills-hub/skills/
+```
+
+</details>
+
+<details>
+<summary><b>OpenCode</b></summary>
+
+Скопируйте скиллы в `.opencode/skills/` (или `~/.config/opencode/skills/`), добавьте локальный `AGENTS.md` и используйте встроенный инструмент skill для агентного выполнения.
+
+```bash
+git clone https://github.com/azimuth0x28/bitrix-skills-hub.git
+cp -r bitrix-skills-hub/skills/bitrix-orm .opencode/skills/
+```
+
+</details>
+
+<details>
+<summary><b>GitHub Copilot</b></summary>
+
+Подключите Copilot к агенту [agents/bitrix-coder.md](agents/bitrix-coder.md) и добавьте нужные правила из скиллов в `.github/copilot-instructions.md` вашего проекта.
+
+```bash
+git clone https://github.com/azimuth0x28/bitrix-skills-hub.git
+# Укажите пути к скиллам из клона в ваших инструкциях для Copilot
+```
+
+</details>
+
+<details>
+<summary><b>Windsurf</b></summary>
+
+Добавьте содержимое скиллов в конфигурацию правил Windsurf в `.windsurf/rules/`.
+
+```bash
+git clone https://github.com/azimuth0x28/bitrix-skills-hub.git
+cp bitrix-skills-hub/skills/bitrix-orm/SKILL.md .windsurf/rules/bitrix-orm.mdc
+```
+
+</details>
+
+<details>
+<summary><b>Codex</b></summary>
+
+Установка как нативный плагин Codex (Codex CLI v0.122+):
+
+```bash
+codex plugin marketplace add azimuth0x28/bitrix-skills-hub
+codex plugin add bitrix-skills-hub@bitrix-skills-hub
+```
+
+Первая команда регистрирует маркетплейс, вторая устанавливает плагин. Codex читает корневую папку `skills/` через `.codex-plugin/plugin.json`. После установки вызывайте скиллы через `@`.
+
+</details>
+
+<details>
+<summary><b>Kiro IDE</b></summary>
+
+Скиллы для Kiro хранятся в `.kiro/skills/` на уровне проекта или глобально. Kiro также поддерживает `AGENTS.md`.
+
+```bash
+git clone https://github.com/azimuth0x28/bitrix-skills-hub.git
+cp -r bitrix-skills-hub/skills/bitrix-orm .kiro/skills/
+```
+
+Подробнее: [документация Kiro](https://kiro.dev/docs/skills/).
+
+</details>
+
+<details>
+<summary><b>Antigravity CLI</b></summary>
+
+Установка как нативный плагин для скиллов, субагентов и слеш-команд:
+
+```bash
+agy plugin install https://github.com/azimuth0x28/bitrix-skills-hub.git
+```
+
+Или из локального клона:
+
+```bash
+git clone https://github.com/azimuth0x28/bitrix-skills-hub.git
+agy plugin install ./bitrix-skills-hub
+```
+
+</details>
+
+<details>
+<summary><b>Другие агенты</b></summary>
+
+Скиллы — это обычный Markdown, они работают с любым агентом, принимающим системные промпты или файлы инструкций.
+
+```bash
+git clone https://github.com/azimuth0x28/bitrix-skills-hub.git
+cp -r bitrix-skills-hub/skills/bitrix-orm ваш-проект/.agents/skills/
+```
+
+</details>
+
+После установки правила и индекс скиллов из исходного проекта лежат в [agents/bitrix-coder.md](agents/bitrix-coder.md): подключите файл как rule в Cursor или возьмите за основу собственного `AGENTS.md`.
 
 ## Каталог
 
 42 скилла по темам ядра D7 и смежным областям. Каждый — самодостаточный справочник, который агент применяет сразу.
 
-| Область | Skill |
-| --- | --- |
-| Структура проекта, Loader, `/local` | `bitrix-project-structure` |
-| Секции `.settings.php` ядра | `bitrix-settings` |
-| Создание модулей, install/uninstall | `bitrix-modules` |
-| CLI, `make:*`, cron, команды | `bitrix-console-commands` |
-| Контроллеры, actions, filters | `bitrix-controllers` |
-| Роутинг, URL generation | `bitrix-routing` |
-| ORM, tablets, queries | `bitrix-orm` |
-| События (new + legacy) | `bitrix-events` |
-| Валидация, DTO attributes | `bitrix-validation` |
-| ServiceLocator, DI | `bitrix-service-locator` |
-| Кеш, composite | `bitrix-caching` |
-| Производительность | `bitrix-performance` |
-| CSRF, XSS, SQLi, JWT | `bitrix-security` |
-| Агенты, background jobs, Messenger | `bitrix-background-jobs` |
-| Result, Error, ErrorCollection | `bitrix-result-and-errors` |
-| Компоненты, templates, SEF | `bitrix-components` |
-| Инфоблоки, свойства, SEO | `bitrix-iblocks` |
-| Highload-блоки | `bitrix-highloadblock` |
-| Торговый каталог, цены, SKU | `bitrix-catalog` |
-| Интернет-магазин, заказы, оплата | `bitrix-sale` |
-| REST API, OAuth | `bitrix-rest` |
-| Pull-сервер, real-time | `bitrix-pull` |
-| Landing, конструктор страниц | `bitrix-landing` |
-| SEO, мета, sitemap | `bitrix-seo` |
-| Бизнес-процессы | `bitrix-bizproc` |
-| HttpClient, SSRF, GeoIP | `bitrix-http-client` |
-| PSR-3 logging | `bitrix-logger` |
-| Локализация, Loc | `bitrix-localization` |
-| Date/DateTime, timezones | `bitrix-datetime` |
-| Application, Context, Request/Response | `bitrix-request-response` |
-| Сессии, separated mode | `bitrix-sessions` |
-| SQL, transactions, SqlHelper | `bitrix-database` |
-| PostgreSQL migration | `bitrix-postgresql` |
-| Persistent Storage (25.1100+) | `bitrix-storage` |
-| JS/CSS extensions | `bitrix-extensions` |
-| UI kit (popup, sidepanel) | `bitrix-ui` |
-| BitrixVue 3 | `bitrix-vue` |
-| CMS: sites, menus, templates | `bitrix-cms-basics` |
-| Миграции БД/схемы ([sprint.migration](https://marketplace.1c-bitrix.ru/solutions/sprint.migration/)) | `bitrix-sprint-migration` |
+### Ядро и D7
 
-### Мета-скиллы
+| Skill | Что делает | Когда использовать |
+| --- | --- | --- |
+| [bitrix-project-structure](skills/bitrix-project-structure/SKILL.md) | `/local` vs `/bitrix`, PSR-4, `.settings.php`, Loader | Размещение кода, загрузка модулей, autoloading |
+| [bitrix-settings](skills/bitrix-settings/SKILL.md) | Секции `.settings.php`: connections, cache, session, routing, messenger | Настройка поведения ядра |
+| [bitrix-modules](skills/bitrix-modules/SKILL.md) | CModule, install/index.php, DoInstall/DoUninstall, make:module | Создание новых модулей, регистрация |
+| [bitrix-console-commands](skills/bitrix-console-commands/SKILL.md) | CLI-инструменты, генераторы make:*, Symfony Console | Скелеты, cron, queue workers |
+| [bitrix-controllers](skills/bitrix-controllers/SKILL.md) | Engine Controller/JsonController, actions, фильтры, CurrentUser | AJAX/REST/routed эндпоинты |
+| [bitrix-routing](skills/bitrix-routing/SKILL.md) | RoutingConfigurator, /local/routes, PublicPageController, urlrewrite | Настройка публичных/API URL |
+| [bitrix-orm](skills/bitrix-orm/SKILL.md) | D7 ORM: tablet'ы, ConditionTree, Objectify, batch/merge/deleteByFilter | Проектирование сущностей, чтение, персистентность |
+| [bitrix-events](skills/bitrix-events/SKILL.md) | Система событий: новая модель (EventManager) + легаси (OnBefore*/OnAfter*) | Интеграция модулей, хуки жизненного цикла |
+| [bitrix-validation](skills/bitrix-validation/SKILL.md) | ValidationService, #[NotEmpty]/#[Email]/#[Length], Request DTO | Валидация ввода для контроллеров/сервисов |
+| [bitrix-service-locator](skills/bitrix-service-locator/SKILL.md) | DI-контейнер (PSR-11), autowire, constructor injection | Подключение зависимостей, отказ от статики |
+| [bitrix-result-and-errors](skills/bitrix-result-and-errors/SKILL.md) | Result, Error, ErrorCollection, AddResult, UpdateResult | API сервисов, обработка ошибок без исключений |
+| [bitrix-database](skills/bitrix-database/SKILL.md) | Connection, SqlHelper, SqlExpression, raw SQL, транзакции, bulk-операции | Когда ORM недостаточно, raw SQL, миграции |
+| [bitrix-postgresql](skills/bitrix-postgresql/SKILL.md) | PgsqlConnection, миграция с MySQL, совместимый код, матрица поддержки | Настройка PostgreSQL Enterprise |
+| [bitrix-datetime](skills/bitrix-datetime/SKILL.md) | Date/DateTime, маски ядра, часовые пояса, Culture, DateField | Расписания, конвертация часовых поясов, арифметика дат |
+| [bitrix-request-response](skills/bitrix-request-response/SKILL.md) | HttpRequest/HttpResponse, Json/AjaxJson/Redirect, Uri | Замена $_GET/$_POST, сырые заголовки |
+| [bitrix-storage](skills/bitrix-storage/SKILL.md) | PersistentStorageInterface, DeferredStorageDecorator, Option | Конфиг vs TTL-состояние vs производный кеш |
+| [bitrix-caching](skills/bitrix-caching/SKILL.md) | Cache, ManagedCache, TaggedCache, ORM auto-cache, Composite | Производительность, инвалидация, TTL, прогрев |
+| [bitrix-performance](skills/bitrix-performance/SKILL.md) | Composite site, оптимизация запросов, репликация, шардинг | Высоконагруженная оптимизация за пределами кеширования |
+| [bitrix-background-jobs](skills/bitrix-background-jobs/SKILL.md) | CAgent, addBackgroundJob, брокеры/очереди Messenger | Отложенная и асинхронная обработка |
+| [bitrix-sprint-migration](skills/bitrix-sprint-migration/SKILL.md) | sprint.migration: Version, HelperManager, builders, CLI migrate.php | Миграции БД/схемы/контента |
 
-Скиллы про сами скиллы: конвенции авторства, контроль качества и механическая валидация.
+### Контент и интерфейс
 
-| Задача | Skill |
-| --- | --- |
-| Создание и рефакторинг скиллов по конвенциям репозитория | `bitrix-skill-creator` |
-| Оценка качества скилла перед приёмкой: слепой тест, рубрика Q1–Q10 | `bitrix-skill-eval` |
-| Механическая валидация скилла перед PR: формат + безопасность | `skill-validator` |
+| Skill | Что делает | Когда использовать |
+| --- | --- | --- |
+| [bitrix-iblocks](skills/bitrix-iblocks/SKILL.md) | Типы/элементы/секции инфоблоков, ORM compileEntity, свойства, SEO | Работа с инфоблоками, структурированные данные |
+| [bitrix-highloadblock](skills/bitrix-highloadblock/SKILL.md) | HighloadBlockTable, compileEntity, DataManager CRUD, UF, ORM-события | Кастомные сущности, динамические модели данных |
+| [bitrix-components](skills/bitrix-components/SKILL.md) | class.php, шаблоны, кеш, SEF, Controllerable AJAX | Создание или редактирование компонентов |
+| [bitrix-extensions](skills/bitrix-extensions/SKILL.md) | /local/js/, bundle.config.js, Extension::load, @bitrix/cli | Добавление фронтенд-кода в модули |
+| [bitrix-ui](skills/bitrix-ui/SKILL.md) | Popup, SidePanel, MessageBox, entity-selector, grid, alerts, toasts | Админ-интерфейсы, публичные UI-компоненты |
+| [bitrix-vue](skills/bitrix-vue/SKILL.md) | BitrixVue 3, ui.vue3.bitrixvue, createApp, интеграция с REST | Реактивный UI на Vue в Bitrix |
+| [bitrix-cms-basics](skills/bitrix-cms-basics/SKILL.md) | Сайты, шаблоны, меню, инклюды, хлебные крошки, стили, user fields | Структура сайта, управление контентом |
+| [bitrix-landing](skills/bitrix-landing/SKILL.md) | Лендинги, репозиторий блоков, публикация, хуки | Страницы Sites24, витрины, базы знаний |
+| [bitrix-seo](skills/bitrix-seo/SKILL.md) | Карты сайта, robots.txt, интеграция с вебмастером, IPROPERTY | Карты обхода, подключение к поисковикам |
+
+### Торговля
+
+| Skill | Что делает | Когда использовать |
+| --- | --- | --- |
+| [bitrix-catalog](skills/bitrix-catalog/SKILL.md) | Продукты, SKU/офферы, цены, инвентарь, скидки, бандлы | Электронная коммерция: цены, остатки, API каталога |
+| [bitrix-sale](skills/bitrix-sale/SKILL.md) | Basket, Order, FUSER, оплата, доставка, скидки, купоны | Корзина/checkout, жизненный цикл заказа |
+| [bitrix-bizproc](skills/bitrix-bizproc/SKILL.md) | CBPDocument, CBPRuntime, шаблоны workflows, кастомные activities | Согласования, документооборот, автоматизация |
+
+### Интеграции и платформа
+
+| Skill | Что делает | Когда использовать |
+| --- | --- | --- |
+| [bitrix-rest](skills/bitrix-rest/SKILL.md) | REST-методы, scopes, webhook/OAuth, настройки rest | Предоставление API приложениям/webhooks/маркетплейсу |
+| [bitrix-pull](skills/bitrix-pull/SKILL.md) | Pull-модуль: realtime-события, подписка JS, watch tags | Живые обновления UI, уведомления |
+| [bitrix-http-client](skills/bitrix-http-client/SKILL.md) | HttpClient, PSR-18, async Promise, SSRF, GeoIp | Интеграции с внешними API, webhooks |
+| [bitrix-logger](skills/bitrix-logger/SKILL.md) | PSR-3: FileLogger, SysLogger, LogFormatter, Monolog | Логи модулей, отладка, ротация логов |
+| [bitrix-localization](skills/bitrix-localization/SKILL.md) | Loc, lang-файлы, loadMessages, BX.message, translate:index | Интернационализация, многоязычные сайты, JS-переводы |
+| [bitrix-security](skills/bitrix-security/SKILL.md) | CSRF, XSS, SQLi, SSRF, JWT/JWK, права доступа, шифрование | Обработка ввода, аудит безопасности |
+| [bitrix-sessions](skills/bitrix-sessions/SKILL.md) | Application::getSession(), read-only/virtual-режимы, separated mode | Управление сессиями, настройка AJAX-блокировок |
+
+### Мета
+
+| Skill | Что делает | Когда использовать |
+| --- | --- | --- |
+| [bitrix-skill-creator](skills/bitrix-skill-creator/SKILL.md) | Конвенции авторства: морфология, frontmatter, baseline/Since, плотность | Создание или редактирование скиллов |
+| [bitrix-skill-eval](skills/bitrix-skill-eval/SKILL.md) | Протокол слепого теста, рубрика Q1-Q10, хард-гейты, метрика плотности | Оценка черновиков скиллов |
+| [skill-validator](skills/skill-validator/SKILL.md) | quick_validate.py (формат), prism-scanner (безопасность), грейд-гейты | Механическая проверка перед PR |
+
+## Агентские персоны
+
+Готовые специализированные персоны для разработки на Bitrix:
+
+| Agent | Роль | Перспектива |
+| --- | --- | --- |
+| [bitrix-coder](agents/bitrix-coder.md) | Специалист по Bitrix Framework | Глубокое знание D7, границы DI, конвенции `/local/`, паттерны безопасности, политика версий |
 
 ## Устройство скилла
 
@@ -110,7 +276,7 @@ skills/<name>/
 
 ## Как добавить свой
 
-Новый скилл создавайте через `bitrix-skill-creator`: он знает конвенции репозитория — структуру, frontmatter, обязательные слои, чеклисты. Готовый черновик прогоните через `skill-validator` (формат + безопасность) и `bitrix-skill-eval`: слепой тест и рубрика Q1–Q10 отсеивают слабые скиллы до попадания в каталог.
+Новый скилл создавайте через `bitrix-skill-creator`: он знает конвенции репозитория, структуру, frontmatter, обязательные слои, чеклисты. Готовый черновик прогоните через `skill-validator` (формат + безопасность) и `bitrix-skill-eval`: слепой тест и рубрика Q1-Q10 отсеивают слабые скиллы до попадания в каталог.
 
 ## Ссылки
 
