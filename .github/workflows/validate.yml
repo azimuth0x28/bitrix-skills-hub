@@ -1,0 +1,44 @@
+name: Skills Hub Validation
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  # Reserved: scheduled lint trigger (next phase, PRD R1.1) — do not enable yet.
+  # schedule:
+  #   - cron: '0 9 * * 1'  # every Monday at 09:00 UTC
+
+permissions:
+  contents: read
+
+jobs:
+  # Reserved: skill linter job (next phase, PRD R1.1) — do not enable yet.
+
+  smoke:
+    name: Catalog smoke test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Catalog consistency smoke
+        run: |
+          bash .github/scripts/smoke-catalog.sh
+        # Exit 0 expected — every README catalog entry matches a skills/ folder and SKILL.md exists.
+
+  security:
+    name: Skill security scan (prism)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Prism security scan
+        # Pinned by SHA per PRD §9.1; fail-on high mirrors the AGENTS.md repo gate.
+        uses: aidongise-cell/prism-scanner@4194331c9f750756bcdd8fd777a4d714ba557375 # v0.2.2
+        with:
+          path: skills
+          format: sarif
+          output-file: prism-results.sarif
+          fail-on: high
