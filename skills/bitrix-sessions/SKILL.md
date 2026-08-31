@@ -224,5 +224,5 @@ UserAuthActionTable::addLogoutAction($USER->GetID());
 - With `APPLICATION_ID` set, browser sessions skip the record (id mismatch → `continue`).
 - The action check caches its `getList()` for 3600 s — urgent revocation may lag by up to the ORM query cache TTL.
 - After the user changes their own password, the kernel sets `AUTH_ACTION_SKIP_LOGOUT` so they are not kicked immediately.
-- REST/desktop clients authenticate with their own application passwords — for a full account revoke, also delete the `ApplicationPasswordTable` rows (as the admin "Execute logout" flow does).
+- REST/desktop clients authenticate with their own application passwords — for a full account revoke, also delete the `ApplicationPasswordTable` rows.
 - Stale records are cleaned by the `CUser::AuthActionsCleanUpAgent()` agent (older than a day).

@@ -1,6 +1,6 @@
 ---
 name: bitrix-ui
-description: Covers Bitrix UI library — main.popup, main.sidepanel, ui.system.dialog, ui.dialogs.messagebox, ui.system.menu, ui.system.input, ui.alerts, ui.notification (toasts), ui.entity-selector (Dialog, TagSelector, providers), main.ui.grid, main.ui.filter, ui.icon-set, ui.lottie, ui.a11y, typography. Applied when building admin interfaces and public UI with kernel components. Key terms — Extension::load, Popup, SidePanel, system-dialog, MessageBox, ui.alerts, entity-selector, grid, filter, ui.a11y, UI kit.
+description: Covers Bitrix UI library — main.popup, main.sidepanel, ui.system.dialog, ui.dialogs.messagebox, ui.system.menu, ui.alerts, ui.notification, ui.entity-selector (Dialog, TagSelector), main.ui.grid, main.ui.filter, ui.icon-set, ui.a11y. Applied when building admin and public UI with kernel components. Key terms — Extension::load, Popup, SidePanel, MessageBox, ui.alerts, entity-selector, grid, filter.
 ---
 
 # Bitrix UI Library

@@ -1,6 +1,6 @@
 ---
 name: bitrix-service-locator
-description: Covers DI container Bitrix\Main\DI\ServiceLocator (PSR-11) — registration of services in the services section of a module's .settings.php file, autowire, retrieving dependencies via has()/get(), constructor injection in application services, action-parameter injection in controllers, binding interfaces to implementations. Applied when moving logic to services, avoiding static calls, and wiring dependencies into services and controller actions (not console/event constructors). Key terms — ServiceLocator, DI, services, autowire, PSR-11, dependency injection, container.
+description: Covers DI container Bitrix\Main\DI\ServiceLocator (PSR-11) — registration in services section of .settings.php, autowire, has()/get(), constructor injection, action-parameter injection in controllers, binding interfaces. Applied when moving logic to services, avoiding static calls, wiring dependencies. Key terms — ServiceLocator, DI, services, autowire, PSR-11, dependency injection, container.
 ---
 
 # ServiceLocator (DI) in Bitrix

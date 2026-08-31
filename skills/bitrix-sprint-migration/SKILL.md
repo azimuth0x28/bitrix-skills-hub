@@ -1,13 +1,6 @@
 ---
 name: bitrix-sprint-migration
-description: >-
-  Covers Bitrix module sprint.migration — Version migrations, HelperManager
-  (Iblock/Hlblock/Option/Agent/…), builders (run), CLI migrate.php
-  (add/ls/up/down/redo/mark), configs migrations.*.php, restartable batches,
-  exchange dirs. Use when creating or applying DB/schema/content migrations,
-  exporting iblock/HL/options via builders, or debugging migration state.
-  Key terms — sprint.migration, Version, up/down, HelperManager, saveIblock,
-  saveHlblock, migrate.php, version builders, migration_dir.
+description: Covers Bitrix module sprint.migration — Version, HelperManager (Iblock/Hlblock/Option/Agent), builders, CLI migrate.php, configs migrations.*.php, restartable batches, exchange dirs. Applied when creating or applying DB/schema/content migrations, exporting via builders, or debugging state. Key terms — sprint.migration, Version, up/down, HelperManager, saveIblock, saveHlblock, migrate.php.
 ---
 
 # Bitrix sprint.migration

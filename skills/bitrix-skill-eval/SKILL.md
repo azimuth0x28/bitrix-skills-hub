@@ -1,6 +1,6 @@
 ---
 name: bitrix-skill-eval
-description: Covers quality evaluation of Bitrix Framework skills in this repository — the blind authoring test protocol (frozen spec snapshot, verbatim prompt, per-run isolation, external time cap), the Q1–Q10 grading rubric (structure, triggerability, coverage, precision, code quality, safety, checklist, density, consistency, generation time), hard gates, knowledge-point density metric, kernel verification of draft identifiers, spec-caused vs agent-caused gap classification, and the iteration loop. Applied when grading a skill draft against a reference skill, running a blind test of `bitrix-skill-creator` output, comparing an AI-generated skill with a human-written one, evaluating a first-of-its-kind skill when no reference exists, or deciding whether a skill draft is accepted into the collection. Key terms — Q1–Q10, knowledge point, density, hard gates, blind test, frozen snapshot, tier-N isolation, kernel verification, reference calibration, absolute mode, above-average bar.
+description: Covers quality evaluation of Bitrix Framework skills — blind test protocol (frozen spec, verbatim prompt, per-run isolation, time cap), Q1–Q10 grading rubric, hard gates, knowledge-point density, kernel verification. Applied when grading skill drafts, running blind tests, deciding acceptance. Key terms — Q1–Q10, knowledge point, density, hard gates, blind test, kernel verification.
 ---
 
 # Bitrix Skill Quality Evaluation

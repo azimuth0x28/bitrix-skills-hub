@@ -1,6 +1,6 @@
 ---
 name: bitrix-project-structure
-description: Covers Bitrix project structure — /local vs /bitrix, PSR-4 autoloading, .settings.php, Loader includeModule vs requireModule, placement of components, templates, modules, routes and php_interface, namespaces like Vendor\Module. Applied for "where to put code" questions, module loading boundaries and configuring autoloading. Key terms — /local, /bitrix, PSR-4, .settings.php, Loader, requireModule, includeModule, autoload.
+description: Covers Bitrix project structure — /local vs /bitrix, PSR-4 autoloading, .settings.php, Loader includeModule vs requireModule, placement of components, templates, modules, routes and php_interface, namespaces like Vendor\Module. Applied for "where to put code" questions, module loading, autoloading. Key terms — /local, /bitrix, PSR-4, .settings.php, Loader, requireModule, includeModule, autoload.
 ---
 
 # Project Structure and Autoloading in Bitrix

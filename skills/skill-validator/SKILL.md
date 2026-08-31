@@ -1,6 +1,6 @@
 ---
 name: skill-validator
-description: Covers mechanical validation of a skill folder before a PR — format check via quick_validate.py from the anthropics/skills skill-creator (single uv run command), security scan via prism-scanner (single uvx command), exit-code and grade A–F gates, reading validator errors, known false positives with the .prismignore policy, and batch validation of the whole skills/ folder. Applied when a new skill is ready for a PR, when asked to check, lint, or validate a skill, when interpreting validator output, or after mass edits to skills/. Key terms — quick_validate.py, prism-scanner, prism scan, --fail-on, exit code, grade A–F, .prismignore, skill folder, agent-skills spec, pre-PR checks.
+description: Covers mechanical validation of a skill folder before a PR — format check via quick_validate.py, security scan via prism-scanner, exit-code and grade A–F gates, .prismignore, batch validation. Applied when a skill is ready for a PR, when asked to validate, or after mass edits. Key terms — quick_validate.py, prism-scanner, --fail-on, exit code, grade A–F, .prismignore, pre-PR checks.
 ---
 
 # Skill Validation (Format + Security)

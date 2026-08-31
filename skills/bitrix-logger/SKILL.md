@@ -1,6 +1,6 @@
 ---
 name: bitrix-logger
-description: Covers PSR-3 logging in Bitrix — Bitrix\Main\Diag\Logger, FileLogger, SysLogger, NullLogger, LogFormatter, loggers section in .settings.php, named kernel loggers (main.Default, main.HttpClient, main.GeoIpManager, main.EventLog.*), integration with Monolog and third-party PSR-3 loggers. Applied when configuring module logs, debugging integrations, gathering errors from specific kernel components and log rotation. Key terms — Logger, FileLogger, SysLogger, LogFormatter, PSR-3, Monolog, loggers config, log level.
+description: Covers PSR-3 logging in Bitrix — Bitrix\Main\Diag\Logger, FileLogger, SysLogger, NullLogger, LogFormatter, loggers section in .settings.php, named kernel loggers (main.Default, main.HttpClient, main.GeoIpManager, main.EventLog.*), Monolog and PSR-3 integration. Applied when configuring module logs, debugging integrations. Key terms — Logger, FileLogger, SysLogger, LogFormatter, PSR-3, Monolog.
 ---
 
 # Logging in Bitrix (PSR-3)

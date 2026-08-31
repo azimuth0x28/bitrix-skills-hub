@@ -1,6 +1,6 @@
 ---
 name: bitrix-modules
-description: Covers creation and maintenance of a custom Bitrix module in /local/modules/<vendor>.<module>/ — CModule class, install/index.php, DoInstall and DoUninstall, install/version.php with $arModuleVersion, registration of events and agents during installation, module options (options.php), generation via make:module. Applied when creating a new module, refining installation/uninstallation, registering event handlers and publishing module options in the Admin Panel. Key terms — CModule, DoInstall, DoUninstall, module manifest, install/index.php, make:module, vendor.module.
+description: Covers creation and maintenance of a custom Bitrix module in /local/modules/vendor.module/ — CModule class, install/index.php, DoInstall/DoUninstall, install/version.php with $arModuleVersion, event/agent registration, module options, make:module. Applied when creating modules, installing, registering handlers. Key terms — CModule, DoInstall, DoUninstall, module manifest, install/index.php.
 ---
 
 # Bitrix Modules

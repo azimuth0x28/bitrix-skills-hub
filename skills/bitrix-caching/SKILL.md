@@ -1,6 +1,6 @@
 ---
 name: bitrix-caching
-description: Covers caching in Bitrix — Cache (unmanaged), ManagedCache, TaggedCache, ORM auto-cache, component cache via startResultCache/endResultCache, Composite Site, cache engine configuration (files, memcached, redis) in .settings.php. Applied when optimizing performance, invalidating by tags and events, setting TTL, cache warm-up, and debugging cache hits. Key terms — cache, invalidate, TaggedCache, ManagedCache, startResultCache, cacheDir, clean.
+description: Covers caching in Bitrix — Cache, ManagedCache, TaggedCache, ORM auto-cache, component cache via startResultCache/endResultCache, Composite Site, cache engine config (files, memcached, redis) in .settings.php. Applied when optimizing performance, invalidating by tags/events, setting TTL, cache warm-up. Key terms — cache, invalidate, TaggedCache, ManagedCache, startResultCache, cacheDir.
 ---
 
 # Caching in Bitrix

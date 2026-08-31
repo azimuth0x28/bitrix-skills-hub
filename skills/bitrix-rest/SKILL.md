@@ -1,6 +1,6 @@
 ---
 name: bitrix-rest
-description: Covers REST module — registering methods from a custom module, scopes, webhook and OAuth overview, rest / restIntegration settings, link to Engine controllers and ActionFilter\Scope::REST. Applied when exposing module APIs to apps, webhooks, or marketplace integrations. Key terms — rest, OnRestServiceBuildDescription, CRestUtil, scope, webhook, OAuth, APAuth, restIntegration, Scope::REST, BX.rest.callMethod.
+description: Covers REST module — registering methods from a custom module, scopes, webhook and OAuth overview, rest / restIntegration settings, Engine controllers and ActionFilter\Scope::REST. Applied when exposing module APIs to apps, webhooks, or marketplace integrations. Key terms — rest, OnRestServiceBuildDescription, CRestUtil, scope, webhook, OAuth, restIntegration, Scope::REST, BX.rest.callMethod.
 ---
 
 # REST API (`rest`)
