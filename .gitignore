@@ -10,10 +10,14 @@
 # Agent platforms
 .claude
 .codex
-.cursor
+.cursoro
+.opencode
 
 # other agent/work/experiment folders
 .openai
 .anthropic
 .llama
 .palm
+.logs
+.omo
+.tmp
