@@ -21,7 +21,7 @@ This repo plays the hub role: one Bitrix skill collection, shared authoring conv
 **Fastest path** — any agent, one command. The open [skills CLI](https://github.com/vercel-labs/skills) installs into 70+ agents:
 
 ```bash
-npx skills add azimuth0x28/bitrix-skills-hub --all   # all 42 skills at once
+npx skills add azimuth0x28/bitrix-skills-hub --all   # all 43 skills at once
 npx skills add azimuth0x28/bitrix-skills-hub --list  # browse before installing
 npx skills add azimuth0x28/bitrix-skills-hub --skill bitrix-orm bitrix-controllers
 npx skills update                                    # update installed ones
@@ -187,7 +187,7 @@ After installation, the rules and skill index from the original project live in 
 
 ## The catalog
 
-42 skills covering D7 core topics and adjacent areas. Each one is a self-contained reference an agent can apply immediately.
+43 skills covering D7 core topics and adjacent areas. Each one is a self-contained reference an agent can apply immediately.
 
 ### Core & D7
 
@@ -252,7 +252,8 @@ After installation, the rules and skill index from the original project live in 
 
 | Skill | What It Does | Use When |
 | --- | --- | --- |
-| [bitrix-skill-creator](skills/bitrix-skill-creator/SKILL.md) | Authoring conventions: morphology, frontmatter, baseline/Since, density | Creating or editing skills |
+| [bitrix-api-skill-creator](skills/bitrix-api-skill-creator/SKILL.md) | Authoring conventions: morphology, frontmatter, baseline/Since, density | Creating API/kernel skills (kernel classes, ORM, module APIs) |
+| [bitrix-workflow-skill-creator](skills/bitrix-workflow-skill-creator/SKILL.md) | Workflow-skill conventions: decision tables, project facts, procedures, tool versions | Creating workflow/process skills (code style, devops setup, review rules) |
 | [bitrix-skill-eval](skills/bitrix-skill-eval/SKILL.md) | Blind test protocol, Q1-Q10 rubric, hard gates, density metric | Grading skill drafts |
 | [skill-validator](skills/skill-validator/SKILL.md) | quick_validate.py (format), prism-scanner (security), grade gates | Pre-PR mechanical validation |
 
@@ -276,7 +277,7 @@ Fat skills use progressive disclosure: the agent opens `SKILL.md` first, then on
 
 ## Adding your own
 
-Author a new skill through `bitrix-skill-creator`: it knows the repo conventions, structure, frontmatter, mandatory content layers, checklists. Run the finished draft through `skill-validator` (format + security) and `bitrix-skill-eval`: the blind test and the Q1-Q10 rubric filter out weak skills before they enter the catalog.
+Author a new skill through `bitrix-api-skill-creator` (API/kernel skills — the default) or `bitrix-workflow-skill-creator` (workflow skills: processes, conventions, environment setup). Run the finished draft through `skill-validator` (format + security) and `bitrix-skill-eval`: the blind test and the Q1-Q10 rubric filter out weak skills before they enter the catalog.
 
 ## Links
 

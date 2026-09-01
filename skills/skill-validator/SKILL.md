@@ -5,7 +5,7 @@ description: Covers mechanical validation of a skill folder before a PR — form
 
 # Skill Validation (Format + Security)
 
-Mechanical gate for a skill folder before a PR. Editorial quality (blind test, Q1–Q10 rubric) is owned by `bitrix-skill-eval`; authoring rules by `bitrix-skill-creator`; the PR gate policy lives in `AGENTS.md` ("Automated skill checks") — reference them, never duplicate.
+Mechanical gate for a skill folder before a PR. Editorial quality (blind test, Q1–Q10 rubric) is owned by `bitrix-skill-eval`; authoring rules by `bitrix-api-skill-creator`; the PR gate policy lives in `AGENTS.md` ("Automated skill checks") — reference them, never duplicate.
 
 | Check | Tool | Command |
 | --- | --- | --- |
@@ -99,5 +99,5 @@ Every folder must appear in either the pass set or the report — a folder check
 
 ## Related skills
 
-- `bitrix-skill-creator` — authoring spec a validated skill must satisfy.
+- `bitrix-api-skill-creator` — authoring spec a validated skill must satisfy.
 - `bitrix-skill-eval` — editorial quality gate beyond mechanical checks.

@@ -1,5 +1,5 @@
 ---
-name: bitrix-skill-creator
+name: bitrix-api-skill-creator
 description: Covers house conventions for authoring skills — morphology (router vs monolith), frontmatter templates, baseline/Since versioning, mandatory content layers, negative knowledge, cross-linking, kernel verification, line-density quality bar. Applied when creating, editing, or reviewing a skill for house-style compliance. Key terms — SKILL.md, rules/, router, baseline, Since, API matrix, density.
 ---
 

@@ -14,7 +14,7 @@ Guide for AI agents contributing to **bitrix-skills-hub** — a hub of 42 AI ski
 ```
 skills/<name>/SKILL.md        # router: what the skill covers, which rules/*.md to open
 skills/<name>/rules/*.md      # progressive-disclosure layers
-skills/bitrix-skill-creator/  # meta-skill: authoring spec for new skills
+skills/bitrix-api-skill-creator/  # meta-skill: authoring spec for new skills
 skills/bitrix-skill-eval/     # meta-skill: Q1–Q10 rubric, blind-test protocol, hard gates
 skills/skill-validator/       # meta-skill: format validation + prism security scanning
 agents/bitrix-coder.md        # Bitrix canons for skill consumers (D7, DI, /local/, security)
@@ -29,7 +29,7 @@ plugin.json                   # Codex plugin manifest
 | --- | --- |
 | This file | Contribution workflow in this repo |
 | `agents/bitrix-coder.md` | Bitrix canons for agents on Bitrix projects (skill consumers) |
-| `skills/bitrix-skill-creator/` | Product spec a finished skill must satisfy |
+| `skills/bitrix-api-skill-creator/` | Product spec a finished skill must satisfy |
 | `skills/bitrix-skill-eval/` | Quality gate for skill drafts |
 | `skills/skill-validator/` | Pre-PR validation (format + security scan) |
 
@@ -41,16 +41,16 @@ A new skill passes six steps; the owner of every step is a house skill — read 
 
 | Step | Owner | Output |
 | --- | --- | --- |
-| 1. Morphology decision (monolith vs router + rules) | `bitrix-skill-creator` §1 | Shape + size budget |
-| 2. Domain surface discovery | `bitrix-skill-creator` §9.0 | Enumerated classes, services, settings, events |
-| 3. Draft (router first, then `rules/*.md` one by one) | `bitrix-skill-creator` §2–§8 | Partial delivery stays useful |
-| 4. Kernel verification (targeted greps, sibling cross-check) | `bitrix-skill-creator` §9 | Every identifier confirmed |
+| 1. Morphology decision (monolith vs router + rules) | `bitrix-api-skill-creator` §1 | Shape + size budget |
+| 2. Domain surface discovery | `bitrix-api-skill-creator` §9.0 | Enumerated classes, services, settings, events |
+| 3. Draft (router first, then `rules/*.md` one by one) | `bitrix-api-skill-creator` §2–§8 | Partial delivery stays useful |
+| 4. Kernel verification (targeted greps, sibling cross-check) | `bitrix-api-skill-creator` §9 | Every identifier confirmed |
 | 5. Evaluation (blind test, Q1–Q10, hard gates) | `bitrix-skill-eval` | Grades with `file:line` evidence |
 | 6. Acceptance + catalog registration | This file | PR green in CI (smoke + security), with catalog rows |
 
 **Acceptance bar** (from `bitrix-skill-eval` §4): mean ≥8.5 across Q1–Q10, zero invented identifiers, coverage ≥85% of the scenario-scoped domain surface, within the time cap. Below any of these — iterate (max three runs), then report the trend.
 
-Editing an existing skill: follow `bitrix-skill-creator` (§1, §4, §8) and re-run kernel verification on every changed identifier.
+Editing an existing skill: follow `bitrix-api-skill-creator` (§1, §4, §8) and re-run kernel verification on every changed identifier.
 
 ## Content conventions
 

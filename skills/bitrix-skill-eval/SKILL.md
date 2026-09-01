@@ -5,30 +5,30 @@ description: Covers quality evaluation of Bitrix Framework skills — blind test
 
 # Bitrix Skill Quality Evaluation
 
-Measures skill drafts against the house quality bar. The authoring spec lives in `bitrix-skill-creator`; this skill measures its output. It does not explain what skills are and does not own generic eval tooling.
+Measures skill drafts against the house quality bar. The authoring spec lives in `bitrix-api-skill-creator`; this skill measures its output. It does not explain what skills are and does not own generic eval tooling.
 
 | Concern | Owner |
 | --- | --- |
-| Skill product spec (structure, content, style) | `bitrix-skill-creator` |
+| Skill product spec (structure, content, style) | `bitrix-api-skill-creator` |
 | Generic eval tooling (test prompts, benchmarks, viewers) | System skill-creator |
 | Bitrix-specific rubric, blind-test protocol, kernel verification of drafts | This skill |
 
-Baseline: **main 23.0+**. Version markers inside graded drafts follow the rules in `bitrix-skill-creator` §4 and are verified during grading.
+Baseline: **main 23.0+**. Version markers inside graded drafts follow the rules in `bitrix-api-skill-creator` §4 and are verified during grading.
 
 ## 1. Evaluation model (indirect measurement)
 
 A skill draft is the effect; the authoring spec is the treatment. Grading a draft measures how well the spec transmits house conventions to an arbitrary agent.
 
-- Classify every gap as **spec-caused** (the rule is missing or weak in `bitrix-skill-creator`) or **agent-caused** (the rule existed and was ignored).
+- Classify every gap as **spec-caused** (the rule is missing or weak in `bitrix-api-skill-creator`) or **agent-caused** (the rule existed and was ignored).
 - Patch the spec only for spec-caused gaps. Agent-caused misses count against the draft; a miss repeated across drafts is evidence of a spec gap, however.
 - Never widen a rubric criterion mid-series to fit a draft — recalibrate only between series, and record the change.
 
 ## 2. Blind test protocol
 
-1. **Freeze the spec snapshot**: copy `skills/bitrix-skill-creator/` to an isolated location (e.g. `.tmp/spec/bitrix-skill-creator/`) before launch. The authoring agent reads only that snapshot. The snapshot must not change during a test.
+1. **Freeze the spec snapshot**: copy `skills/bitrix-api-skill-creator/` to an isolated location (e.g. `.tmp/spec/bitrix-api-skill-creator/`) before launch. The authoring agent reads only that snapshot. The snapshot must not change during a test.
 2. **Canonical verbatim prompt**: byte-identical across iterations of one task, except the run-unique output-folder token. No coaching, no quality hints, no time-limit mentions inside the prompt — enforcement is external.
 3. **Run isolation**: every run writes to its own unique output folder (`tier-<N>/`, incremented per run). A new agent launched while a previous one has yet to finish can never affect its results.
-4. **Reference isolation**: the authoring agent is forbidden from reading the whole `skills/` directory — no sibling skills, no reference draft, no `bitrix-skill-creator` inside it. It reads the spec snapshot and kernel source only. Violations invalidate the run.
+4. **Reference isolation**: the authoring agent is forbidden from reading the whole `skills/` directory — no sibling skills, no reference draft, no `bitrix-api-skill-creator` inside it. It reads the spec snapshot and kernel source only. Violations invalidate the run.
 5. **External time cap**: run the authoring agent in the background; poll status every ~45–60 s; cancel at the cap. Check the output directory after cancelling — writes often flush past the cancel point.
 6. **Archive everything**: copy every artifact (complete or partial) to the eval archive immediately after the run. Drafts never overwrite reference skills.
 
@@ -79,7 +79,7 @@ Never trust a draft's identifiers on their face — verify against source, stron
 ## 7. Iteration loop
 
 1. Grade the draft per §3–§5; write the grades down before touching anything.
-2. Classify each gap: spec-caused → patch `bitrix-skill-creator`; agent-caused → record and move on.
+2. Classify each gap: spec-caused → patch `bitrix-api-skill-creator`; agent-caused → record and move on.
 3. Re-sync the spec snapshot, increment the tier token, re-run with the same canonical prompt.
 4. Stop when the above-average bar holds, or after three iterations — then report the trend with evidence.
 
@@ -125,4 +125,4 @@ When no reference skill exists for the domain (a first-of-its-kind skill), grade
 
 ## Related skills
 
-- `bitrix-skill-creator` — the authoring spec this rubric measures.
+- `bitrix-api-skill-creator` — the authoring spec this rubric measures.
