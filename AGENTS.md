@@ -28,12 +28,12 @@ plugin.json                   # Codex plugin manifest
 
 | File | Governs |
 | --- | --- |
-| This file | Contribution workflow in this repo |
-| `agents/bitrix-coder.md` | Bitrix canons for agents on Bitrix projects (skill consumers) |
-| `skills/bitrix-api-skill-creator/` | Product spec a finished skill must satisfy |
-| `skills/bitrix-workflow-skill-creator/` | Authoring spec for workflow/process skills (conventions, code style, environment setup) |
-| `skills/bitrix-skill-eval/` | Quality gate for skill drafts |
-| `skills/skill-validator/` | Pre-PR validation (format + security scan) |
+| This file | How to contribute here: authoring pipeline, content conventions, fact discipline, PR checklist |
+| `agents/bitrix-coder.md` | How agents write Bitrix code on consumer projects (D7, DI, `/local/`, security, version policy) |
+| `skills/bitrix-api-skill-creator/` | How to author API skills: structure, content layers, kernel verification |
+| `skills/bitrix-workflow-skill-creator/` | How to author workflow skills: decision tables, project facts, procedures, tool versions |
+| `skills/bitrix-skill-eval/` | How skill drafts are graded: blind test, Q1–Q10 rubric, hard gates |
+| `skills/skill-validator/` | How to run mechanical checks (quick_validate.py, prism scan) before a PR |
 
 Skills reference the Bitrix canons (DI, `/local/`, security, version policy) from project rulebooks; neither skills nor this file duplicate them.
 
