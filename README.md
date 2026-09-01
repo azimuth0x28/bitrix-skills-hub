@@ -12,7 +12,7 @@ Every skill here is a plain markdown file: readable in a couple of minutes, open
 
 ## Why a hub
 
-Skills multiply like mushrooms after rain: every engineer ends up with a personal stash of prompts, rules, and wrappers. Six months later that is skills-hell, dozens of scattered files with no versions, no quality checks, no shared standard. The AvitoTech team made the case for centralization in their article [«Агентская разработка: как обеспечить качество»](https://habr.com/ru/companies/avito/articles/1060190/) (in Russian): a skills-hub keeps vetted skills in one place, versioned and quality-checked, built for exactly that moment.
+Skills multiply like mushrooms after rain: every engineer ends up with a personal stash of prompts, rules, and wrappers. Six months later that is skills-hell, dozens of scattered files with no versions, no quality checks, no shared standard. The AvitoTech team made the case for centralization in their article [«Agentic Development: How to Ensure Quality»](https://habr.com/ru/companies/avito/articles/1060190/) (in Russian): a skills-hub keeps vetted skills in one place, versioned and quality-checked, built for exactly that moment.
 
 This repo plays the hub role: one Bitrix skill collection, shared authoring conventions, and an evaluation gate before a skill enters the catalog.
 
