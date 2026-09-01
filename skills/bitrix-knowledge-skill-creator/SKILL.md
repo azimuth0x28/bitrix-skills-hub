@@ -5,7 +5,7 @@ description: Covers house conventions for authoring knowledge skills — skills 
 
 # Knowledge Skill Authoring Conventions
 
-House rules for **knowledge skills** in this repository — skills that teach how to work correctly and incorrectly with a development aspect and convey best practices: kernel and module code, the API an agent writes against, patterns, prohibitions, negative knowledge. Workflow skills (processes, conventions, environment setup) follow `bitrix-workflow-skill-creator`. The generic skill-creator owns the process (draft, test prompts, eval loop, description optimization) — its canonical source is [anthropics/skills › skill-creator](https://github.com/anthropics/skills/tree/main/skills/skill-creator); this file refines it with the product spec a finished Bitrix knowledge skill must satisfy. It does not explain what skills are.
+House rules for **knowledge skills** in this repository — skills that teach how to work correctly and incorrectly with a development aspect and convey best practices: kernel and module code, the API an agent writes against, patterns, prohibitions, negative knowledge. Workflow skills (processes, conventions, environment setup) follow `bitrix-workflow-skill-creator`. The generic skill-creator owns the process (draft, test prompts, eval loop, description optimization) — its canonical source is [anthropics/skills › skill-creator](https://github.com/anthropics/skills/tree/main/skills/skill-creator); this file refines it with the product spec a finished Bitrix knowledge skill must satisfy. The base agent-skills spec (what a SKILL is) is resolved per **Base skill dependency** below.
 
 Goal: an agent following only this spec must produce a skill at the quality of the existing collection — structure, precision, and density included.
 
@@ -16,6 +16,15 @@ Goal: an agent following only this spec must produce a skill at the quality of t
 | Agent canons: DI boundaries, `/local/`, security, version policy | Project rulebooks — skills reference them, never repeat them |
 
 A skill lives at `skills/<name>/SKILL.md` (+ optional `rules/*.md`); `name` equals the folder name.
+
+## Base skill dependency (read before drafting)
+
+This skill refines the generic `skill-creator` and depends on it for the base agent-skills spec. Check availability before drafting:
+
+- `skill-creator` available → read it first; it owns what a skill is and the draft → test → eval loop.
+- `skill-creator` unavailable → read [`references/skill-anatomy.md`](references/skill-anatomy.md) in this folder — a verbatim copy of the agent-skills anatomy (skill structure, required frontmatter, section layout, naming, context-efficiency rules). If the file is missing, fetch the canonical source: <https://github.com/addyosmani/agent-skills/blob/main/docs/skill-anatomy.md>.
+
+Do not start a draft until one of the two has been read.
 
 ## 1. Choose the morphology first
 
