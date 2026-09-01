@@ -18,7 +18,7 @@ jobs:
     name: Catalog smoke test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Catalog consistency smoke
         run: |
@@ -32,7 +32,7 @@ jobs:
       contents: read
       security-events: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Prism security scan
         # Pinned by SHA per PRD §9.1; fail-on high mirrors the AGENTS.md repo gate.
