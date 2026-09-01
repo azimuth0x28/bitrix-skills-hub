@@ -5,14 +5,14 @@ description: Covers house conventions for authoring skills — morphology (route
 
 # Bitrix Skill Authoring Conventions
 
-House rules for skills in this repository. The generic skill-creator owns the process (draft, test prompts, eval loop, description optimization) — its canonical source is [anthropics/skills › skill-creator](https://github.com/anthropics/skills/tree/main/skills/skill-creator); this file refines it with the product spec a finished Bitrix skill must satisfy. It does not explain what skills are.
+House rules for **API skills** in this repository — skills that document kernel or module code and the API an agent writes against. Workflow skills (processes, conventions, environment setup) follow `bitrix-workflow-skill-creator`. The generic skill-creator owns the process (draft, test prompts, eval loop, description optimization) — its canonical source is [anthropics/skills › skill-creator](https://github.com/anthropics/skills/tree/main/skills/skill-creator); this file refines it with the product spec a finished Bitrix API skill must satisfy. It does not explain what skills are.
 
 Goal: an agent following only this spec must produce a skill at the quality of the existing collection — structure, precision, and density included.
 
 | Concern | Owner |
 | --- | --- |
 | Draft → test → eval loop, packaging, description optimization | System skill-creator |
-| Structure, content layers, style, quality bar of a Bitrix skill | This skill |
+| Structure, content layers, style, quality bar of an API skill | This skill (workflow skills: `bitrix-workflow-skill-creator`) |
 | Agent canons: DI boundaries, `/local/`, security, version policy | Project rulebooks — skills reference them, never repeat them |
 
 A skill lives at `skills/<name>/SKILL.md` (+ optional `rules/*.md`); `name` equals the folder name.
