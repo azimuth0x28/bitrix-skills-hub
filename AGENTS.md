@@ -56,7 +56,7 @@ Editing an existing skill: follow `bitrix-skill-creator` (§1, §4, §8) and re-
 
 - Skills: English, imperative, telegraphic bullets, tables for choices, fenced code with language tags. Zero marketing, zero "what is Bitrix".
 - READMEs are bilingual: update `README.md` and `README.ru.md` in the same change, keeping the language of each file.
-- Commits: semantic prefix + Russian description (`docs:`, `fix:`, `chore:`), one concern per commit. A new skill and its catalog rows may go together; unrelated skills split.
+- Commits: English only, [Conventional Commits](https://www.conventionalcommits.org/) format (`docs:`, `fix:`, `feat:`, `chore:`, `refactor:`), one concern per commit. A new skill and its catalog rows may go together; unrelated skills split.
 - Chat with the maintainer in Russian.
 
 ## Fact discipline
