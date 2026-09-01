@@ -5,7 +5,7 @@ description: Covers authoring conventions for workflow skills — process, conve
 
 # Workflow Skill Authoring Conventions
 
-House rules for **workflow skills** — skills that teach a process: code style, code organization, project conventions, environment and DevOps setup, review rules. Skills that document kernel or module code follow `bitrix-knowledge-skill-creator`. The generic skill-creator owns the draft → test → eval loop ([anthropics/skills › skill-creator](https://github.com/anthropics/skills/tree/main/skills/skill-creator)); this file refines it for the workflow type. It does not explain what skills are.
+House rules for **workflow skills** — skills that teach a process: code style, code organization, project conventions, environment and DevOps setup, review rules. Skills that document kernel or module code follow `bitrix-knowledge-skill-creator`. The generic skill-creator owns the draft → test → eval loop ([anthropics/skills › skill-creator](https://github.com/anthropics/skills/tree/main/skills/skill-creator)); this file refines it for the workflow type. The base agent-skills spec (what a SKILL is) is resolved per **Base skill dependency** below.
 
 | Concern | Owner |
 | --- | --- |
@@ -13,6 +13,15 @@ House rules for **workflow skills** — skills that teach a process: code style,
 | Knowledge skills (kernel/module APIs): content layers, kernel verification, Baseline/Since | `bitrix-knowledge-skill-creator` |
 | Workflow skills: content layers, project-fact verification, tool versions | This skill |
 | Rubric, blind-test protocol, acceptance bar for both types | `bitrix-skill-eval` |
+
+## Base skill dependency (read before drafting)
+
+This skill refines the generic `skill-creator` and depends on it for the base agent-skills spec. Check availability before drafting:
+
+- `skill-creator` available → read it first; it owns what a skill is and the draft → test → eval loop.
+- `skill-creator` unavailable → read [`references/skill-anatomy.md`](references/skill-anatomy.md) in this folder — a verbatim copy of the agent-skills anatomy (skill structure, required frontmatter, section layout, naming, context-efficiency rules). If the file is missing, fetch the canonical source: <https://github.com/addyosmani/agent-skills/blob/main/docs/skill-anatomy.md>.
+
+Do not start a draft until one of the two has been read.
 
 ## 1. Type dispatch
 
@@ -29,7 +38,7 @@ A workflow skill may reference kernel identifiers inside examples or config keys
 
 Same decision rule and budgets as `bitrix-knowledge-skill-creator` §1: monolith (100–310 lines) when the process fits one reading pass; router + `rules/*.md` (router ≤60, rules 45–135 each) when it spans 2+ independent layers (e.g. environment setup / daily workflow / release process). Deliver incrementally: router first, then rules files one by one. Size is a hard gate — cut, never pad.
 
-**Template assets (`references/`).** A workflow skill that installs files into the target project may ship a `references/` directory: template assets copied verbatim into the project, with placeholder substitution as the only allowed edit. They serve the target project, agent reading — the 45–135 rules budget does not apply. Name a template that mirrors a special file so agents do not auto-load it from inside the skill folder (e.g. `AGENTS.md.template` → installed as `AGENTS.md`).
+**Template assets (`references/`).** A workflow skill that installs files into the target project may ship a `references/` directory: template assets copied verbatim into the project, with placeholder substitution as the only allowed edit. They serve the target project, agent reading — the 45–135 rules budget does not apply. Name a template that mirrors a special file so agents do not auto-load it from inside the skill folder (e.g. `AGENTS.md.template` → installed as `AGENTS.md`). Creator skills may also ship agent-facing reference material in `references/` (this skill bundles `references/skill-anatomy.md`, see Base skill dependency) — same budget exemption.
 
 ## 3. Frontmatter and templates
 
