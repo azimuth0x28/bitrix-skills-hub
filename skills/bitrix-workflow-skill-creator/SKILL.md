@@ -5,12 +5,12 @@ description: Covers authoring conventions for workflow skills — process, conve
 
 # Workflow Skill Authoring Conventions
 
-House rules for **workflow skills** — skills that teach a process: code style, code organization, project conventions, environment and DevOps setup, review rules. Skills that document kernel or module code follow `bitrix-api-skill-creator`. The generic skill-creator owns the draft → test → eval loop ([anthropics/skills › skill-creator](https://github.com/anthropics/skills/tree/main/skills/skill-creator)); this file refines it for the workflow type. It does not explain what skills are.
+House rules for **workflow skills** — skills that teach a process: code style, code organization, project conventions, environment and DevOps setup, review rules. Skills that document kernel or module code follow `bitrix-knowledge-skill-creator`. The generic skill-creator owns the draft → test → eval loop ([anthropics/skills › skill-creator](https://github.com/anthropics/skills/tree/main/skills/skill-creator)); this file refines it for the workflow type. It does not explain what skills are.
 
 | Concern | Owner |
 | --- | --- |
 | Draft → test → eval loop, packaging, description optimization | System skill-creator |
-| API/kernel/module skills: content layers, kernel verification, Baseline/Since | `bitrix-api-skill-creator` |
+| Knowledge skills (kernel/module APIs): content layers, kernel verification, Baseline/Since | `bitrix-knowledge-skill-creator` |
 | Workflow skills: content layers, project-fact verification, tool versions | This skill |
 | Rubric, blind-test protocol, acceptance bar for both types | `bitrix-skill-eval` |
 
@@ -20,27 +20,30 @@ Pick the creator before drafting:
 
 | Skill teaches... | Creator | Skill type |
 | --- | --- | --- |
-| Kernel classes, service ids, tables, module APIs — code the agent writes against | `bitrix-api-skill-creator` | API skill |
+| Kernel classes, service ids, tables, module APIs — code the agent writes against | `bitrix-knowledge-skill-creator` | Knowledge skill |
 | How to work: conventions, code style, processes, environment setup, review steps — process the agent follows | This skill | Workflow skill |
 
-A workflow skill may reference kernel identifiers inside examples or config keys — every such identifier is still verified per `bitrix-api-skill-creator` §9. An API-choice-matrix-shaped draft is an API skill: reclassify and switch creators. Declare the type when requesting evaluation — `bitrix-skill-eval` dispatches rubric measures per type (its §11).
+A workflow skill may reference kernel identifiers inside examples or config keys — every such identifier is still verified per `bitrix-knowledge-skill-creator` §9. An API-choice-matrix-shaped draft is a knowledge skill: reclassify and switch creators. Declare the type when requesting evaluation — `bitrix-skill-eval` dispatches rubric measures per type (its §11).
 
 ## 2. Morphology
 
-Same decision rule and budgets as `bitrix-api-skill-creator` §1: monolith (100–310 lines) when the process fits one reading pass; router + `rules/*.md` (router ≤60, rules 45–135 each) when it spans 2+ independent layers (e.g. environment setup / daily workflow / release process). Deliver incrementally: router first, then rules files one by one. Size is a hard gate — cut, never pad.
+Same decision rule and budgets as `bitrix-knowledge-skill-creator` §1: monolith (100–310 lines) when the process fits one reading pass; router + `rules/*.md` (router ≤60, rules 45–135 each) when it spans 2+ independent layers (e.g. environment setup / daily workflow / release process). Deliver incrementally: router first, then rules files one by one. Size is a hard gate — cut, never pad.
+
+**Template assets (`references/`).** A workflow skill that installs files into the target project may ship a `references/` directory: template assets copied verbatim into the project, with placeholder substitution as the only allowed edit. They serve the target project, agent reading — the 45–135 rules budget does not apply. Name a template that mirrors a special file so agents do not auto-load it from inside the skill folder (e.g. `AGENTS.md.template` → installed as `AGENTS.md`).
 
 ## 3. Frontmatter and templates
 
-- `name` equals the folder name; description per `bitrix-api-skill-creator` §3 templates (soft limit 400 chars, hard 500). Key terms are tool names, paths, and command names — what a user prompt matches.
+- `name` equals the folder name; description per `bitrix-knowledge-skill-creator` §3 templates (soft limit 400 chars, hard 500). Key terms are tool names, paths, and command names — what a user prompt matches.
+- No `argument-hint` / `arguments` keys — the agent-skills spec has no argument concept. Declare optional input in the body (`<input>` block or stage 1), including its default.
 - H1: `# <Topic>` — no module id.
 - **Never write a `Baseline:` line.** Kernel versioning (`main X.Y`) does not apply to a process; a Baseline line in a workflow skill is a defect.
-- Router variant: the skeleton of `bitrix-api-skill-creator` §2 minus the Baseline line; all router invariants (verbatim H2 bullets, meta-only checklist) hold.
+- Router variant: the skeleton of `bitrix-knowledge-skill-creator` §2 minus the Baseline line; all router invariants (verbatim H2 bullets, meta-only checklist) hold.
 
 ## 4. Version anchoring
 
 - Versions anchor to the sources of truth the workflow lives in: `composer.json` (`php` requirement), `package.json` (`engines`), `Dockerfile` base images, CI workflow matrices, `.editorconfig`, tool configs.
 - State a version together with its source: "PHP 8.2+ (`composer.json`)", "Node 20 (CI matrix)". Never invent a version; if unverifiable, write "verify in your project".
-- Bitrix kernel version claims inside examples follow `bitrix-api-skill-creator` §4.
+- Bitrix kernel version claims inside examples follow `bitrix-knowledge-skill-creator` §4.
 
 ## 5. Mandatory content layers
 
@@ -61,7 +64,7 @@ Final `## Checklist` with `- [ ]` items that are verifiable completion criteria,
 
 ## 7. Cross-linking and style
 
-`bitrix-api-skill-creator` §7–§8 apply unchanged: exact sibling names in backticks, canons referenced never duplicated, English imperative, tables for choices, fenced code with language tags. The optional mixed XML + Markdown body style of §8 applies to workflow skills on the same terms — procedures sit naturally in `<workflow>`/`<stage>` blocks, prohibitions in `<critical_rules>`; decision tables stay Markdown tables.
+`bitrix-knowledge-skill-creator` §7–§8 apply unchanged: exact sibling names in backticks, canons referenced never duplicated, English imperative, tables for choices, fenced code with language tags. The optional mixed XML + Markdown body style of §8 applies to workflow skills on the same terms — procedures sit naturally in `<workflow>`/`<stage>` blocks, prohibitions in `<critical_rules>`; decision tables stay Markdown tables.
 
 ## 8. Project verification (workflow-specific step)
 
@@ -90,11 +93,11 @@ Accept when all hold. Measures align with the workflow dispatch in `bitrix-skill
 
 ## Validation after authoring
 
-Run the format check and the security gate packaged in `skill-validator` — same commands, same gates, same exit-code discipline as every skill in this collection (see `bitrix-api-skill-creator` → Validation after authoring). Fix every reported error at the source; never bypass or weaken a check.
+Run the format check and the security gate packaged in `skill-validator` — same commands, same gates, same exit-code discipline as every skill in this collection (see `bitrix-knowledge-skill-creator` → Validation after authoring). Fix every reported error at the source; never bypass or weaken a check.
 
 ## Pre-submit checklist for the skill author
 
-- [ ] Type dispatch correct: process/convention content → this skill; kernel-heavy content → `bitrix-api-skill-creator`.
+- [ ] Type dispatch correct: process/convention content → this skill; kernel-heavy content → `bitrix-knowledge-skill-creator`.
 - [ ] `name` = folder name; description per §3 template; length soft ≤400, hard ≤500 chars.
 - [ ] Line count within budget (monolith 100–310; router ≤60; rules 45–135). Cut, never pad.
 - [ ] No `Baseline:` line; tool versions anchored to project manifests or CI configs.

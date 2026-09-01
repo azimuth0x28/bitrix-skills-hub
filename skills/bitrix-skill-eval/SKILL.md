@@ -5,30 +5,30 @@ description: Covers quality evaluation of Bitrix Framework skills — blind test
 
 # Bitrix Skill Quality Evaluation
 
-Measures skill drafts against the house quality bar. The authoring spec is `bitrix-api-skill-creator` for API skills and `bitrix-workflow-skill-creator` for workflow skills; the type dispatch is §11. It does not explain what skills are and does not own generic eval tooling.
+Measures skill drafts against the house quality bar. The authoring spec is `bitrix-knowledge-skill-creator` for knowledge skills and `bitrix-workflow-skill-creator` for workflow skills; the type dispatch is §11. It does not explain what skills are and does not own generic eval tooling.
 
 | Concern | Owner |
 | --- | --- |
-| Skill product spec (structure, content, style) | `bitrix-api-skill-creator` (API skills), `bitrix-workflow-skill-creator` (workflow skills) |
+| Skill product spec (structure, content, style) | `bitrix-knowledge-skill-creator` (knowledge skills), `bitrix-workflow-skill-creator` (workflow skills) |
 | Generic eval tooling (test prompts, benchmarks, viewers) | System skill-creator |
 | Bitrix-specific rubric, blind-test protocol, kernel verification of drafts | This skill |
 
-Baseline: **main 23.0+**. Version markers inside graded drafts follow the rules in `bitrix-api-skill-creator` §4 and are verified during grading.
+Baseline: **main 23.0+**. Version markers inside graded drafts follow the rules in `bitrix-knowledge-skill-creator` §4 and are verified during grading.
 
 ## 1. Evaluation model (indirect measurement)
 
 A skill draft is the effect; the authoring spec is the treatment. Grading a draft measures how well the spec transmits house conventions to an arbitrary agent.
 
-- Classify every gap as **spec-caused** (the rule is missing or weak in `bitrix-api-skill-creator`) or **agent-caused** (the rule existed and was ignored).
+- Classify every gap as **spec-caused** (the rule is missing or weak in `bitrix-knowledge-skill-creator`) or **agent-caused** (the rule existed and was ignored).
 - Patch the spec only for spec-caused gaps. Agent-caused misses count against the draft; a miss repeated across drafts is evidence of a spec gap, however.
 - Never widen a rubric criterion mid-series to fit a draft — recalibrate only between series, and record the change.
 
 ## 2. Blind test protocol
 
-1. **Freeze the spec snapshot**: copy `skills/bitrix-api-skill-creator/` to an isolated location (e.g. `.tmp/spec/bitrix-api-skill-creator/`) before launch. The authoring agent reads only that snapshot. The snapshot must not change during a test.
+1. **Freeze the spec snapshot**: copy `skills/bitrix-knowledge-skill-creator/` to an isolated location (e.g. `.tmp/spec/bitrix-knowledge-skill-creator/`) before launch. The authoring agent reads only that snapshot. The snapshot must not change during a test.
 2. **Canonical verbatim prompt**: byte-identical across iterations of one task, except the run-unique output-folder token. No coaching, no quality hints, no time-limit mentions inside the prompt — enforcement is external.
 3. **Run isolation**: every run writes to its own unique output folder (`tier-<N>/`, incremented per run). A new agent launched while a previous one has yet to finish can never affect its results.
-4. **Reference isolation**: the authoring agent is forbidden from reading the whole `skills/` directory — no sibling skills, no reference draft, no `bitrix-api-skill-creator` inside it. It reads the spec snapshot and kernel source only. Violations invalidate the run.
+4. **Reference isolation**: the authoring agent is forbidden from reading the whole `skills/` directory — no sibling skills, no reference draft, no `bitrix-knowledge-skill-creator` inside it. It reads the spec snapshot and kernel source only. Violations invalidate the run.
 5. **External time cap**: run the authoring agent in the background; poll status every ~45–60 s; cancel at the cap. Check the output directory after cancelling — writes often flush past the cancel point.
 6. **Archive everything**: copy every artifact (complete or partial) to the eval archive immediately after the run. Drafts never overwrite reference skills.
 
@@ -79,7 +79,7 @@ Never trust a draft's identifiers on their face — verify against source, stron
 ## 7. Iteration loop
 
 1. Grade the draft per §3–§5; write the grades down before touching anything.
-2. Classify each gap: spec-caused → patch `bitrix-api-skill-creator`; agent-caused → record and move on.
+2. Classify each gap: spec-caused → patch `bitrix-knowledge-skill-creator`; agent-caused → record and move on.
 3. Re-sync the spec snapshot, increment the tier token, re-run with the same canonical prompt.
 4. Stop when the above-average bar holds, or after three iterations — then report the trend with evidence.
 
@@ -112,18 +112,18 @@ When no reference skill exists for the domain (a first-of-its-kind skill), grade
 
 ## 11. Skill types and rubric dispatch
 
-Two skill types are graded under one rubric. The author declares the type when requesting evaluation; the evaluator confirms it from the draft's content — an API-choice matrix, kernel identifiers, and code examples signal an API skill; decision tables, procedures, and environment facts signal a workflow skill. The creator skill that was followed is the treatment record.
+Two skill types are graded under one rubric. The author declares the type when requesting evaluation; the evaluator confirms it from the draft's content — an API-choice matrix, kernel identifiers, and code examples signal a knowledge skill; decision tables, procedures, and environment facts signal a workflow skill. The creator skill that was followed is the treatment record.
 
 | Type | Creator spec | Rubric |
 | --- | --- | --- |
-| API skill | `bitrix-api-skill-creator` | §3–§6 as written |
+| Knowledge skill | `bitrix-knowledge-skill-creator` | §3–§6 as written |
 | Workflow skill | `bitrix-workflow-skill-creator` | §3–§6 with the measure swaps below |
 
 Workflow-skill measure swaps (same Q numbers, same 0–10 scale, same hard gates):
 
 | # | 10 = (workflow) | Automatic fail (workflow) |
 | --- | --- | --- |
-| Q1 | Morphology per `bitrix-api-skill-creator` §1; templates of `bitrix-workflow-skill-creator` §3–§6; mixed XML + Markdown body allowed per `bitrix-api-skill-creator` §8 | — |
+| Q1 | Morphology per `bitrix-knowledge-skill-creator` §1; templates of `bitrix-workflow-skill-creator` §3–§6; mixed XML + Markdown body allowed per `bitrix-knowledge-skill-creator` §8 | — |
 | Q3 | ≥85% of the declared process scope: stages, decision forks, environment facts, procedures | <60% of the scope |
 | Q4 | 0 invented paths, config keys, commands, or tool versions — verified per `bitrix-workflow-skill-creator` §8; 2+ negative statements | any invented project fact |
 | Q5 | Commands copy-runnable; config snippets complete for scope; step order explained where semantic | invented commands or config syntax |
@@ -147,4 +147,4 @@ Unswapped criteria (Q2, Q6–Q8, Q10) and the acceptance bar (§4) apply unchang
 
 ## Related skills
 
-- `bitrix-api-skill-creator` — the authoring spec this rubric measures.
+- `bitrix-knowledge-skill-creator` — the authoring spec this rubric measures.

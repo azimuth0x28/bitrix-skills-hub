@@ -21,7 +21,7 @@ This repo plays the hub role: one Bitrix skill collection, shared authoring conv
 **Fastest path** — any agent, one command. The open [skills CLI](https://github.com/vercel-labs/skills) installs into 70+ agents:
 
 ```bash
-npx skills add azimuth0x28/bitrix-skills-hub --all   # all 43 skills at once
+npx skills add azimuth0x28/bitrix-skills-hub --all   # all skills at once
 npx skills add azimuth0x28/bitrix-skills-hub --list  # browse before installing
 npx skills add azimuth0x28/bitrix-skills-hub --skill bitrix-orm bitrix-controllers
 npx skills update                                    # update installed ones
@@ -185,7 +185,7 @@ After installation, the rules and skill index from the original project live in 
 
 ## The catalog
 
-43 skills covering D7 core topics and adjacent areas. Each one is a self-contained reference an agent can apply immediately.
+Skills covering D7 core topics and adjacent areas. Each one is a self-contained reference an agent can apply immediately.
 
 ### Core & D7
 
@@ -234,6 +234,14 @@ After installation, the rules and skill index from the original project live in 
 | [bitrix-sale](skills/bitrix-sale/SKILL.md) | Basket, Order, FUSER, payments, delivery, discounts, coupons | Cart/checkout, order lifecycle, pay/ship |
 | [bitrix-bizproc](skills/bitrix-bizproc/SKILL.md) | CBPDocument, CBPRuntime, workflow templates, custom activities | Approvals, document workflows, automation |
 
+### Project Rules & Onboarding
+
+| Skill | What It Does | Use When |
+| --- | --- | --- |
+| [bitrix-prime-codebase](skills/bitrix-prime-codebase/SKILL.md) | Reality map of an existing codebase: structure, ORM, migrations, events, agents, style, git — with file:line evidence | Brownfield analysis before generating project rules |
+| [bitrix-rules-create-global](skills/bitrix-rules-create-global/SKILL.md) | Global rules: lean root AGENTS.md + `.agents/rules/core/` files, from templates (Greenfield) or codebase analysis (Brownfield) | Project init, developer onboarding, replacing generic init |
+| [rules-check-drift](skills/rules-check-drift/SKILL.md) | Checks the rules file against recent changes; minimal edits keep it true and lean | Before merges, inside code-review passes |
+
 ### Integrations & Platform
 
 | Skill | What It Does | Use When |
@@ -250,7 +258,7 @@ After installation, the rules and skill index from the original project live in 
 
 | Skill | What It Does | Use When |
 | --- | --- | --- |
-| [bitrix-api-skill-creator](skills/bitrix-api-skill-creator/SKILL.md) | Authoring conventions: morphology, frontmatter, baseline/Since, density | Creating API/kernel skills (kernel classes, ORM, module APIs) |
+| [bitrix-knowledge-skill-creator](skills/bitrix-knowledge-skill-creator/SKILL.md) | Authoring conventions: morphology, frontmatter, baseline/Since, density | Creating knowledge skills (how to work correctly/incorrectly with kernel classes, ORM, module APIs; best practices) |
 | [bitrix-workflow-skill-creator](skills/bitrix-workflow-skill-creator/SKILL.md) | Workflow-skill conventions: decision tables, project facts, procedures, tool versions | Creating workflow/process skills (code style, devops setup, review rules) |
 | [bitrix-skill-eval](skills/bitrix-skill-eval/SKILL.md) | Blind test protocol, Q1-Q10 rubric, hard gates, density metric | Grading skill drafts |
 | [skill-validator](skills/skill-validator/SKILL.md) | quick_validate.py (format), prism-scanner (security), grade gates | Pre-PR mechanical validation |
@@ -268,14 +276,15 @@ Pre-configured specialist personas for Bitrix development:
 ```
 skills/<name>/
 ├── SKILL.md      # router: description, triggers, links to rules
-└── rules/*.md    # rules by topic; the agent reads only the ones it needs
+├── rules/*.md    # rules by topic; the agent reads only the ones it needs
+└── references/   # template assets (some workflow skills): copied verbatim into the target project
 ```
 
 Fat skills use progressive disclosure: the agent opens `SKILL.md` first, then only the `rules/` files it needs. Skills are self-sufficient and anchored to the core: verified against **main 26.150.0**, baseline patterns **main 23.0+**.
 
 ## Adding your own
 
-Author a new skill through `bitrix-api-skill-creator` (API/kernel skills — the default) or `bitrix-workflow-skill-creator` (workflow skills: processes, conventions, environment setup). Run the finished draft through `skill-validator` (format + security) and `bitrix-skill-eval`: the blind test and the Q1-Q10 rubric filter out weak skills before they enter the catalog.
+Author a new skill through `bitrix-knowledge-skill-creator` (knowledge skills: correct/incorrect usage and best practices — the default) or `bitrix-workflow-skill-creator` (workflow skills: processes, conventions, environment setup). Run the finished draft through `skill-validator` (format + security) and `bitrix-skill-eval`: the blind test and the Q1-Q10 rubric filter out weak skills before they enter the catalog.
 
 ## Links
 

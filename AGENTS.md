@@ -14,7 +14,8 @@ Guide for AI agents contributing to **bitrix-skills-hub** — a hub of 43 AI ski
 ```
 skills/<name>/SKILL.md        # router: what the skill covers, which rules/*.md to open
 skills/<name>/rules/*.md      # progressive-disclosure layers
-skills/bitrix-api-skill-creator/  # meta-skill: authoring spec for API/kernel skills
+skills/<name>/references/     # template assets (workflow skills): copied verbatim into the target project
+skills/bitrix-knowledge-skill-creator/  # meta-skill: authoring spec for knowledge skills
 skills/bitrix-workflow-skill-creator/  # meta-skill: authoring spec for workflow/process skills
 skills/bitrix-skill-eval/     # meta-skill: Q1–Q10 rubric, blind-test protocol, hard gates
 skills/skill-validator/       # meta-skill: format validation + prism security scanning
@@ -30,7 +31,7 @@ plugin.json                   # Codex plugin manifest
 | --- | --- |
 | This file | How to contribute here: authoring pipeline, content conventions, fact discipline, PR checklist |
 | `agents/bitrix-coder.md` | How agents write Bitrix code on consumer projects (D7, DI, `/local/`, security, version policy) |
-| `skills/bitrix-api-skill-creator/` | How to author API skills: structure, content layers, kernel verification |
+| `skills/bitrix-knowledge-skill-creator/` | How to author knowledge skills (correct/incorrect usage of a dev aspect, best practices): structure, content layers, kernel verification |
 | `skills/bitrix-workflow-skill-creator/` | How to author workflow skills: decision tables, project facts, procedures, tool versions |
 | `skills/bitrix-skill-eval/` | How skill drafts are graded: blind test, Q1–Q10 rubric, hard gates |
 | `skills/skill-validator/` | How to run mechanical checks (quick_validate.py, prism scan) before a PR |
@@ -41,20 +42,20 @@ Skills reference the Bitrix canons (DI, `/local/`, security, version policy) fro
 
 A new skill passes six steps; the owner of every step is a house skill — read it before acting.
 
-First classify the draft: an **API skill** (documents kernel or module code) follows `bitrix-api-skill-creator`; a **workflow skill** (processes, conventions, environment setup) follows `bitrix-workflow-skill-creator`. The six steps below apply to both types — the chosen creator and the `bitrix-skill-eval` §11 dispatch carry the per-type details.
+First classify the draft: a **knowledge skill** (teaches correct and incorrect usage of a development aspect and conveys best practices: kernel/module code, APIs) follows `bitrix-knowledge-skill-creator`; a **workflow skill** (processes, conventions, environment setup) follows `bitrix-workflow-skill-creator`. The six steps below apply to both types — the chosen creator and the `bitrix-skill-eval` §11 dispatch carry the per-type details.
 
 | Step | Owner | Output |
 | --- | --- | --- |
-| 1. Morphology decision (monolith vs router + rules) | `bitrix-api-skill-creator` §1 | Shape + size budget |
-| 2. Domain surface discovery | `bitrix-api-skill-creator` §9.0 | Enumerated classes, services, settings, events |
-| 3. Draft (router first, then `rules/*.md` one by one) | `bitrix-api-skill-creator` §2–§8 | Partial delivery stays useful |
-| 4. Kernel verification (targeted greps, sibling cross-check) | `bitrix-api-skill-creator` §9 | Every identifier confirmed |
+| 1. Morphology decision (monolith vs router + rules) | `bitrix-knowledge-skill-creator` §1 | Shape + size budget |
+| 2. Domain surface discovery | `bitrix-knowledge-skill-creator` §9.0 | Enumerated classes, services, settings, events |
+| 3. Draft (router first, then `rules/*.md` one by one) | `bitrix-knowledge-skill-creator` §2–§8 | Partial delivery stays useful |
+| 4. Kernel verification (targeted greps, sibling cross-check) | `bitrix-knowledge-skill-creator` §9 | Every identifier confirmed |
 | 5. Evaluation (blind test, Q1–Q10, hard gates) | `bitrix-skill-eval` | Grades with `file:line` evidence |
 | 6. Acceptance + catalog registration | This file | PR green in CI (smoke + security), with catalog rows |
 
-**Acceptance bar** (from `bitrix-skill-eval` §4): mean ≥8.5 across Q1–Q10, zero invented identifiers (kernel ids for API skills; paths, config keys, commands, tool versions for workflow skills), coverage ≥85% of the scenario-scoped domain surface, within the time cap. Below any of these — iterate (max three runs), then report the trend.
+**Acceptance bar** (from `bitrix-skill-eval` §4): mean ≥8.5 across Q1–Q10, zero invented identifiers (kernel ids for knowledge skills; paths, config keys, commands, tool versions for workflow skills), coverage ≥85% of the scenario-scoped domain surface, within the time cap. Below any of these — iterate (max three runs), then report the trend.
 
-Editing an existing skill: follow `bitrix-api-skill-creator` (§1, §4, §8) and re-run kernel verification on every changed identifier.
+Editing an existing skill: follow `bitrix-knowledge-skill-creator` (§1, §4, §8) and re-run kernel verification on every changed identifier.
 
 ## Content conventions
 

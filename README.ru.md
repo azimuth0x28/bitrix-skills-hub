@@ -21,7 +21,7 @@ English version: [README.md](README.md)
 **Самый быстрый путь** — любой агент, одна команда. Открытый [skills CLI](https://github.com/vercel-labs/skills) устанавливается в 70+ агентов:
 
 ```bash
-npx skills add azimuth0x28/bitrix-skills-hub --all   # все 43 скилла сразу
+npx skills add azimuth0x28/bitrix-skills-hub --all   # все скиллы сразу
 npx skills add azimuth0x28/bitrix-skills-hub --list  # посмотреть список
 npx skills add azimuth0x28/bitrix-skills-hub --skill bitrix-orm bitrix-controllers
 npx skills update                                    # обновить установленные
@@ -185,7 +185,7 @@ cp -r bitrix-skills-hub/skills/bitrix-orm ваш-проект/.agents/skills/
 
 ## Каталог
 
-43 скилла по темам ядра D7 и смежным областям. Каждый — самодостаточный справочник, который агент применяет сразу.
+Скиллы по темам ядра D7 и смежным областям. Каждый — самодостаточный справочник, который агент применяет сразу.
 
 ### Ядро и D7
 
@@ -234,6 +234,14 @@ cp -r bitrix-skills-hub/skills/bitrix-orm ваш-проект/.agents/skills/
 | [bitrix-sale](skills/bitrix-sale/SKILL.md) | Basket, Order, FUSER, оплата, доставка, скидки, купоны | Корзина/checkout, жизненный цикл заказа |
 | [bitrix-bizproc](skills/bitrix-bizproc/SKILL.md) | CBPDocument, CBPRuntime, шаблоны workflows, кастомные activities | Согласования, документооборот, автоматизация |
 
+### Правила проекта и онбординг
+
+| Skill | Что делает | Когда использовать |
+| --- | --- | --- |
+| [bitrix-prime-codebase](skills/bitrix-prime-codebase/SKILL.md) | Карта реального состояния кодовой базы: структура, ORM, миграции, события, агенты, стиль, git — с доказательствами file:line | Brownfield-анализ перед генерацией правил проекта |
+| [bitrix-rules-create-global](skills/bitrix-rules-create-global/SKILL.md) | Глобальные правила: лаконичный корневой AGENTS.md + файлы `.agents/rules/core/`, из шаблонов (Greenfield) или анализа кодовой базы (Brownfield) | Инициализация проекта, онбординг разработчика, замена generic init |
+| [rules-check-drift](skills/rules-check-drift/SKILL.md) | Сверяет файл правил с недавними изменениями; минимальные правки держат его точным и лаконичным | Перед мержами, внутри code-review |
+
 ### Интеграции и платформа
 
 | Skill | Что делает | Когда использовать |
@@ -250,7 +258,7 @@ cp -r bitrix-skills-hub/skills/bitrix-orm ваш-проект/.agents/skills/
 
 | Skill | Что делает | Когда использовать |
 | --- | --- | --- |
-| [bitrix-api-skill-creator](skills/bitrix-api-skill-creator/SKILL.md) | Конвенции авторства: морфология, frontmatter, baseline/Since, плотность | Создание API/ядерных скиллов (классы ядра, ORM, API модулей) |
+| [bitrix-knowledge-skill-creator](skills/bitrix-knowledge-skill-creator/SKILL.md) | Конвенции авторства: морфология, frontmatter, baseline/Since, плотность | Создание скиллов-знаний (правильная и неправильная работа с классами ядра, ORM, API модулей; лучшие практики) |
 | [bitrix-workflow-skill-creator](skills/bitrix-workflow-skill-creator/SKILL.md) | Конвенции для процессных скиллов: таблицы решений, проектные факты, процедуры, версии инструментов | Создание процессных скиллов (code style, DevOps, правила ревью) |
 | [bitrix-skill-eval](skills/bitrix-skill-eval/SKILL.md) | Протокол слепого теста, рубрика Q1-Q10, хард-гейты, метрика плотности | Оценка черновиков скиллов |
 | [skill-validator](skills/skill-validator/SKILL.md) | quick_validate.py (формат), prism-scanner (безопасность), грейд-гейты | Механическая проверка перед PR |
@@ -268,14 +276,15 @@ cp -r bitrix-skills-hub/skills/bitrix-orm ваш-проект/.agents/skills/
 ```
 skills/<name>/
 ├── SKILL.md      # роутер: описание, триггеры, ссылки на правила
-└── rules/*.md    # правила по темам, агент читает только нужные
+├── rules/*.md    # правила по темам, агент читает только нужные
+└── references/   # шаблоны-ассеты (у процессных скиллов): копируются в проект как есть
 ```
 
 «Толстые» скиллы используют progressive disclosure: агент открывает `SKILL.md`, затем только нужные файлы из `rules/`. Скиллы самодостаточны и опираются на ядро: проверены на **main 26.150.0**, baseline-паттерны — **main 23.0+**.
 
 ## Как добавить свой
 
-Новый скилл создавайте через `bitrix-api-skill-creator` (API/ядерные скиллы — тип по умолчанию) или `bitrix-workflow-skill-creator` (процессные скиллы: конвенции, code style, окружение). Готовый черновик прогоните через `skill-validator` (формат + безопасность) и `bitrix-skill-eval`: слепой тест и рубрика Q1-Q10 отсеивают слабые скиллы до попадания в каталог.
+Новый скилл создавайте через `bitrix-knowledge-skill-creator` (скиллы-знания: правильная и неправильная работа с аспектом разработки, лучшие практики — тип по умолчанию) или `bitrix-workflow-skill-creator` (процессные скиллы: конвенции, code style, окружение). Готовый черновик прогоните через `skill-validator` (формат + безопасность) и `bitrix-skill-eval`: слепой тест и рубрика Q1-Q10 отсеивают слабые скиллы до попадания в каталог.
 
 ## Ссылки
 

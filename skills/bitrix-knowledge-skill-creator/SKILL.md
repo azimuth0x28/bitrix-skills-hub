@@ -1,18 +1,18 @@
 ---
-name: bitrix-api-skill-creator
-description: Covers house conventions for authoring skills — morphology (router vs monolith), frontmatter templates, baseline/Since versioning, mandatory content layers, negative knowledge, cross-linking, kernel verification, line-density quality bar. Applied when creating, editing, or reviewing a skill for house-style compliance. Key terms — SKILL.md, rules/, router, baseline, Since, API matrix, density.
+name: bitrix-knowledge-skill-creator
+description: Covers house conventions for authoring knowledge skills — skills that teach correct and incorrect usage of a development aspect and convey best practices for kernel and module APIs (patterns, prohibitions, negative knowledge, morphology, density). Applied when creating, editing, or reviewing a knowledge skill. Key terms — SKILL.md, rules/, router, baseline, Since, API matrix, kernel verification.
 ---
 
-# Bitrix Skill Authoring Conventions
+# Knowledge Skill Authoring Conventions
 
-House rules for **API skills** in this repository — skills that document kernel or module code and the API an agent writes against. Workflow skills (processes, conventions, environment setup) follow `bitrix-workflow-skill-creator`. The generic skill-creator owns the process (draft, test prompts, eval loop, description optimization) — its canonical source is [anthropics/skills › skill-creator](https://github.com/anthropics/skills/tree/main/skills/skill-creator); this file refines it with the product spec a finished Bitrix API skill must satisfy. It does not explain what skills are.
+House rules for **knowledge skills** in this repository — skills that teach how to work correctly and incorrectly with a development aspect and convey best practices: kernel and module code, the API an agent writes against, patterns, prohibitions, negative knowledge. Workflow skills (processes, conventions, environment setup) follow `bitrix-workflow-skill-creator`. The generic skill-creator owns the process (draft, test prompts, eval loop, description optimization) — its canonical source is [anthropics/skills › skill-creator](https://github.com/anthropics/skills/tree/main/skills/skill-creator); this file refines it with the product spec a finished Bitrix knowledge skill must satisfy. It does not explain what skills are.
 
 Goal: an agent following only this spec must produce a skill at the quality of the existing collection — structure, precision, and density included.
 
 | Concern | Owner |
 | --- | --- |
 | Draft → test → eval loop, packaging, description optimization | System skill-creator |
-| Structure, content layers, style, quality bar of an API skill | This skill (workflow skills: `bitrix-workflow-skill-creator`) |
+| Structure, content layers, style, quality bar of a knowledge skill | This skill (workflow skills: `bitrix-workflow-skill-creator`) |
 | Agent canons: DI boundaries, `/local/`, security, version policy | Project rulebooks — skills reference them, never repeat them |
 
 A skill lives at `skills/<name>/SKILL.md` (+ optional `rules/*.md`); `name` equals the folder name.
