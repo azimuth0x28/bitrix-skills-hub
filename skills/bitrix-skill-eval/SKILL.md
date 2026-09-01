@@ -5,11 +5,11 @@ description: Covers quality evaluation of Bitrix Framework skills — blind test
 
 # Bitrix Skill Quality Evaluation
 
-Measures skill drafts against the house quality bar. The authoring spec lives in `bitrix-api-skill-creator`; this skill measures its output. It does not explain what skills are and does not own generic eval tooling.
+Measures skill drafts against the house quality bar. The authoring spec is `bitrix-api-skill-creator` for API skills and `bitrix-workflow-skill-creator` for workflow skills; the type dispatch is §11. It does not explain what skills are and does not own generic eval tooling.
 
 | Concern | Owner |
 | --- | --- |
-| Skill product spec (structure, content, style) | `bitrix-api-skill-creator` |
+| Skill product spec (structure, content, style) | `bitrix-api-skill-creator` (API skills), `bitrix-workflow-skill-creator` (workflow skills) |
 | Generic eval tooling (test prompts, benchmarks, viewers) | System skill-creator |
 | Bitrix-specific rubric, blind-test protocol, kernel verification of drafts | This skill |
 
@@ -110,6 +110,27 @@ When no reference skill exists for the domain (a first-of-its-kind skill), grade
 
 **Never grade from the authoring agent's self-assessment.** It is input to the report, never evidence.
 
+## 11. Skill types and rubric dispatch
+
+Two skill types are graded under one rubric. The author declares the type when requesting evaluation; the evaluator confirms it from the draft's content — an API-choice matrix, kernel identifiers, and code examples signal an API skill; decision tables, procedures, and environment facts signal a workflow skill. The creator skill that was followed is the treatment record.
+
+| Type | Creator spec | Rubric |
+| --- | --- | --- |
+| API skill | `bitrix-api-skill-creator` | §3–§6 as written |
+| Workflow skill | `bitrix-workflow-skill-creator` | §3–§6 with the measure swaps below |
+
+Workflow-skill measure swaps (same Q numbers, same 0–10 scale, same hard gates):
+
+| # | 10 = (workflow) | Automatic fail (workflow) |
+| --- | --- | --- |
+| Q1 | Morphology per `bitrix-api-skill-creator` §1; templates of `bitrix-workflow-skill-creator` §3–§6 | — |
+| Q3 | ≥85% of the declared process scope: stages, decision forks, environment facts, procedures | <60% of the scope |
+| Q4 | 0 invented paths, config keys, commands, or tool versions — verified per `bitrix-workflow-skill-creator` §8; 2+ negative statements | any invented project fact |
+| Q5 | Commands copy-runnable; config snippets complete for scope; step order explained where semantic | invented commands or config syntax |
+| Q9 | Cross-links exact; canons and the project's `AGENTS.md` conventions referenced, never duplicated | — |
+
+Unswapped criteria (Q2, Q6–Q8, Q10) and the acceptance bar (§4) apply unchanged. Hard gates map 1:1: invented project fact ↔ invented identifier. Blind test unchanged — freeze the workflow-creator snapshot as the spec. Draft verification (§6) targets project facts with the same `file:line` discipline; kernel version claims inside workflow drafts still flag per §6.3.
+
 ## Pre-flight checklist for the evaluator
 
 - [ ] Spec snapshot frozen before launch; untouched during the test.
@@ -119,6 +140,7 @@ When no reference skill exists for the domain (a first-of-its-kind skill), grade
 - [ ] Time cap + poll cadence set; cancel at cap; directory re-checked after cancel (flushed writes).
 - [ ] Reference measured (lines, points, density) and self-graded before grading the draft.
 - [ ] No reference? Domain surface enumerated before launch; density graded against the 3–5 L/pt band.
+- [ ] Skill type declared and confirmed; workflow drafts graded with the §11 measure swaps.
 - [ ] Kernel checks recorded with `file:line`; unverifiable claims listed separately.
 - [ ] Gaps classified spec-caused vs agent-caused before any spec patch.
 - [ ] Iteration log updated after every run.
