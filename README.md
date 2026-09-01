@@ -30,9 +30,7 @@ npx skills update                                    # update installed ones
 Or grab individual skills:
 
 ```bash
-npx skills add azimuth0x28/bitrix-skills-hub --skill bitrix-orm
-npx skills add azimuth0x28/bitrix-skills-hub --skill bitrix-components
-npx skills add azimuth0x28/bitrix-skills-hub --skill bitrix-rest
+npx skills add azimuth0x28/bitrix-skills-hub --skill bitrix-orm bitrix-components bitrix-rest
 ```
 
 Prefer a native integration? Pick your tool below.

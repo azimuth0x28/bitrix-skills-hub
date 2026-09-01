@@ -30,9 +30,7 @@ npx skills update                                    # обновить уста
 Или по одному:
 
 ```bash
-npx skills add azimuth0x28/bitrix-skills-hub --skill bitrix-orm
-npx skills add azimuth0x28/bitrix-skills-hub --skill bitrix-components
-npx skills add azimuth0x28/bitrix-skills-hub --skill bitrix-rest
+npx skills add azimuth0x28/bitrix-skills-hub --skill bitrix-orm bitrix-components bitrix-rest
 ```
 
 Предпочитаете нативную интеграцию? Выберите свой инструмент ниже.
