@@ -1,20 +1,21 @@
 # AGENTS.md
 
-Guide for AI agents contributing to **bitrix-skills-hub** — a hub of 42 AI skills for **1C-Bitrix / Bitrix Framework** (D7).
+Guide for AI agents contributing to **bitrix-skills-hub** — a hub of 43 AI skills for **1C-Bitrix / Bitrix Framework** (D7).
 
 ## Project overview
 
-- Plain markdown repository: 39 domain skills + 3 meta-skills under `skills/`. One skill = one folder.
+- Plain markdown repository: 39 domain skills + 4 meta-skills under `skills/`. One skill = one folder.
 - A skill teaches an agent one Bitrix domain: `SKILL.md` (router, ≤60 lines) + optional `rules/*.md` (45–135 lines each, progressive disclosure).
 - No build, no test suite. Quality is enforced by mechanical checks (`skills/skill-validator/`), the review checklist, and the evaluation protocol in `skills/bitrix-skill-eval/`.
-- User-facing docs: `README.md` (English, primary) and `README.ru.md` (Russian). The catalog of all 42 skills lives in both.
+- User-facing docs: `README.md` (English, primary) and `README.ru.md` (Russian). The catalog of all 43 skills lives in both.
 
 ## Repository structure
 
 ```
 skills/<name>/SKILL.md        # router: what the skill covers, which rules/*.md to open
 skills/<name>/rules/*.md      # progressive-disclosure layers
-skills/bitrix-api-skill-creator/  # meta-skill: authoring spec for new skills
+skills/bitrix-api-skill-creator/  # meta-skill: authoring spec for API/kernel skills
+skills/bitrix-workflow-skill-creator/  # meta-skill: authoring spec for workflow/process skills
 skills/bitrix-skill-eval/     # meta-skill: Q1–Q10 rubric, blind-test protocol, hard gates
 skills/skill-validator/       # meta-skill: format validation + prism security scanning
 agents/bitrix-coder.md        # Bitrix canons for skill consumers (D7, DI, /local/, security)
@@ -30,6 +31,7 @@ plugin.json                   # Codex plugin manifest
 | This file | Contribution workflow in this repo |
 | `agents/bitrix-coder.md` | Bitrix canons for agents on Bitrix projects (skill consumers) |
 | `skills/bitrix-api-skill-creator/` | Product spec a finished skill must satisfy |
+| `skills/bitrix-workflow-skill-creator/` | Authoring spec for workflow/process skills (conventions, code style, environment setup) |
 | `skills/bitrix-skill-eval/` | Quality gate for skill drafts |
 | `skills/skill-validator/` | Pre-PR validation (format + security scan) |
 
@@ -38,6 +40,8 @@ Skills reference the Bitrix canons (DI, `/local/`, security, version policy) fro
 ## Skill authoring pipeline
 
 A new skill passes six steps; the owner of every step is a house skill — read it before acting.
+
+First classify the draft: an **API skill** (documents kernel or module code) follows `bitrix-api-skill-creator`; a **workflow skill** (processes, conventions, environment setup) follows `bitrix-workflow-skill-creator`. The six steps below apply to both types — the chosen creator and the `bitrix-skill-eval` §11 dispatch carry the per-type details.
 
 | Step | Owner | Output |
 | --- | --- | --- |
@@ -48,7 +52,7 @@ A new skill passes six steps; the owner of every step is a house skill — read 
 | 5. Evaluation (blind test, Q1–Q10, hard gates) | `bitrix-skill-eval` | Grades with `file:line` evidence |
 | 6. Acceptance + catalog registration | This file | PR green in CI (smoke + security), with catalog rows |
 
-**Acceptance bar** (from `bitrix-skill-eval` §4): mean ≥8.5 across Q1–Q10, zero invented identifiers, coverage ≥85% of the scenario-scoped domain surface, within the time cap. Below any of these — iterate (max three runs), then report the trend.
+**Acceptance bar** (from `bitrix-skill-eval` §4): mean ≥8.5 across Q1–Q10, zero invented identifiers (kernel ids for API skills; paths, config keys, commands, tool versions for workflow skills), coverage ≥85% of the scenario-scoped domain surface, within the time cap. Below any of these — iterate (max three runs), then report the trend.
 
 Editing an existing skill: follow `bitrix-api-skill-creator` (§1, §4, §8) and re-run kernel verification on every changed identifier.
 
