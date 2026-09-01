@@ -38,7 +38,7 @@ A single deliverable file fits tighter caps; multi-file (router + rules) deliver
 
 | # | Criterion | 10 = | Automatic fail |
 | --- | --- | --- | --- |
-| Q1 | Structure | morphology per spec §1; sizes within budgets; templates followed | — |
+| Q1 | Structure | morphology per spec §1; sizes within budgets; templates followed (or the optional mixed XML + Markdown body style per the creator spec) | — |
 | Q2 | Triggerability | description matches the spec template, carries concrete key terms | — |
 | Q3 | Coverage | ≥85% of reference knowledge points + spec-mandated extras | <60% |
 | Q4 | Precision | 0 invented identifiers (kernel-verified), 2+ negative facts | any invented id |
@@ -123,7 +123,7 @@ Workflow-skill measure swaps (same Q numbers, same 0–10 scale, same hard gates
 
 | # | 10 = (workflow) | Automatic fail (workflow) |
 | --- | --- | --- |
-| Q1 | Morphology per `bitrix-api-skill-creator` §1; templates of `bitrix-workflow-skill-creator` §3–§6 | — |
+| Q1 | Morphology per `bitrix-api-skill-creator` §1; templates of `bitrix-workflow-skill-creator` §3–§6; mixed XML + Markdown body allowed per `bitrix-api-skill-creator` §8 | — |
 | Q3 | ≥85% of the declared process scope: stages, decision forks, environment facts, procedures | <60% of the scope |
 | Q4 | 0 invented paths, config keys, commands, or tool versions — verified per `bitrix-workflow-skill-creator` §8; 2+ negative statements | any invented project fact |
 | Q5 | Commands copy-runnable; config snippets complete for scope; step order explained where semantic | invented commands or config syntax |

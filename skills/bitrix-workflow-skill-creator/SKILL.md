@@ -61,7 +61,7 @@ Final `## Checklist` with `- [ ]` items that are verifiable completion criteria,
 
 ## 7. Cross-linking and style
 
-`bitrix-api-skill-creator` §7–§8 apply unchanged: exact sibling names in backticks, canons referenced never duplicated, English imperative, tables for choices, fenced code with language tags.
+`bitrix-api-skill-creator` §7–§8 apply unchanged: exact sibling names in backticks, canons referenced never duplicated, English imperative, tables for choices, fenced code with language tags. The optional mixed XML + Markdown body style of §8 applies to workflow skills on the same terms — procedures sit naturally in `<workflow>`/`<stage>` blocks, prohibitions in `<critical_rules>`; decision tables stay Markdown tables.
 
 ## 8. Project verification (workflow-specific step)
 

@@ -138,6 +138,10 @@ Final `## Checklist` with `- [ ]` items that are verifiable completion criteria,
 - Fenced code blocks always carry the language (`php`, `javascript`, `bash`).
 - Facts verified against the kernel; formulations copied from verified sibling skills where topics overlap.
 - Router morphology: add a `## Cross-cutting invariants` section between the rule-file index and the checklist when rules that apply across ALL rule files exist (mixed-API bans, naming contracts, silent defaults) — the agent should meet them before opening any rule file.
+- **Mixed XML + Markdown style (optional)**: the body may wrap semantic sections in XML blocks — role/mission, context, hard rule sets, workflow stages, checkpoints, quality checks — while Markdown stays the outer layer (headings, tables, lists, code fences). Default stays pure Markdown; pick one style per file and stay consistent throughout.
+  - Mixed-style discipline: XML lives in the body only — frontmatter stays plain YAML (allowed keys, angle-bracket-free description); 2-space indent per nesting level, ≤2–3 levels, one semantic role per tag, `lowercase_with_underscores` tag names, double-quoted attributes, Markdown inside tags.
+  - Mixed-style content: every §5 layer stays present and findable — `<workflow>`/`<stage>` blocks satisfy the procedures layer, `<critical_rules>` with bold rule text satisfies prohibitions at the error site, a checks block satisfies the checklist; a single XML block must be self-sufficient like an H2 section.
+  - Structure lines count toward the §1 budget and the Q8 density band — XML earns its lines with boundaries the task actually needs, or it goes.
 
 ## 9. Kernel verification (Bitrix-specific step)
 
@@ -195,3 +199,4 @@ Exit code 0 = pass. The script enforces the agent-skills spec: `SKILL.md` presen
 - [ ] Canons referenced, never duplicated.
 - [ ] Density checked: ≤ reference density (~4.5–5 lines per knowledge point); line count within budget.
 - [ ] English, imperative, tables, no marketing or product definitions.
+- [ ] Mixed XML + Markdown body (when used): §8 mixed-style constraints hold.
