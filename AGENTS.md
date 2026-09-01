@@ -16,8 +16,11 @@ skills/<name>/SKILL.md        # router: what the skill covers, which rules/*.md 
 skills/<name>/rules/*.md      # progressive-disclosure layers
 skills/bitrix-skill-creator/  # meta-skill: authoring spec for new skills
 skills/bitrix-skill-eval/     # meta-skill: Q1–Q10 rubric, blind-test protocol, hard gates
+skills/skill-validator/       # meta-skill: format validation + prism security scanning
 agents/bitrix-coder.md        # Bitrix canons for skill consumers (D7, DI, /local/, security)
 README.md / README.ru.md      # project docs + skill catalog
+.github/workflows/validate.yml  # CI: smoke test + prism scan on every PR
+plugin.json                   # Codex plugin manifest
 ```
 
 ### Related rulebooks
@@ -28,6 +31,7 @@ README.md / README.ru.md      # project docs + skill catalog
 | `agents/bitrix-coder.md` | Bitrix canons for agents on Bitrix projects (skill consumers) |
 | `skills/bitrix-skill-creator/` | Product spec a finished skill must satisfy |
 | `skills/bitrix-skill-eval/` | Quality gate for skill drafts |
+| `skills/skill-validator/` | Pre-PR validation (format + security scan) |
 
 Skills reference the Bitrix canons (DI, `/local/`, security, version policy) from project rulebooks; neither skills nor this file duplicate them.
 
