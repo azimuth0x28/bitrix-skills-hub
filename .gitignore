@@ -13,6 +13,9 @@
 .cursor
 .opencode
 
+# npx skills project-scope lock (this repo is a skill source, not a consumer)
+skills-lock.json
+
 # other agent/work/experiment folders
 .openai
 .anthropic
