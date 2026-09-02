@@ -1,6 +1,6 @@
 ---
 name: bitrix-components
-description: "Bitrix components: class.php, templates, cache, SEF, Controllerable AJAX. Use when building or editing components."
+description: "Bitrix components: anatomy (complex/simple, class.php-only), placement, templates, cache, SEF, Controllerable AJAX. Use when building or editing components."
 ---
 
 # Bitrix Components
@@ -15,39 +15,17 @@ Progressive disclosure: open **only** the rule files that match the task. Do not
 2. Open the matching `rules/*.md` below.
 3. Prefer framework-native Bitrix patterns over custom abstractions.
 
-
 ## Choose a rule file
 
-### When to read `rules/structure.md`
-
-Read `rules/structure.md` (`Placement and structure`) when the task involves:
-
-- Where to Place
-- Folder Structure
-- `class.php` — Minimum
-- Usage
-- `$arParams` and `$arResult`
-- `.description.php`
-- `.parameters.php`
-
-### When to read `rules/template.md`
-
-Read `rules/template.md` (`Templates and epilog`) when the task involves:
-
-- Template
-- `result_modifier.php`
-- `component_epilog.php`
-
-### When to read `rules/cache-sef-ajax.md`
-
-Read `rules/cache-sef-ajax.md` (`Cache, SEF, AJAX`) when the task involves:
-
-- Caching Details
-- SEF (Search-Friendly URLs)
-- Controllerable and AJAX
-- Checklist
+| Rule | Covers | Read when |
+| --- | --- | --- |
+| `rules/anatomy.md` | complex vs simple anatomy, class.php-only, SEF flow, class namespace | scaffolding a new component, deciding complex/simple |
+| `rules/structure.md` | placement, folder structure, class.php minimum, usage, `$arParams`/`$arResult`, `.description.php`, `.parameters.php` | placing files, writing parameters |
+| `rules/template.md` | template, `result_modifier.php`, `component_epilog.php` | templates and epilog |
+| `rules/cache-sef-ajax.md` | cache, SEF, Controllerable and AJAX | caching, SEF, AJAX |
 
 ## Checklist
 
+- [ ] Decided the anatomy first — complex vs simple (see `rules/anatomy.md`).
 - [ ] Opened only the rule file(s) needed for this task.
 - [ ] Followed DI / `/local/` / security canons from `AGENTS.md`.
