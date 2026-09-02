@@ -1,6 +1,6 @@
 ---
 name: bitrix-modules
-description: Covers creation and maintenance of a custom Bitrix module in /local/modules/vendor.module/ — CModule class, install/index.php, DoInstall/DoUninstall, install/version.php with $arModuleVersion, event/agent registration, module options, make:module. Applied when creating modules, installing, registering handlers. Key terms — CModule, DoInstall, DoUninstall, module manifest, install/index.php.
+description: Covers creation, anatomy and inclusion of a custom Bitrix module in /local/modules/vendor.module/ — CModule, install/index.php, install/db, lib/ subdirectories (Agent, Component, Controller, Integration, Internal, Model, Module, Repository, Service), namespaces, Loader inclusion, events, agents, options, make:module. Applied when creating, installing or including modules. Key terms — CModule, DoInstall, DoUninstall, lib/, PSR-4, Loader, requireModule, vendor.module.component_name.
 ---
 
 # Bitrix Modules
@@ -20,14 +20,8 @@ php bitrix/bitrix.php make:module vendor.module
 
 **Since main 25.900.** On older versions, scaffold files manually.
 
-`make:module` creates a **minimal** skeleton only:
+`make:module` creates a **minimal** skeleton only: `install/index.php` + `version.php`, empty `install/mysql/install.sql` / `uninstall.sql` stubs, `default_option.php`, `lang/ru/install/index.php`. It does **not** create `.settings.php`, `/lib/`, routes, or controllers — add those yourself or via further `make:*` / `dev:module-skeleton`.
 
-- `install/index.php`, `install/version.php`
-- `install/mysql/install.sql`, `install/mysql/uninstall.sql` (empty stubs)
-- `default_option.php`
-- `lang/ru/install/index.php`
-
-It does **not** create `.settings.php`, `/lib/`, routes, or controllers. Add those yourself or via further `make:*` / `dev:module-skeleton`.
 
 ## Minimal Structure
 
@@ -46,11 +40,44 @@ It does **not** create `.settings.php`, `/lib/`, routes, or controllers. Add tho
 └── include.php                  # optional, for registerNamespace/registerAutoLoadClasses
 ```
 
+## Base Module Anatomy
+
+```
+/local/modules/vendor.module/
+├── install/
+│   ├── components/<vendor>/     # module components, copied to /local/components/
+│   │   └── <module>.<name>/
+│   ├── db/
+│   │   ├── install.sql          # schema on install
+│   │   └── update_0.0.1.sql     # migrations
+│   ├── index.php                # installer class (CModule)
+│   └── version.php
+├── lib/                         # PSR-4, \Vendor\Module\... (add manually)
+│   ├── Agent/                   # agents (cron)
+│   ├── Component/               # base component classes
+│   ├── Controller/              # Ajax|Rest controllers
+│   ├── Integration/             # external systems + EventHandler/
+│   ├── Internal/                # Util, Error, Exception, QueueMessenger/
+│   ├── Model/                   # ORM entities (PostTable.php)
+│   ├── Module/                  # Configuration.php, Constants.php, EventManager.php
+│   ├── Repository/              # data access over ORM
+│   └── Service/                 # business logic, Container.php (ServiceLocator)
+├── views/                       # PHP views for renderView() in controllers
+├── routes/                      # Module route files — require from /local/routes/web.php
+├── .settings.php                # controllers, services, console (add manually)
+└── include.php                  # optional, for registerNamespace/registerAutoLoadClasses
+```
+
+## lib/ Anatomy Rules
+
+- **One class per file; file name = class name.** Namespace folders are **singular**: `lib\Agent\`, `lib\Model` — never `lib\Agents\`, `lib\Models\`.
+- Namespace: `\Vendor\Module\<SubNamespace>\<ClassName>` — `vendorname.catalog` → `\VendorName\Catalog\Agent\PriceUpdateAgent`.
+- Vendor-level namespace `\Vendor\` is declared in the project's `AGENTS.md` (`{{VENDOR_NAME}}`); class placement at project level → skill `bitrix-project-structure`.
+- Module components ship in `install/components/<vendor>/` and are copied to `/local/components/` on install; name `vendor.module.component_name`. Component anatomy → skill `bitrix-components`.
+
 ## Module Routing
 
-Routing is **global-only**. The kernel loads route files listed in global `routing.config` from `/local/routes/` and `/bitrix/routes/` only.
-
-A `routing` section in the module's `.settings.php` is **not** auto-loaded. Connect module routes by `require` from `/local/routes/web.php`:
+Routing is **global-only** — the kernel loads route files listed in global `routing.config` from `/local/routes/` and `/bitrix/routes/` only. A `routing` section in the module's `.settings.php` is **not** auto-loaded. Connect module routes by `require` from `/local/routes/web.php`:
 
 ```php
 // /local/routes/web.php
@@ -120,7 +147,7 @@ final class vendor_module extends CModule
 
         ModuleManager::registerModule($this->MODULE_ID);
 
-        $this->installDb();
+        $this->installDb();   // create tables via ORM — see DB Tables
         $this->installEvents();
         $this->installAgents();
         $this->installFiles();
@@ -133,21 +160,10 @@ final class vendor_module extends CModule
 
         $this->uninstallAgents();
         $this->uninstallEvents();
-        $this->uninstallDb();
+        $this->uninstallDb(); // drop tables — see DB Tables
         $this->uninstallFiles();
 
         ModuleManager::unRegisterModule($this->MODULE_ID);
-    }
-
-    private function installDb(): void
-    {
-        // Table creation via ORM Entity:
-        // \Vendor\Module\Model\PostTable::getEntity()->createDbTable();
-    }
-
-    private function uninstallDb(): void
-    {
-        // Application::getConnection()->dropTable(PostTable::getTableName());
     }
 
     private function installEvents(): void
@@ -156,7 +172,7 @@ final class vendor_module extends CModule
             fromModule: 'main',
             eventType: 'OnAfterUserAdd',
             toModuleId: $this->MODULE_ID,
-            toClass: \Vendor\Module\Internals\Integration\Main\EventHandler\OnAfterUserAddHandler::class,
+            toClass: \Vendor\Module\Integration\Main\EventHandler\OnAfterUserAddHandler::class,
             toMethod: 'handle',
         );
     }
@@ -167,7 +183,7 @@ final class vendor_module extends CModule
             fromModule: 'main',
             eventType: 'OnAfterUserAdd',
             toModuleId: $this->MODULE_ID,
-            toClass: \Vendor\Module\Internals\Integration\Main\EventHandler\OnAfterUserAddHandler::class,
+            toClass: \Vendor\Module\Integration\Main\EventHandler\OnAfterUserAddHandler::class,
             toMethod: 'handle',
         );
     }
@@ -175,7 +191,7 @@ final class vendor_module extends CModule
     private function installAgents(): void
     {
         \CAgent::AddAgent(
-            \Vendor\Module\Cli\Agent\QueueAgent::class . '::run();',
+            \Vendor\Module\Agent\QueueAgent::class . '::run();',
             $this->MODULE_ID,
             'N',
             300,
@@ -210,32 +226,13 @@ final class vendor_module extends CModule
 
 ## Language Files
 
-`/local/modules/vendor.module/lang/ru/install/index.php` (created by `make:module`):
+`/local/modules/vendor.module/lang/ru/install/index.php` (created by `make:module`) defines `$MESS['VENDOR_MODULE_NAME']`, `$MESS['VENDOR_MODULE_DESCRIPTION']`; add `lang/en/` (and other locales) for multi-language admin UI.
 
-```php
-<?php
-$MESS['VENDOR_MODULE_NAME'] = 'Vendor Module';
-$MESS['VENDOR_MODULE_DESCRIPTION'] = 'Module description';
-```
-
-Add `lang/en/` (and other locales) as needed for multi-language admin UI.
-
-Lang file paths must **mirror the source file path** relative to the module root: `/install/index.php` → `/lang/<code>/install/index.php`, `/admin/my_page.php` → `/lang/<code>/admin/my_page.php`. `MODULE_NAME` / `MODULE_DESCRIPTION` are read from these phrases in the installer constructor and shown in Admin → *Settings → Product settings → Modules*; if the lang file path or phrase codes don't match, the module appears there with an empty name/description.
+Lang paths **mirror the source path** relative to the module root: `/install/index.php` → `/lang/<code>/install/index.php`, `/admin/my_page.php` → `/lang/<code>/admin/my_page.php`. `MODULE_NAME` / `MODULE_DESCRIPTION` are read from these phrases in the installer constructor; a wrong path or phrase code shows the module with an empty name in the admin modules list.
 
 ## DB Tables
 
-Do not use raw SQL for table creation. Describe the entity in `/lib/Model/PostTable.php` and create the table via ORM:
-
-```php
-\Bitrix\Main\Loader::includeModule('vendor.module');
-\Vendor\Module\Model\PostTable::getEntity()->createDbTable();
-```
-
-For deletion:
-
-```php
-\Bitrix\Main\Application::getConnection()->dropTable(PostTable::getTableName());
-```
+Do not use raw SQL for table creation. Describe the entity in `/lib/Model/PostTable.php`; include the module, then create via `\Vendor\Module\Model\PostTable::getEntity()->createDbTable()` and drop via `\Bitrix\Main\Application::getConnection()->dropTable(PostTable::getTableName())`.
 
 ## Module Options (`options.php`)
 
@@ -258,24 +255,52 @@ $options = [
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && check_bitrix_sessid())
 {
-    foreach ($options as $opt)
+    foreach ($options as [$code, , $default])
     {
-        $val = $_POST[$opt[0]] ?? $opt[2];
-        Option::set($mid, $opt[0], $val);
+        Option::set($mid, $code, $_POST[$code] ?? $default);
     }
 }
 
-// ... display via CAdminTabControl
+// render the form via CAdminTabControl
 ```
 
-## PSR-4 Autoloading
+## Including a Module (`Loader`)
 
-Nothing needs to be registered manually in `include.php` if:
-1. Module is in `/local/modules/vendor.module/`.
-2. Classes are in `/lib/`.
-3. Namespace follows `\Vendor\Module\...` (or `\Bitrix\Mymodule\...` for a one-word id).
+Prefer `Bitrix\Main\Loader` in new code; treat `CModule::IncludeModule*` as legacy compatibility. `includeModule` / `requireModule` include the module's `include.php` and `/lib/autoload.php`, register the module namespace for PSR-4 autoloading — with the rules above, nothing needs manual registration — and register module **`services`** into `ServiceLocator`.
 
-Bitrix `Loader` handles this automatically when `includeModule` is called.
+| Situation | API |
+| --- | --- |
+| Module is mandatory; failure must abort | `Loader::requireModule('vendor.module')` |
+| Optional integration with a real `false` branch | `Loader::includeModule(...)` and handle `false` |
+| Shareware/demo status codes | `Loader::includeSharewareModule()` / legacy `CModule::IncludeModuleEx()` — not plain `includeModule` |
+
+```php
+use Bitrix\Main\Loader;
+
+// Mandatory — fail-fast (preferred when no fallback exists)
+Loader::requireModule('vendor.module');
+
+// Optional — must handle false explicitly
+if (Loader::includeModule('vendor.analytics'))
+{
+    // enrich behaviour
+}
+```
+
+**Do not** call `includeModule` without handling `false` when the dependency is actually required — use `requireModule`. Load a required module once near the scenario boundary; do not repeat the same check deep in call stacks. **Do not** flip global behaviour with `Loader::setRequireThrowException(false)` to fake a bool API — call `includeModule` instead. **Do not** introduce new `CModule::IncludeModule()` in greenfield code.
+
+## Manual Registration (Legacy Folders)
+
+For non-PSR-4 legacy folders, register in module `include.php`:
+
+```php
+\Bitrix\Main\Loader::registerNamespace(
+    'Vendor\\Module\\Legacy',
+    $_SERVER['DOCUMENT_ROOT'] . '/local/modules/vendor.module/legacy',
+);
+```
+
+Prefer `registerNamespace` for a PSR-4-shaped folder; `registerAutoLoadClasses` is a last resort — keep `include.php` **empty** otherwise.
 
 ## Checklist
 
@@ -285,8 +310,8 @@ Bitrix `Loader` handles this automatically when `includeModule` is called.
 - [ ] `DoInstall`/`DoUninstall` are implemented and idempotent.
 - [ ] Event handlers and agents are registered upon installation and removed upon uninstallation.
 - [ ] DB tables are managed via ORM or `SqlHelper` (DDL).
-- [ ] Language files exist where needed (`lang/ru/` from generator; add `lang/en/` etc.).
+- [ ] Language files exist where needed (`lang/ru/` from generator; add `lang/en/` etc.); no hardcoded strings in `index.php` — use `Loc`.
 - [ ] Services and controllers are registered in `.settings.php`.
-- [ ] No hardcoded strings in `index.php` (use `Loc`).
-- [ ] Module is compatible with PSR-4.
-- [ ] Files are copied to `/local/`, not `/bitrix/`.
+- [ ] `lib/` follows the anatomy (Agent, Component, Controller, Integration, Internal, Model, Module, Repository, Service); namespace folders singular; one class per file; PSR-4-compatible.
+- [ ] Module components in `install/components/<vendor>/`, name `vendor.module.component_name`; files copied to `/local/`, never `/bitrix/`.
+- [ ] Mandatory dependencies load via `Loader::requireModule`; `includeModule` result is handled.
