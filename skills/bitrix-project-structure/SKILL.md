@@ -1,6 +1,6 @@
 ---
 name: bitrix-project-structure
-description: Covers Bitrix project structure — /local vs /bitrix, PSR-4 autoloading, .settings.php, Loader includeModule vs requireModule, placement of components, templates, modules, routes and php_interface, namespaces like Vendor\Module. Applied for "where to put code" questions, module loading, autoloading. Key terms — /local, /bitrix, PSR-4, .settings.php, Loader, requireModule, includeModule, autoload.
+description: Covers Bitrix project structure — /local vs /bitrix, project tree, class placement and namespaces, .settings.php, composer, routing, init.php. Applied for "where to put code" and autoloading decisions. Module anatomy and inclusion → bitrix-modules; component anatomy → bitrix-components. Key terms — /local, PSR-4, namespace, .settings.php, composer, /local/routes/, init.php.
 ---
 
 # Project Structure and Autoloading in Bitrix
@@ -13,105 +13,59 @@ Baseline: **main 23.0+**. Features newer than baseline are marked **Since**.
 - `/local/` — **all user code**. If a file doesn't exist — create it manually. With the same path, a file in `/local/` takes precedence over `/bitrix/`.
 - `/upload/` — files uploaded by users and modules.
 
-## What to Put in `/local/`
+## Project Tree (`/local/`)
 
 ```
-/local/
-├── modules/<vendor>.<module>/   # Custom modules (PSR-4 autoloading)
-├── components/<vendor>/<name>/  # Components (class.php, templates/.default/)
-├── templates/<id>/              # Site templates + /components/, /page_templates/
-├── routes/
-│   └── web.php                  # Routing entry (Since main 21.400)
-├── activities/                  # Business process actions
-├── gadgets/                     # Desktop gadgets
-├── blocks/                      # Sites24 blocks
-├── js/                          # Custom JS extensions
-├── php_interface/
-│   ├── init.php                 # Loaded on every hit
-│   ├── after_connect_d7.php     # After DB connect (charset, sql_mode, TZ)
-│   ├── dbconn.php               # Since main 24.100 — can live here
-│   └── user_lang/               # User interface translations
-├── .settings.php                # Kernel configuration (Since main 24.100)
-└── .settings_extra.php          # Overrides (Since main 24.100)
+<project-root>/
+├── .gitignore / .editorconfig / .gitattributes
+├── .gitlab-ci.yml                  # CI/CD  (optional)
+├── AGENTS.md                       # instructions for AI agents
+├── README.md                       # project conventions for developers
+└── local/                          # all custom code
+    ├── activities/custom/          # business process activities
+    ├── blocks/                     # Sites24 blocks
+    ├── components/
+    │   ├── bitrix/                 # overridden system components
+    │   └── <vendor>/               # custom components (see bitrix-components)
+    ├── gadgets/                    # desktop gadgets
+    ├── js/<vendor>/<extension>/    # JS extensions (see bitrix-extensions)
+    ├── modules/<vendor>.<module>/  # custom modules (see bitrix-modules)
+    ├── php_interface/
+    │   ├── lib/                    # shared libs — when no module fits
+    │   ├── init.php                # loaded on every hit; minimal: composer autoload only
+    │   ├── cron_events.php         # cron tasks
+    │   ├── after_connect_d7.php    # after DB connect (charset, sql_mode, TZ)
+    │   ├── dbconn.php              # Since main 24.100 — can live here
+    │   ├── this_site_support.php   # site support info in admin footer? (html document)
+    │   └── user_lang/              # user interface translations
+    ├── routes/
+    │   └── web.php                 # routing entry — global routing.config lists files here
+    ├── templates/<id>/             # site templates + /components/, /page_templates/
+    ├── vendor/                     # composer dependencies
+    ├── composer.json               # Project dependencies with module composer.json includes
+    ├── .settings.php               # kernel config — Since main 24.100
+    ├── .settings_extra.php         # overrides without API — Since main 24.100
+    ├── .phpcs.xml                 # PHP CodeSniffer config (optional)
+    ├── .php-cs-fixer.dist.php     # PHP CS Fixer config (optional)
+    └── .gitignore                 # Git ignore for local
 ```
 
 Set the same permissions for `/local/php_interface/` as for `/bitrix/php_interface/` — it may contain sensitive files.
 
-## Including a Module (`Loader`)
+## Class Placement
 
-Prefer `Bitrix\Main\Loader` in new code. Treat `CModule::IncludeModule*` as legacy compatibility.
+| Project type | Classes go to | Namespace |
+| --- | --- | --- |
+| Monolith (e.g. DDD-based) | `/local/lib/` | `\Vendor\...` |
+| Module-based | `/local/modules/<vendor>.<module>/lib/` | `\Vendor\Module\...` |
 
-| Situation | API |
-| --- | --- |
-| Module is mandatory; failure must abort | `Loader::requireModule('vendor.module')` |
-| Optional integration with a real `false` branch | `Loader::includeModule(...)` and handle `false` |
-| Shareware/demo status codes | `Loader::includeSharewareModule()` / legacy `CModule::IncludeModuleEx()` — not plain `includeModule` |
+PSR-4: **folder name = namespace part, file name = class name** (PascalCase, singular folders). If the PSR-4 structure is followed — **nothing needs to be registered manually**.
 
-```php
-use Bitrix\Main\Loader;
-
-// Mandatory — fail-fast (preferred when no fallback exists)
-Loader::requireModule('vendor.module');
-
-// Optional — must handle false explicitly
-if (Loader::includeModule('vendor.analytics'))
-{
-    // enrich behaviour
-}
-```
-
-`includeModule` / `requireModule`:
-
-- Includes `include.php` and `/lib/autoload.php` of the module.
-- Registers the module namespace for PSR-4 autoloading.
-- Registers module **`services`** into `ServiceLocator`.
-
-Rules:
-
-- Do not call `includeModule` without handling `false` when the dependency is actually required — use `requireModule`.
-- Load a required module once near the scenario boundary; do not repeat the same check deep in call stacks.
-- Do not flip global behaviour with `Loader::setRequireThrowException(false)` to fake a bool API — call `includeModule` instead.
-- Do not introduce new `CModule::IncludeModule()` in greenfield code.
-
-## PSR-4 Autoloading of Classes in `/lib/`
-
-The rule is simple: **folder name = namespace part, file name = class name** (both in PascalCase).
-
-```
-/local/modules/vendor.module/lib/
-├── Application/Service/PostService.php        # \Vendor\Module\Application\Service\PostService
-├── Infrastructure/Controller/Post.php         # \Vendor\Module\Infrastructure\Controller\Post
-├── Model/PostTable.php                         # \Vendor\Module\Model\PostTable
-└── Cli/Command/Feature/RebuildCommand.php      # \Vendor\Module\Cli\Command\Feature\RebuildCommand
-```
-
-Namespace from module id:
-
-- Partner module `vendor.module` → `\Vendor\Module`
-- One-word module `mymodule` → **`\Bitrix\Mymodule`** (kernel rule in `Loader`)
-
-If the PSR-4 structure is followed — **nothing needs to be registered manually**.
-
-## Manual Registration (When Needed)
-
-In rare cases (mixed folders, non-PSR-4 legacy), you can specify in `/local/modules/vendor.module/include.php`:
-
-```php
-\Bitrix\Main\Loader::registerNamespace(
-    'Vendor\\Module\\Legacy',
-    $_SERVER['DOCUMENT_ROOT'] . '/local/modules/vendor.module/legacy',
-);
-
-\Bitrix\Main\Loader::registerAutoLoadClasses('vendor.module', [
-    'Vendor\\Module\\OldClass' => 'classes/old_class.php',
-]);
-```
-
-Prefer `registerNamespace` for a folder with PSR-4 structure. `registerAutoLoadClasses` is a last resort.
+Module `lib/` subdirectories, namespace-from-module-id rules and `Loader` inclusion → skill `bitrix-modules`.
 
 ## Composer
 
-Composer dependencies are placed in `/local/vendor/` (`/local/composer.json`). Keep `composer.json` **outside** `DOCUMENT_ROOT` when possible.
+Composer dependencies are placed in `/local/vendor/` (`/local/composer.json`). Keep `composer.json` **outside** `DOCUMENT_ROOT` when possible. Module `composer.json` files are included from the project one.
 
 In `.settings.php`:
 
@@ -129,6 +83,8 @@ Required for `bitrix/bitrix.php` (`make:*` commands, **Since main 25.900**). Do 
 - `/bitrix/routing_index.php` — entry point for new routing (configure web server to forward here).
 - `/local/php_interface/after_connect_d7.php` — included after successful DB connection (`ConnectionPool` → `include_after_connected`). Typical uses: `SET NAMES`, `sql_mode`, DB timezone.
 - `/local/php_interface/virtual_file_system.php` — virtual filesystem overrides.
+- `/local/php_interface/cron_events.php` — cron task registration.
+- `/local/php_interface/this_site_support.php` — support info in the admin footer.
 
 ## JS Extensions
 
@@ -140,31 +96,7 @@ Custom frontend code lives in `/local/js/<module>/<extension>/`. Load via `Exten
 - `/bitrix/.settings_extra.php` or `/local/.settings_extra.php` — overrides without API.
 - `/bitrix/php_interface/dbconn.php` or `/local/php_interface/dbconn.php` — constants for old kernel and compatibility.
 
-### Global vs module `.settings.php`
-
-| Section | Where | Notes |
-| --- | --- | --- |
-| `connections`, `cache`, `session`, `routing`, `crypto`, `exception_handling`, `loggers`, `messenger` | **Global** only | Read by kernel config |
-| `controllers`, `services`, `console` | **Module** (and optionally global for `services`) | Module `services` register on `includeModule` |
-| `routing` in module `.settings.php` | **Not used by router** | See below |
-
-### Module routes (not auto-loaded)
-
-The router loads only files listed in **global** `routing.config` from `/local/routes/` and `/bitrix/routes/`.
-
-Canonical pattern — keep module route file and require it from `/local/routes/web.php`:
-
-```php
-// /local/routes/web.php
-return function (\Bitrix\Main\Routing\RoutingConfigurator $routes): void {
-    $file = $_SERVER['DOCUMENT_ROOT'] . '/local/modules/vendor.module/routes/web.php';
-    if (is_file($file)) {
-        (require $file)($routes);
-    }
-};
-```
-
-See skill `bitrix-routing`.
+Global-only `.settings.php` sections — read by kernel config: `connections`, `cache`, `session`, `routing`, `crypto`, `exception_handling`, `loggers`, `messenger`. Module-level sections (`controllers`, `services`, `console`), module route wiring and `Loader` inclusion → skill `bitrix-modules`; router mechanics → skill `bitrix-routing`.
 
 ## File Priority
 
@@ -181,4 +113,13 @@ Only for:
 - Project constants that must be available before modules are included.
 - Compatibility hooks.
 
-For everything else — create a module and use its `install/index.php`, `include.php`, and `.settings.php`.
+`init.php` stays **minimal — composer autoload only** for new code. For everything else — create a module and use its `install/index.php`, `include.php`, and `.settings.php`.
+
+## Checklist
+
+- [ ] All custom code lives in `/local/`, never in `/bitrix/`.
+- [ ] New classes go to `lib/` of a module (or `/local/lib/` for monoliths), PSR-4, one class per file.
+- [ ] Module anatomy, naming and inclusion follow skill `bitrix-modules`; component anatomy follows skill `bitrix-components`.
+- [ ] Router reads only global `routing.config` (`/local/routes/`, `/bitrix/routes/`); module wiring per `bitrix-modules`.
+- [ ] Composer packages in `/local/vendor/`, never `/bitrix/vendor/`.
+- [ ] `init.php` minimal — composer autoload only; event handlers live in modules.
