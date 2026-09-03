@@ -15,6 +15,9 @@ Baseline: **main 23.0+**. Features newer than baseline are marked **Since**.
 
 ## Project Tree (`/local/`)
 
+The tree below is a general skeleton of a 1C-Bitrix project. The project should preferably be organized according to this layout and its inline comments: put new files, directories, components, and extensions in the places shown here, and follow the comments when deciding where code belongs. If an entry is missing from the tree, add it so the tree keeps reflecting the actual project
+structure.
+
 ```
 <project-root>/
 ├── .gitignore / .editorconfig / .gitattributes
@@ -37,7 +40,7 @@ Baseline: **main 23.0+**. Features newer than baseline are marked **Since**.
     │   ├── after_connect_d7.php    # after DB connect (charset, sql_mode, TZ)
     │   ├── dbconn.php              # Since main 24.100 — can live here
     │   ├── this_site_support.php   # site support info in admin footer? (html document)
-    │   └── user_lang/              # user interface translations
+    │   └── user_lang/              # user interface translations. overwrite system messages
     ├── routes/
     │   └── web.php                 # routing entry — global routing.config lists files here
     ├── templates/<id>/             # site templates + /components/, /page_templates/
@@ -66,6 +69,56 @@ Module `lib/` subdirectories, namespace-from-module-id rules and `Loader` inclus
 ## Composer
 
 Composer dependencies are placed in `/local/vendor/` (`/local/composer.json`). Keep `composer.json` **outside** `DOCUMENT_ROOT` when possible. Module `composer.json` files are included from the project one.
+
+Minimal `/local/composer.json` skeleton:
+
+```json
+{
+	"name": "vendor/project",
+	"type": "project",
+	"license": "MIT",
+	"minimum-stability": "dev",
+	"prefer-stable": true,
+	"require": {
+		"composer/installers": "^2.0",
+		"wikimedia/composer-merge-plugin": "dev-master"
+	},
+	"autoload": {
+		"psr-4": {
+		}
+	},
+	"extra": {
+		"bitrix-dir": "../bitrix",
+		"merge-plugin": {
+			"require": [
+				"../bitrix/composer-bx.json",
+				"./modules/<vendor>.<module>/composer.json"
+			]
+		},
+		"installer-paths": {
+			"./modules/{$vendor}.{$name}/": [
+				"type:bitrix-d7-module",
+				"type:bitrix-module"
+			],
+			"./components/{$vendor}/{$name}/": [
+				"type:bitrix-d7-component",
+				"type:bitrix-component"
+			],
+			"./templates/{$vendor}_{$name}/": [
+				"type:bitrix-d7-template",
+				"type:bitrix-theme"
+			]
+		}
+	},
+	"config": {
+		"vendor-dir": "vendor",
+		"allow-plugins": {
+			"composer/installers": true,
+			"wikimedia/composer-merge-plugin": true
+		}
+	}
+}
+```
 
 In `.settings.php`:
 
