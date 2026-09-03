@@ -62,10 +62,12 @@ php bitrix/bitrix.php make:module vendor.module
 │   ├── Module/                  # Configuration.php, Constants.php, EventManager.php
 │   ├── Repository/              # data access over ORM
 │   └── Service/                 # business logic, Container.php (ServiceLocator)
-├── views/                       # PHP views for renderView() in controllers
+├── views/                       # PHP views for renderView() in controllers (optional)
 ├── routes/                      # Module route files — require from /local/routes/web.php
 ├── .settings.php                # controllers, services, console (add manually)
 └── include.php                  # optional, for registerNamespace/registerAutoLoadClasses
+├── composer.json                # Module dependencies  (recommended)
+└── .gitignore                   # Git ignore for module  (optional)
 ```
 
 ## lib/ Anatomy Rules
@@ -301,6 +303,50 @@ For non-PSR-4 legacy folders, register in module `include.php`:
 ```
 
 Prefer `registerNamespace` for a PSR-4-shaped folder; `registerAutoLoadClasses` is a last resort — keep `include.php` **empty** otherwise.
+
+## Composer
+
+Module `composer.json` declares dependencies and configures PSR-4 autoloading for the module namespace. The project-level `composer.json` includes module manifests via `wikimedia/composer-merge-plugin` (see `bitrix-project-structure`).
+
+Minimal module `composer.json`:
+
+```json
+{
+	"name": "vendor/module",
+	"type": "bitrix-d7-module",
+	"license": "MIT",
+	"require": {
+		"php": "^8.0",
+		"composer/installers": "^2.0"
+	},
+	"replace": {
+		"psr/log": "*",
+		"psr/container": "*",
+		"psr/http-client": "*",
+		"psr/http-message": "*"
+	},
+	"autoload": {
+		"psr-4": {
+			"Vendor\\Module\\": "lib/"
+		}
+	},
+	"config": {
+		"vendor-dir": "vendor",
+		"allow-plugins": {
+			"composer/installers": true
+		}
+	}
+}
+```
+
+| Field | Purpose |
+| --- | --- |
+| `type: bitrix-d7-module` | Lets `composer/installers` auto-place the package into `/local/modules/` |
+| `replace` | Stubs PSR interfaces that Bitrix kernel provides at runtime — prevents conflicts with standalone PSR packages |
+| `autoload.psr-4` | Maps module namespace to `lib/`; must match the namespace convention from Identifier and Namespace section |
+| `vendor-dir` | Keeps module-specific dependencies isolated within the module directory |
+
+The `replace` block is optional when the module has no PSR dependency conflicts. When omitted, `vendor-dir` defaults to the module root.
 
 ## Checklist
 
