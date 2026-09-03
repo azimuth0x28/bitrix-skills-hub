@@ -1,0 +1,53 @@
+# {{PROJECT_NAME}} — a 1C-Bitrix (on-premise) project
+
+## Project Map
+
+- `/local/` — all custom code: components, templates, modules
+- `/local/php_interface/` — init scripts and event handlers
+- `/local/components/` — custom components (complex preferred)
+- `/local/templates/.default/` — site template
+- `/local/modules/` — custom modules (reusable functionality)
+- `/bitrix/` — core and standard modules (MUST NOT modify)
+
+## Vendor Convention
+
+- Vendor name MUST be: `{{VENDOR_NAME}}` (confirmed at initialization)
+- Top-level namespace MUST be: `{{VENDOR_NAME}}\`
+- Module prefix MUST be: `{{vendor_name}}.<modulename>` (e.g. `{{vendor_name}}.billing`)
+- Custom components and JS MUST live in: `local/components/{{vendor_name}}/`, `local/js/{{vendor_name}}/`
+- CSS prefixes MUST be: `{{vendor_name}}-`
+- DB table prefix MUST be: `{{db_prefix}}` (derived from vendor name, e.g. `acme` for `Acme`; max 5 chars) — used as `{{db_prefix}}_table_name`
+
+## Ground Rules
+
+| Rule | Use When |
+| --- | --- |
+| `@.agents/rules/core/core-interaction.md` | Any work touching `init.php`, event handlers, agents (scheduled tasks), components, form handling/CSRF, or logging |
+| `@.agents/rules/core/database.md` | Any work with D7 ORM entities, direct SQL (rare, ORM-first), migrations, or DB table naming (`{{db_prefix}}`) |
+| `@.agents/rules/core/architecture.md` | Creating or moving files: modules, components, classes, namespaces (PSR-4) |
+| `@.agents/rules/core/code-style.md` | Writing or editing any PHP code: naming, formatting (PSR-12 + Bitrix deviations), strict typing, PHPDoc |
+| `@.agents/rules/core/gitflow.md` | Any git work: branches (Git Flow), commits (Conventional Commits), PRs, releases |
+
+## Working Principles
+
+- Plan before non-trivial changes
+- Clarify ambiguous requirements instead of guessing
+- Test changes in staging before rollout
+- Fail fast with explicit error messages
+- Keep the change scope small — one task at a time
+
+## Commands
+
+All commands run from `/local/` (the composer root).
+
+```bash
+cd local
+
+# Syntax check for a single file
+php -l <file>
+
+# Single-file style check
+php vendor/bin/phpcs --standard=.phpcs.xml --extensions=php <path>
+php vendor/bin/php-cs-fixer fix --dry-run --diff --config=.php-cs-fixer.dist.php -- <path>
+```
+

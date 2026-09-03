@@ -221,6 +221,7 @@ Open the skill for the task. If it has `rules/`, read **only** matching rule fil
 | Extensions / UI / Vue | `bitrix-extensions`, `bitrix-ui`, `bitrix-vue` |
 | CMS basics | `bitrix-cms-basics` |
 | Migrations (`sprint.migration`, optional) | `bitrix-sprint-migration` |
+| Rules setup / onboarding / drift | `bitrix-prime-codebase`, `bitrix-rules-create-global`, `rules-check-drift` |
 
 ---
 
