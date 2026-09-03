@@ -42,7 +42,7 @@ structure.
     │   ├── this_site_support.php   # site support info in admin footer? (html document)
     │   └── user_lang/              # user interface translations. overwrite system messages
     ├── routes/
-    │   └── web.php                 # routing entry — global routing.config lists files here
+    │   └── web.php                 # routing entry — global routing.config lists files here  (optional)
     ├── templates/<id>/             # site templates + /components/, /page_templates/
     ├── vendor/                     # composer dependencies
     ├── composer.json               # Project dependencies with module composer.json includes
