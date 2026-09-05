@@ -19,11 +19,12 @@ RewriteRule ^(.*)$ /bitrix/routing_index.php [L]
 try_files $uri $uri/ /bitrix/routing_index.php;
 ```
 
-### Global `.settings.php` only
+### Global config only
 
-In `/local/.settings.php` (or `/bitrix/.settings.php`):
+Register the section in `.settings_extra.php` — the **preferred** file (create `/local/.settings_extra.php` if absent, **Since main 24.100**):
 
 ```php
+// /local/.settings_extra.php
 'routing' => [
     'value' => [
         'config' => ['web.php'], // basename only — searched in /local/routes/ and /bitrix/routes/
@@ -31,6 +32,10 @@ In `/local/.settings.php` (or `/bitrix/.settings.php`):
     'readonly' => true,
 ],
 ```
+
+The kernel loads the extra file after the primary config and each same-named section replaces the primary section entirely. An existing `/local/.settings_extra.php` replaces `/bitrix/.settings_extra.php`. On kernels older than main 24.100, add the section to `/bitrix/.settings_extra.php`.
+
+> Do **not** create a partial `/local/.settings.php` for this. That file **replaces** `/bitrix/.settings.php` entirely (no merge) — without `connections` it breaks the site on deploy. No `.settings*` file in `/bitrix/` is a partial-codebase signal: the replace stays invisible in a sandbox yet is fatal on the real site — verify the target environment first.
 
 How the kernel loads files (`Application::initializeRouter`):
 
