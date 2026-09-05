@@ -15,6 +15,9 @@ Progressive disclosure: open **only** the rule files that match the task. Do not
 2. Open the matching `rules/*.md` below.
 3. Prefer framework-native Bitrix patterns over custom abstractions.
 
+## Routing style: check the project first
+
+New-style routing is recommended for new projects; most existing projects still route through `urlrewrite.php`. Before registering routes or touching the `routing` config section, determine the project's active routing: web-server rewrite target (`urlrewrite.php` vs `routing_index.php`) and presence of `/local/routes/`. On a legacy project follow its existing style or migrate explicitly — do not force new routing onto it. Migration → `rules/matching-legacy.md`.
 
 ## Choose a rule file
 

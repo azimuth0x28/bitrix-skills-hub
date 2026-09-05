@@ -37,6 +37,8 @@ Each section:
 
 **Routing is global-only:** the router loads files listed in global `routing.config` from `/local/routes/` and `/bitrix/routes/` only. Module route files must be `require`d from `/local/routes/web.php` — a module `.settings.php` `routing` section does **not** auto-load them.
 
+**Routing style:** the `routing` section serves the new router — recommended for new projects, while most existing projects still route through `urlrewrite.php`. Determine the project's active routing (web-server rewrite target: `urlrewrite.php` vs `routing_index.php`) before touching `routing`: on a legacy project the section stays inert until the web server forwards to `routing_index.php`. See skill `bitrix-routing`.
+
 There is **no** `validation` section in `.settings.php`. Use `ValidationService` via ServiceLocator (`main.validation.service` in `main` module services). See skill `bitrix-validation`.
 
 ## Key Sections
