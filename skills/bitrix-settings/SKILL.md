@@ -7,9 +7,13 @@ description: Covers kernel configuration — .settings.php sections (connections
 
 Baseline: **main 23.0+**. Features newer than baseline are marked **Since**.
 
-Primary config: `/bitrix/.settings.php` or `/local/.settings.php` (**Since main 24.100**). Overrides: `/bitrix/.settings_extra.php` or `/local/.settings_extra.php` (**Since main 24.100**).
+Primary config: `/bitrix/.settings.php`; if `/local/.settings.php` exists (**Since main 24.100**), it **replaces** the primary entirely — no merge. A partial `/local/.settings.php` (no `connections`) kills the site on deploy. Own the file only as a complete copy of the primary plus your sections.
+
+Overrides: `.settings_extra.php` — **preferred** for adding sections without touching the primary config. The kernel loads it after the primary and each same-named section **replaces** the primary section entirely (`data[$k] = $v`, no per-key merge). When both exist, `/local/.settings_extra.php` (**Since main 24.100**) replaces `/bitrix/.settings_extra.php`.
 
 > Errors in `.settings.php` can break the site. Back up before changes.
+
+> **No `.settings*` file anywhere in `/bitrix/`?** Signal of a partial codebase (agent sandbox, partial checkout, deploy artifact): config may be absent here yet present on the real site. Verify the target environment before creating config files — a change that looks harmless in the sandbox can break the site on deploy.
 
 Also maintain `/local/php_interface/dbconn.php` for legacy kernel compatibility even when using D7 only.
 
@@ -197,7 +201,8 @@ Encryption keys for `CryptoField`, encrypted cookies. Store keys outside git —
 
 ## Checklist
 
-- [ ] User overrides in `/local/.settings.php`, not edited `/bitrix/.settings.php`.
+- [ ] Section additions go to `.settings_extra.php` (create `/local/.settings_extra.php` if absent); `/bitrix/.settings.php` left untouched.
+- [ ] `/local/.settings.php`, when created, holds the full mandatory config (`connections` included) — it replaces, never supplements, `/bitrix/.settings.php`.
 - [ ] `debug => false` on production.
 - [ ] Secrets in `.settings_extra.php` or env vars.
 - [ ] `readonly => true` for connections and services.

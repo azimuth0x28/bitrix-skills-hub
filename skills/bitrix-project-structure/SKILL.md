@@ -46,8 +46,8 @@ structure.
     ├── templates/<id>/             # site templates + /components/, /page_templates/
     ├── vendor/                     # composer dependencies
     ├── composer.json               # Project dependencies with module composer.json includes
-    ├── .settings.php               # kernel config — Since main 24.100
-    ├── .settings_extra.php         # overrides without API — Since main 24.100
+    ├── .settings.php               # full kernel config — replaces /bitrix/.settings.php entirely — Since main 24.100
+    ├── .settings_extra.php         # section overrides — preferred for additions — Since main 24.100
     ├── .phpcs.xml                 # PHP CodeSniffer config (optional)
     ├── .php-cs-fixer.dist.php     # PHP CS Fixer config (optional)
     └── .gitignore                 # Git ignore for local
@@ -145,8 +145,9 @@ Custom frontend code lives in `/local/js/<module>/<extension>/`. Load via `Exten
 
 ## Configuration Files
 
-- `/bitrix/.settings.php` or `/local/.settings.php` — primary D7 kernel config.
-- `/bitrix/.settings_extra.php` or `/local/.settings_extra.php` — overrides without API.
+- `/bitrix/.settings.php` — primary D7 kernel config. `/local/.settings.php` (**Since main 24.100**) **replaces** it entirely, no merge — must contain the full mandatory config, `connections` included.
+- `/bitrix/.settings_extra.php` — overrides without API; preferred for adding sections. `/local/.settings_extra.php` (**Since main 24.100**) replaces it the same way; the kernel loads the extra file after the primary and each same-named section replaces the primary section entirely.
+- No `.settings*` file in `/bitrix/` — signal of a partial codebase (agent sandbox, partial checkout). Verify the real environment before config changes.
 - `/bitrix/php_interface/dbconn.php` or `/local/php_interface/dbconn.php` — constants for old kernel and compatibility.
 
 Global-only `.settings.php` sections — read by kernel config: `connections`, `cache`, `session`, `routing`, `crypto`, `exception_handling`, `loggers`, `messenger`. Module-level sections (`controllers`, `services`, `console`), module route wiring and `Loader` inclusion → skill `bitrix-modules`; router mechanics → skill `bitrix-routing`.
