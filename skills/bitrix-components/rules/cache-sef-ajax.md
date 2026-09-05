@@ -26,7 +26,7 @@ For complex components, define in `.parameters.php`:
 ],
 ```
 
-In `class.php`, parse SEF variables and build URLs. Prefer controllers + routes for new full sections; use complex SEF components only when visual editor integration is required.
+In `class.php`, parse SEF variables and build URLs. For a new full section prefer controllers + routes when the project already uses new routing; on legacy `urlrewrite.php` projects match the existing routing style. Use complex SEF components only when visual editor integration is required.
 
 ## Controllerable and AJAX
 

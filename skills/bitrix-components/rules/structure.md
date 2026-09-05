@@ -1,6 +1,6 @@
 # Placement and structure
 
-Component = a widget that fetches data via module API and transforms it into HTML. For entire sections (catalog, personal area), prefer a controller + routes; complex SEF components when visual-editor tree integration is required.
+Component = a widget that fetches data via module API and transforms it into HTML. For entire sections (catalog, personal area), prefer a controller + routes when the project already uses new routing (legacy `urlrewrite.php` projects keep SEF components); complex SEF components when visual-editor tree integration is required.
 
 ## Where to Place
 

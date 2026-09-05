@@ -41,8 +41,8 @@ structure.
     │   ├── dbconn.php              # Since main 24.100 — can live here
     │   ├── this_site_support.php   # site support info in admin footer? (html document)
     │   └── user_lang/              # user interface translations. overwrite system messages
-    ├── routes/
-    │   └── web.php                 # routing entry — global routing.config lists files here  (optional)
+    ├── routes/                     # optional — only for projects on new routing; legacy sites route via urlrewrite.php
+    │   └── web.php                 # routing entry — global routing.config lists files here
     ├── templates/<id>/             # site templates + /components/, /page_templates/
     ├── vendor/                     # composer dependencies
     ├── composer.json               # Project dependencies with module composer.json includes
@@ -133,7 +133,7 @@ Required for `bitrix/bitrix.php` (`make:*` commands, **Since main 25.900**). Do 
 
 ## Additional Files
 
-- `/bitrix/routing_index.php` — entry point for new routing (configure web server to forward here).
+- `/bitrix/routing_index.php` — entry point for new routing; the web server forwards here only when the project uses new routing (legacy projects forward to `/bitrix/urlrewrite.php`).
 - `/local/php_interface/after_connect_d7.php` — included after successful DB connection (`ConnectionPool` → `include_after_connected`). Typical uses: `SET NAMES`, `sql_mode`, DB timezone.
 - `/local/php_interface/virtual_file_system.php` — virtual filesystem overrides.
 - `/local/php_interface/cron_events.php` — cron task registration.
