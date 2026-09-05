@@ -2,126 +2,60 @@
 
 <context>
   <system_context>
-    The repository follows a Git Flow derived workflow with three long-lived root
-    branches (`main`, `pre-prod`, `develop`) and four short-lived branch types
-    (`feature/`, `bugfix/`, `release/`, `hotfix/`). Branch names encode a task
-    tracking number so every change is traceable to a tracker entry.
+    Rules below are the hub default git process. Branch models, naming, and
+    release mechanics differ between teams and are project facts: the observed
+    repository practice wins over this default. Adapt this file to the real
+    process and record the adaptation instead of enforcing details nobody uses.
   </system_context>
 
   <domain_context>
-    Git Flow · Conventional commits · release branches (`release/vX.Y.Z`) ·
-    semantic versioning tags (`vX.Y.Z`, `vX.Y.Z-rcN`) · hotfix propagation.
+    Branch model · Conventional Commits · review flow · release tagging.
   </domain_context>
 </context>
 
 <critical_rules enforcement="strict">
-  <rule id="branch-source-develop" scope="all-branches">
-    All new branches are created only from `develop`; the only exception is
-    `hotfix/*`, which is created from `main`.
-  </rule>
-
-  <rule id="branch-naming" scope="all-branches">
-    Branch names must contain a task tracking number (`feature/task-123`,
-    `bugfix/task-323`) or an explicit `no-task` marker when there is no task in
-    the tracker (`feature/no-task/refactoring-init`). Bare names without either
-    are invalid.
-  </rule>
-
-  <rule id="merge-before-develop" scope="feature-bugfix">
-    Before merging into `develop`, first merge `develop` into the feature|bugfix
-    branch and resolve conflicts.
-  </rule>
-
-  <rule id="final-tag-on-main" scope="releases">
-    Final release tags (`vX.Y.Z`) are placed only on the release merge commit
-    into `main`.
+  <rule id="observe-first" scope="all-git-work">
+    Read the team's actual git process from the repository before creating
+    branches, releases, or tags: `git branch -r`, merge history, CI/CD config,
+    `CHANGELOG.md`. This file states the default; the observed process wins.
   </rule>
 
   <rule id="conventional-commits" scope="commits">
-    MUST use Conventional commits: `type(scope): subject`, with only the types
-    `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`.
+    MUST use Conventional Commits: `type(scope): subject`, types limited to
+    `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`; subject in
+    the imperative mood, body explains "why" for complex changes.
   </rule>
 
   <rule id="no-direct-main-commits" scope="code-review">
-    MUST NOT make direct commits to `main`; route changes through review —
-    on `develop` before a release, or through a PR when the team has a PR process.
+    MUST NOT commit directly to `main` or any production branch; route changes
+    through review — a PR when the team has a PR process.
   </rule>
 
-  <rule id="hotfix-propagation" scope="hotfix">
-    Hotfixes go straight to `main` and are then delivered to all long-lived branches.
+  <rule id="traceable-branches" scope="all-branches">
+    Branch names must be traceable: a task-tracking number when the project
+    has a tracker (`feature/task-123`), otherwise an explicit `no-task` marker
+    with a short description (`feature/no-task/refactoring-init`).
   </rule>
 </critical_rules>
 
-## 1. Main Branches (Root Nodes)
+## Review
 
-Long-lived root branches:
-
-- `main` — Production (the final branch for delivering code to the production site)
-- `pre-prod` — Pre-production (release preparation and testing). Usually a server in the Customer's environment
-- `develop` — Integration testing. All new branches are created only from it
-
-Short-lived development branches:
-
-1. **feature/** — for developing new functionality; created from `develop`
-2. **bugfix/** — for fixing bugs in current development; created from `develop` or `release`
-3. **release/** — for preparing a release version (format `release/vX.Y.Z`); created from `develop`
-4. **hotfix/** — for urgent fixes in production (branch `main`); created from `main`
-
-## 2. Branch Naming Conventions
-
-All branches must follow the template:
-
-- `(feature|bugfix|hotfix)/<tracking-number>`
-- `(feature|bugfix|hotfix)/<tracking-number>/<stage>`
-- `(feature|bugfix)/no-task/<description>` — exception when there is no task in the tracker: refactoring initiative, CI/CD preparation, and similar cases
-
-- `feature/task-123` — a feature with a task tracking number
-- `feature/task-234/subfeature_step_1` — a complex feature made of several sub-tasks within the feature
-- `bugfix/task-456` — a bug fix
-- `hotfix/task-789` — an urgent fix for the production site `main`
-- `release/vX.Y.Z` — a versioned release branch (e.g. `release/v1.2.0`)
-- `release/rc-epic/<name>` — a draft release branch accumulating functionality that will later be merged into a versioned branch
-
-**Correct branch names:**
-
-- ✅ `feature/task-123/login-page`
-- ✅ `feature/task-234`
-- ✅ `bugfix/task-456/auth-fix`
-- ✅ `hotfix/task-789/critical-error`
-- ✅ `feature/no-task/refactoring-init`
-- ✅ `bugfix/no-task/cicd-prepare`
-- ✅ `release/v1.2.0`
-
-**Incorrect branch names:**
-
-- ❌ `feature/login` (no task number and no `no-task` marker)
-- ❌ `fix/auth` (does not match the format)
-
-## 3. Tags (Versioning)
-
-- **Release candidates (RC):** `vX.Y.Z-rcN` (e.g. `v1.2.0-rc1`). Tag every bugfix merge into `release`
-- **Final releases:** `vX.Y.Z` — the tag is placed only on the release merge commit into `main`
-
-## Commits
-
-- Limit the subject to 50 characters
-- Add a commit body explaining "why" for complex changes
-
-## Code review
-
-- If the team has a PR process: route all changes to `develop` and `main` through PRs, involve at least one reviewer, and require CI/CD to pass
-- Keep PRs/changes focused and small
+- Keep PRs and changes focused and small — one concern per PR.
+- CI/CD must pass before merge when the project has CI.
 
 ## Releases
 
-- Tag releases with semantic versioning (`v1.2.3`)
-- Create a release branch from `develop` before deploying to production
-- Update `CHANGELOG.md` on every release
+- Tag releases with semantic versioning (`vX.Y.Z`); the tag goes on the merge
+  commit into the production branch.
+- Record what changed on every release — `CHANGELOG.md` or tracker releases,
+  per the team's existing practice.
 
-## Overall Workflow
+## Default branch model (adjust to the team's process)
 
-1. All new branches are created only from `develop`.
-2. Branch names must contain a task tracking number (`feature/task-123`, `bugfix/task-323`) or an explicit `no-task` marker when there is no task in the tracker (`feature/no-task/refactoring-init`).
-3. Before merging into `develop` — first merge `develop` into the feature|bugfix branch and resolve conflicts.
-4. Releases are named `release/vX.Y.Z`, tags — `vX.Y.Z` (final, only on the merge commit into `main`).
-5. Hotfixes go straight to `main` and are then delivered to all long-lived branches.
+Git-Flow-derived default; replace it wholesale when the repository shows a
+different model — keep one model, do not mix:
+
+- Long-lived: `main` (production) ← `develop` (integration).
+- Short-lived, created from `develop`: `feature/task-123`, `bugfix/task-456`;
+  `release/vX.Y.Z` before production deploys.
+- `hotfix/task-789` from `main`, then delivered to all long-lived branches.
