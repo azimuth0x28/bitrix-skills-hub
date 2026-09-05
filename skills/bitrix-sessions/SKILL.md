@@ -110,7 +110,7 @@ define('BX_SECURITY_SESSION_VIRTUAL', true);
 
 ## Storages
 
-Specified in `/local/.settings.php` (or `/bitrix/.settings.php`) in the `session.value.handlers.general.type` section:
+Specified in the global config, `session.value.handlers.general.type` section. Add it to `.settings_extra.php` (preferred) — a partial `/local/.settings.php` would replace `/bitrix/.settings.php` entirely (see skill `bitrix-settings`):
 
 | type | When | Note |
 | --- | --- | --- |

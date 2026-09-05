@@ -118,7 +118,7 @@ Do **not** use `MessageBus::dispatch()` — the current API is `$message->send('
 
 ### 4. Configuration in `.settings.php`
 
-Global config (`/bitrix/.settings.php` or `/local/.settings.php`) — brokers and cross-module queues:
+Global config — add to `.settings_extra.php` (preferred); a partial `/local/.settings.php` would replace `/bitrix/.settings.php` entirely (see skill `bitrix-settings`). Brokers and cross-module queues:
 
 ```php
 'messenger' => [

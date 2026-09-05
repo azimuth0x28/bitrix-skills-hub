@@ -9,7 +9,7 @@ description: Covers Bitrix\Main\Web\HttpClient HTTP client — legacy mode and P
 
 ## Global Configuration
 
-Default values are in `/local/.settings.php`, `http_client_options` section:
+Default values: `http_client_options` section of the global config. Add it to `.settings_extra.php` (preferred) — a partial `/local/.settings.php` would replace `/bitrix/.settings.php` entirely (see skill `bitrix-settings`):
 
 ```php
 'http_client_options' => [

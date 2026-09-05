@@ -75,7 +75,7 @@ return [
 
 ### Global Services
 
-The `services` section can also be used in `/local/.settings.php` — registration does not require a module:
+The `services` section can also live in the global config — registration does not require a module. Add it to `.settings_extra.php` (preferred) rather than creating a partial `/local/.settings.php`, which replaces `/bitrix/.settings.php` entirely (see skill `bitrix-settings`):
 
 ```php
 'services' => [
@@ -151,7 +151,7 @@ Use only where DI is impossible (init.php, global functions, console `execute()`
 
 Override via:
 
-1. **`/local/.settings.php` or `/local/.settings_extra.php`** — global `services` (loaded before modules), or
+1. **`/local/.settings_extra.php`** (preferred; `/local/.settings.php` also works but must be a complete config) — global `services` (loaded before modules), or
 2. **`ServiceLocator::getInstance()->addInstance($code, $object)`** / `addInstanceLazy()` at runtime (e.g. in `init.php`).
 
 ```php
