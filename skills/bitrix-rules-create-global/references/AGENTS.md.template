@@ -1,5 +1,3 @@
-<!-- AGENTS.draft v16 | chars: 9661 | size: 9.7 KB | tokens≈2415 (chars/4) | cap: 10000 | spec: .tmp/agents-draft/SPEC.md | eval: .tmp/agents-draft/agent.eval-rule.md -->
-
 # `{{PROJECT_NAME}}` — a 1C-Bitrix (on-premise) project
 
 > LastDrift: `{{last_drift}}`
@@ -38,8 +36,8 @@ Inline comments carry the placement conventions; the tree mirrors the actual pro
     ├── js/{{vendor_name}}/<extension>/    # JS extensions (see bitrix-extensions skill)
     ├── modules/{{vendor_name}}.<module>/  # custom modules (see bitrix-modules skill)
     ├── php_interface/
-    │   ├── lib/                    # shared libs — when no module fits
-    │   ├── init.php                # loaded on every hit; minimal: composer autoload only
+    │   ├── lib/                    # shared libs — when no module fits; include.php wires handlers
+    │   ├── init.php                # loaded on every hit; minimal: autoload + lib/include.php
     │   ├── cron_events.php         # cron task entrypoint
     │   ├── after_connect_d7.php    # after DB connect (charset, sql_mode, TZ)
     │   ├── dbconn.php              # Since main 24.100 — can live here

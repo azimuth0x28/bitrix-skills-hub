@@ -46,16 +46,20 @@
 
 ## /local/php_interface/init.php
 
-- Keep `/local/php_interface/init.php` as empty as possible: ideally it only loads module autoloaders — directly or through a single composer autoload (if the project uses composer)
-- If the project uses composer — `init.php` contains only `require $_SERVER['DOCUMENT_ROOT'] . '/vendor/autoload.php'`
+- Keep `/local/php_interface/init.php` as empty as possible: it only wires loading — composer autoload
+  (or the namespace registration), plus the single `lib/include.php` connection when project-local handlers exist
+- If the project uses composer — `init.php` contains `require $_SERVER['DOCUMENT_ROOT'] . '/vendor/autoload.php'`
+  (plus `require ... '/local/php_interface/lib/include.php'` when project-local handlers exist)
 - If composer is not used and it is unclear where to place code:
-  - `init.php` contains only the namespace registration:
+  - `init.php` contains the namespace registration and the `include.php` connection:
 
     ```php
     Loader::registerNamespace(
         '{{VENDOR_NAME}}\Local\',
         $_SERVER['DOCUMENT_ROOT'] . '/local/php_interface/lib/'
     );
+
+    require $_SERVER['DOCUMENT_ROOT'] . '/local/php_interface/lib/include.php';
     ```
 
   - Place code in `/local/php_interface/lib/<Domain>/<Class.php>` — e.g. `local/php_interface/lib/Integration/Main/UserHandler.php`, where `<Domain>` is a semantic group (Event, User, Order, etc.)
@@ -63,9 +67,12 @@
 
 ## Event Handlers
 
-- Register handlers as a dedicated handler class in the module (`.events.php` / installer); if there is no module — in a separate event class (e.g. `local/php_interface/lib/Integration/Main/EventHandler.php`) included from `init.php`
+- A module owns its handlers: register them in the module installer (`EventManager::registerEventHandler`)
+- No module — handler classes live in `local/php_interface/lib/Integration/` (e.g. `Integration/Main/UserHandler.php`)
+- The single entry point `local/php_interface/lib/include.php` attaches the project handlers — `init.php` requires
+  `include.php` right after the autoload / namespace registration
 - Move handler logic into a class, not into closures
-- Check module availability (`Loader::includeModule`) before registering
+- Check module availability (`Loader::includeModule`) before registering a handler for another module's events
 - Give handlers meaningful names: `module:OnEventName` → `onEventNameHandler`
 
 ## Agents
