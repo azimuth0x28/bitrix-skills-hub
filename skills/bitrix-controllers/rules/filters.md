@@ -6,6 +6,8 @@ By default, actions get: `Authentication` + `HttpMethod([GET, POST])` + `Csrf`.
 
 When overriding `getDefaultPreFilters()`, **extend** `parent::getDefaultPreFilters()` — do not rebuild the base protection from scratch without reason.
 
+Guests fail the default `Authentication` → **401** without redirect (`bitrix/modules/main/lib/engine/actionfilter/authentication.php`). Guest access to an action = drop the prefilter for that action: `#[DisablePrefilters([ActionFilter\Authentication::class, ActionFilter\Csrf::class])]` or `'-prefilters'` in `configureActions()`, optionally re-adding `Attribute\Rule\*` rules per action. There is **no `allowAnonymous()`** API — prefilters are the only switch.
+
 ## Action Filters
 
 Predefined filters:
@@ -92,6 +94,8 @@ final class Post extends Controller
     }
 }
 ```
+
+**Name-collision trap:** `ActionFilter\HttpMethod` (filter class, no `#[Attribute]`) and `ActionFilter\Attribute\Rule\HttpMethod` (attribute) are different classes. The attribute reader reads only attributes implementing `FilterAttributeInterface` (`bitrix/modules/main/lib/engine/actionfilter/attribute/attributereader.php`): a filter class used in attribute position is silently ignored and the restriction disappears.
 
 Controller-level defaults via `getDefaultPreFilters()` / `getDefaultPostFilters()`. Use `#[EnablePrefilters]` / `#[DisablePrefilters]` to adjust inherited defaults per action.
 
