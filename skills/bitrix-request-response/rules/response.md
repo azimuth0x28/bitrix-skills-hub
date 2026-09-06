@@ -115,6 +115,7 @@ return new Html('<h1>Hi</h1>');
 - [ ] Specific getters (`getQuery`/`getPost`/…) when the source is known; JSON via framework APIs.
 - [ ] Response uses typed classes / helpers (`Json`, `AjaxJson`, `Redirect`, `BFile`) — not raw `header()`.
 - [ ] Cookies via `Cookie` with `HttpOnly` and `Secure`; headers via `addHeader`.
+- [ ] `crypto[crypto_key]` is set in `.settings.php` wherever `CryptoCookie` runs (missing key = fatal `SystemException`).
 - [ ] URLs via `Uri`; opaque ids via `UuidGenerator::generateV4()`.
 - [ ] Input treated as untrusted (still validate); large files via `BFile` / `Archive`.
 
@@ -143,5 +144,7 @@ Context::getCurrent()->getResponse()->addCookie($cookie);
 ```
 
 Reading: `$request->getCookie('vendor_token')` — kernel decrypts automatically when `crypto_key` is configured.
+
+**No `crypto[crypto_key]` → fatal `SystemException`** ("There is no crypto[crypto_key] in .settings.php. Generate it.") — thrown by the kernel when an encrypted cookie is processed (`bitrix/modules/main/lib/web/cookiescrypter.php`). Provision the key in every environment that serves `CryptoCookie`; if encryption is optional for a value, use plain `Cookie`.
 
 For regular (non-encrypted) cookies use `Bitrix\Main\Web\Cookie` with the same security flags. CSRF and cookie policy details: skill `bitrix-security`. Kernel reference: `bitrix/modules/main/lib/web/cookie.php`, `cryptocookie.php` (if present in the project).

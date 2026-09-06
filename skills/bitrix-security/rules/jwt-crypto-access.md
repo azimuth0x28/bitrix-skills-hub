@@ -104,6 +104,8 @@ $response->addCookie($cookie);
 
 Use `HttpOnly` + `Secure` + `SameSite=Lax/Strict`. Do not put access tokens in `localStorage`.
 
+Encrypted cookies (`CryptoCookie`) — key provisioning and the fatal-missing-key failure: skill `bitrix-request-response` (`rules/response.md`, `Encrypted Cookies`).
+
 ## Value Encryption
 
 - `CryptoField('SECRET')` — tablet field, encrypted transparently.
