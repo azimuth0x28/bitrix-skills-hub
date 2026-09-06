@@ -27,7 +27,7 @@
   </rule>
 
   <rule id="json-via-web-json" scope="api">
-    MUST use JSON only through `\Bitrix\Main\Web\Json`
+    MUST use JSON only through `\Bitrix\Main\Web\Json` (`encode` / `decode`) — never raw `json_encode` / `json_decode`
   </rule>
 
   <rule id="idempotent-agents" scope="agents">
@@ -43,6 +43,16 @@
 
 - Load modules via `\Bitrix\Main\Loader` (`Loader::includeModule()`)
 - Access global objects via `$GLOBALS` (`$APPLICATION`, `$USER`, `$DB`) or the `\Bitrix\Main\Application` facade
+- Serialize JSON only via `\Bitrix\Main\Web\Json::encode()` / `Json::decode()` — both throw `ArgumentException` on
+  malformed data; raw `json_encode()` / `json_decode()` fail silently (`false` / `null`)
+
+## Module Options
+
+- Read module options via `\Bitrix\Main\Config\Option::get($moduleId, $name, $default, $siteId)`
+- **A non-empty explicit `$default` overrides the value from the module's `default_option.php`** — the file is
+  consulted only when `$default` is empty
+- When the module ships `default_option.php`, keep all default values there — pass no explicit `$default` in code,
+  so the file stays the single source of defaults
 
 ## /local/php_interface/init.php
 
