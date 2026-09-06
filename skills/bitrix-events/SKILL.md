@@ -136,6 +136,8 @@ EventManager::getInstance()->registerEventHandlerCompatible(
 
 The new `registerEventHandler` also works with old events but adapts them to the `Event $event` signature — parameters are retrieved via `$event->getParameter('fields')`, modification via `EventResult`.
 
+**There is no `unRegisterEventHandlerCompatible`** — the counterpart of `registerEventHandlerCompatible` does not exist in the kernel (verified in `bitrix/modules/main/lib/eventmanager.php`). Remove compatibly registered handlers with plain `unRegisterEventHandler` and the same parameters (`fromModuleId`, `eventType`, `toModuleId`, `toClass`, `toMethod`).
+
 ## Order and Chain of Handlers
 
 - Handlers run in ascending `$sort` order (default `100`).
@@ -162,7 +164,7 @@ Such registration lives until the end of the request.
 
 - [ ] Public event files — in `/lib/Public/Event/<Aggregate>/`.
 - [ ] Handlers of other modules' events — in `/lib/Internals/Integration/<OtherModule>/EventHandler/`.
-- [ ] Registration and unregistration of handlers as a pair in `DoInstall`/`DoUninstall`.
+- [ ] Registration and unregistration of handlers as a pair in `DoInstall`/`DoUninstall` — unregister via `unRegisterEventHandler` (no `unRegisterEventHandlerCompatible` exists).
 - [ ] Custom events use `Bitrix\Main\Event` + `EventResult` instead of returning arrays.
 - [ ] Handler has no constructor DI — resolve services inside the method via `ServiceLocator::get()`.
 - [ ] Handler is idempotent and does not crash — wrap everything in `try/catch` with logging.
