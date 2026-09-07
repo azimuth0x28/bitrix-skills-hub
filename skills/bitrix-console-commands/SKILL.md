@@ -1,6 +1,6 @@
 ---
 name: bitrix-console-commands
-description: Covers Bitrix CLI tools — php bitrix/bitrix.php, generators make:module/make:controller/make:tablet/make:entity/make:service/make:event/make:message/make:component/make:request, kernel commands (orm:annotate, messenger:consume, translate:index), custom Symfony Console commands. Applied for scaffolding, cron, custom CLI, queue workers. Key terms — bitrix.php, make command, Symfony Console, CLI.
+description: Use for scaffolding, cron, custom CLI, queue workers. Covers Bitrix CLI tools — php bitrix/bitrix.php, make:* generators (make:module, make:controller, make:entity, make:request...), kernel commands (orm:annotate, messenger:consume, translate:index), custom Symfony Console commands. Key terms — bitrix.php, make command, Symfony Console, CLI.
 ---
 
 # Bitrix Console Commands

@@ -1,6 +1,6 @@
 ---
 name: bitrix-controllers
-description: "Engine Controller/JsonController: thin actions, filter attributes, CurrentUser, errors. Use for AJAX/REST/routed endpoints."
+description: "Use for AJAX/REST/routed endpoints. Engine Controller/JsonController: thin actions, filter attributes, CurrentUser, errors."
 ---
 
 # Bitrix Controllers

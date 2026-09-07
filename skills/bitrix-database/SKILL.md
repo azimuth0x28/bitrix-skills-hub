@@ -1,6 +1,6 @@
 ---
 name: bitrix-database
-description: Covers direct database work in Bitrix — Application::getConnection(), Connection, MysqliConnection, SqlHelper, SqlExpression, raw SQL via query()/queryExecute()/queryScalar(), transactions, DDL, schema migrations, bulk ops (insertBatch, addMulti). Applied when ORM is insufficient — bulk ops, raw SQL, migrations, external DBs. Key terms — Connection, SqlHelper, SqlExpression, transaction, raw SQL.
+description: Use when ORM is insufficient — bulk ops, raw SQL, migrations, external DBs. Covers direct database work — Application::getConnection(), SqlHelper, SqlExpression, raw SQL via query()/queryExecute(), transactions, DDL, schema migrations. Key terms — Connection, SqlHelper, SqlExpression, transaction, raw SQL.
 ---
 
 # Direct Database Work

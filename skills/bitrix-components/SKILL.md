@@ -1,6 +1,6 @@
 ---
 name: bitrix-components
-description: "Bitrix components: anatomy (complex/simple, class.php-only), placement, templates, cache, SEF, Controllerable AJAX. Use when building or editing components."
+description: "Use when building or editing components. Bitrix components: anatomy (complex/simple, class.php-only), placement, templates, cache, SEF, Controllerable AJAX."
 ---
 
 # Bitrix Components

@@ -1,6 +1,6 @@
 ---
 name: bitrix-cms-basics
-description: Covers CMS fundamentals — sites, site templates, menus, page templates, includes, breadcrumbs, styles/CSS handling (styles.css vs template_styles.css, Asset::addCss, SetAdditionalCSS), user groups, user fields, admin panel. Applied for site structure and content management tasks. Key terms — CSite, template, menu, include area, styles.css, SetAdditionalCSS, user field, UF.
+description: Use for site structure and content management tasks. Covers CMS fundamentals — sites, site templates, menus, page templates, includes, breadcrumbs, styles/CSS handling (styles.css vs template_styles.css, SetAdditionalCSS), user groups, user fields, admin panel. Key terms — CSite, template, menu, include area, styles.css, user field, UF.
 ---
 
 # CMS Basics

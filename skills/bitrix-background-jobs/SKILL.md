@@ -1,6 +1,6 @@
 ---
 name: bitrix-background-jobs
-description: CAgent, addBackgroundJob, Messenger brokers/queues. Use for deferred and async processing.
+description: Use for deferred and async processing. CAgent, addBackgroundJob, Messenger brokers/queues.
 ---
 
 # Background Tasks in Bitrix
