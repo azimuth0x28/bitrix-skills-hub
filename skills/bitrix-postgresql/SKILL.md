@@ -1,6 +1,6 @@
 ---
 name: bitrix-postgresql
-description: Covers PostgreSQL support in Bitrix — PgsqlConnection, migration from MySQL, compatible code, module support matrix. Applied when configuring or migrating to PostgreSQL Enterprise editions. Key terms — PostgreSQL, PgsqlConnection, migration, compatible-code.
+description: Use when configuring or migrating to PostgreSQL Enterprise editions. Covers PostgreSQL support in Bitrix — PgsqlConnection, migration from MySQL, compatible code, module support matrix. Key terms — PostgreSQL, PgsqlConnection, migration, compatible-code.
 ---
 
 # PostgreSQL in Bitrix

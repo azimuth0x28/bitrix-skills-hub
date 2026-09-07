@@ -1,6 +1,6 @@
 ---
 name: bitrix-prime-codebase
-description: Prime (orient) a 1C-Bitrix on-premise codebase for Brownfield rules generation. Analyzes the actual project — layout, ORM usage, migrations, event handlers, agents, coding style, git history — and produces `codebase-analysis.md` with file:line evidence, consumed by `bitrix-rules-create-global`. Applied when onboarding a Bitrix codebase or before generating project rules. Key terms — prime, codebase analysis, Brownfield, conventions, seams.
+description: Use when onboarding a codebase or before generating project rules. Primes the codebase for Brownfield rules generation — analyzes layout, ORM usage, migrations, event handlers, coding style, git history; produces `codebase-analysis.md` with file:line evidence for `bitrix-rules-create-global`. Key terms — prime, codebase analysis, Brownfield, seams.
 ---
 
 # Bitrix Prime Codebase: Analyze a 1C-Bitrix Project's Real Conventions

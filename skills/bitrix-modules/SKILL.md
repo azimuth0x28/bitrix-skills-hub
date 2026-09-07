@@ -1,6 +1,6 @@
 ---
 name: bitrix-modules
-description: Covers creation, anatomy and inclusion of a custom Bitrix module in /local/modules/vendor.module/ — CModule, install/index.php, install/db, lib/ subdirectories (Agent, Component, Controller, Integration, Internal, Model, Module, Repository, Service), namespaces, Loader inclusion, events, agents, options, make:module. Applied when creating, installing or including modules. Key terms — CModule, DoInstall, DoUninstall, lib/, PSR-4, Loader, requireModule, vendor.module.component_name.
+description: Use when creating, installing, or including modules. Covers module creation and anatomy in /local/modules/vendor.module/ — CModule, lib/ subdirectories (Agent, Controller, Model, Service), Loader inclusion, events, agents, options, make:module. Key terms — CModule, DoInstall, DoUninstall, lib/, PSR-4, Loader, requireModule, vendor.module.
 ---
 
 # Bitrix Modules

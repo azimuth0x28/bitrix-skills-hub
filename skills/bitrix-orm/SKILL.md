@@ -1,6 +1,6 @@
 ---
 name: bitrix-orm
-description: D7 ORM tablets, ConditionTree queries, Objectify, batch/merge/deleteByFilter writes. Use for entity design, reads, and persistence.
+description: Use for entity design, reads, and persistence. D7 ORM tablets, ConditionTree queries, Objectify, batch/merge/deleteByFilter writes.
 ---
 
 # Bitrix D7 ORM

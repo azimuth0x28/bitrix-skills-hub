@@ -1,6 +1,6 @@
 ---
 name: bitrix-request-response
-description: HttpRequest/HttpResponse, Json/AjaxJson/Redirect, Uri, UuidGenerator. Use instead of $_GET/$_POST and raw headers.
+description: Use instead of $_GET/$_POST and raw headers. HttpRequest/HttpResponse, Json/AjaxJson/Redirect, Uri, UuidGenerator.
 ---
 
 # Application, Context, Request, Response
