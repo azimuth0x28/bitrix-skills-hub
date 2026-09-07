@@ -1,6 +1,6 @@
 ---
 name: bitrix-knowledge-skill-creator
-description: Covers house conventions for authoring knowledge skills — skills that teach correct and incorrect usage of a development aspect and convey best practices for kernel and module APIs (patterns, prohibitions, negative knowledge, morphology, density). Applied when creating, editing, or reviewing a knowledge skill. Key terms — SKILL.md, rules/, router, baseline, Since, API matrix, kernel verification.
+description: Use when creating, editing, or reviewing a knowledge skill. Covers authoring conventions — correct and incorrect usage of a development aspect, best practices for kernel and module APIs (patterns, prohibitions, negative knowledge, morphology, density). Key terms — SKILL.md, rules/, router, baseline, Since, API matrix, kernel verification.
 ---
 
 # Knowledge Skill Authoring Conventions
@@ -48,7 +48,7 @@ Thin skills follow this skeleton verbatim — the wording is stable across the c
 ```markdown
 ---
 name: <skill-name>
-description: <topics, comma-separated>. Use for/when <situations>.
+description: Use for/when <situations>. <topics, comma-separated>.
 ---
 
 # <Topic> (`<module id>`)
@@ -88,23 +88,23 @@ Router invariants:
 ## 3. Frontmatter
 
 - `name` equals the folder name exactly.
-- The description is the trigger surface. Two templates:
+- The description is the trigger surface. The trigger clause leads — `Use when`/`Applied when` first; topic coverage and key terms follow. Two templates:
 
 Monolith:
 
 ```
-Covers <topic> — <enumerated subtopics>. Applied when/for <task situations>. Key terms — <8–12 searchable tokens: class names, API ids, domain words>.
+Use when/for <task situations>. Covers <topic> — <enumerated subtopics>. Key terms — <8–12 searchable tokens: class names, API ids, domain words>.
 ```
 
 Router:
 
 ```
-<topics, comma-separated>. Use for/when <situations>.
+Use for/when <situations>. <topics, comma-separated>.
 ```
 
 Rules: English only; concrete identifiers as key terms (they are what a user prompt matches); if the description contains `#` or `[` (attribute names like `#[NotEmpty]`), quote the whole value.
 
-Length: **soft limit 400 characters** — at 400+, trim before hand-off (drop redundant key terms, merge subtopics); **hard limit 500** — a draft over it fails review. The agent-skills spec allows 1024; this collection stays deliberately tighter.
+Length: **hard limit 350 characters** — a draft over it fails review; trim before hand-off (drop redundant key terms, merge subtopics). The agent-skills spec allows 1024; this collection stays deliberately tighter.
 
 ## 4. Baseline and versioning
 
@@ -192,7 +192,7 @@ Exit code 0 = pass. The script enforces the agent-skills spec: `SKILL.md` presen
 ## Pre-submit checklist for the skill author
 
 - [ ] `name` = folder name; description matches the template and carries key terms.
-- [ ] Description length: soft ≤400 chars, hard ≤500 chars.
+- [ ] Description length: ≤350 chars.
 - [ ] Line count within budget after the reconciliation pass (cut, never pad).
 - [ ] Format check passes on the final draft ("Validation after authoring"): exit code 0, errors fixed at the source.
 - [ ] Morphology matches the decision rule; sizes within budget.
