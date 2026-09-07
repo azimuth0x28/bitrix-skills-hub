@@ -42,7 +42,7 @@ Same decision rule and budgets as `bitrix-knowledge-skill-creator` §1: monolith
 
 ## 3. Frontmatter and templates
 
-- `name` equals the folder name; description per `bitrix-knowledge-skill-creator` §3 templates (trigger clause first, hard limit 350 chars). Key terms are tool names, paths, and command names — what a user prompt matches.
+- `name` equals the folder name; description per `bitrix-knowledge-skill-creator` §3 templates (trigger clause first, soft limit 350 chars, hard 400). Key terms are tool names, paths, and command names — what a user prompt matches.
 - No `argument-hint` / `arguments` keys — the agent-skills spec has no argument concept. Declare optional input in the body (`<input>` block or stage 1), including its default.
 - H1: `# <Topic>` — no module id.
 - **Never write a `Baseline:` line.** Kernel versioning (`main X.Y`) does not apply to a process; a Baseline line in a workflow skill is a defect.
@@ -107,7 +107,7 @@ Run the format check and the security gate packaged in `skill-validator` — sam
 ## Pre-submit checklist for the skill author
 
 - [ ] Type dispatch correct: process/convention content → this skill; kernel-heavy content → `bitrix-knowledge-skill-creator`.
-- [ ] `name` = folder name; description per §3 template; length ≤350 chars.
+- [ ] `name` = folder name; description per §3 template; length soft ≤350, hard ≤400 chars.
 - [ ] Line count within budget (monolith 100–310; router ≤60; rules 45–135). Cut, never pad.
 - [ ] No `Baseline:` line; tool versions anchored to project manifests or CI configs.
 - [ ] Decision table present where recurring forks exist.
