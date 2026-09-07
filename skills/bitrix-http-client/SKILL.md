@@ -1,6 +1,6 @@
 ---
 name: bitrix-http-client
-description: Covers Bitrix\Main\Web\HttpClient HTTP client — legacy mode and PSR-18 (sendRequest), async Promise, proxies/timeouts, http_client_options, main.HttpClient logger, SSRF, redirects, and GeoIp\Manager lookups. Applied in external API integrations, webhooks, async calls and geolocation. Key terms — HttpClient, PSR-18, Promise, SSRF, GeoIp, Manager, webhook.
+description: Use in external API integrations, webhooks, async calls and geolocation. Covers Bitrix\Main\Web\HttpClient HTTP client — legacy mode and PSR-18 (sendRequest), async Promise, proxies/timeouts, http_client_options, main.HttpClient logger, SSRF, redirects, and GeoIp\Manager lookups. Key terms — HttpClient, PSR-18, Promise, SSRF, GeoIp, webhook.
 ---
 
 # HttpClient

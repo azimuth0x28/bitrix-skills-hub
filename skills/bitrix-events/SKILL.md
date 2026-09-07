@@ -1,6 +1,6 @@
 ---
 name: bitrix-events
-description: Covers Bitrix event system — new model (Bitrix\Main\Event, EventResult, EventManager::addEventHandler, make:event, make:eventhandler) and old model (OnBefore*/OnAfter* hooks in CIBlock, CUser, CSale). Applied when integrating modules, lifecycle hooks, publishing and subscribing to events. Key terms — Event, EventManager, EventResult, OnBefore, OnAfter, handler, subscriber, addEventHandler.
+description: Use when integrating modules, lifecycle hooks, publishing and subscribing to events. Covers Bitrix event system — new model (Bitrix\Main\Event, EventResult, EventManager::addEventHandler, make:event) and old model (OnBefore*/OnAfter* hooks). Key terms — Event, EventManager, EventResult, OnBefore, OnAfter, handler, subscriber, addEventHandler.
 ---
 
 # Bitrix Events

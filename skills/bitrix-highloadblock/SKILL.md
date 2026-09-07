@@ -1,6 +1,6 @@
 ---
 name: bitrix-highloadblock
-description: Covers Highloadblock module — HighloadBlockTable manage API, compileEntity() and dynamic DataManager CRUD, user fields (HLBLOCK_{id}), hlblock UF relations, directory property (UF_XML_ID), ORM events, rights (hl_element_*), highloadblock.list/view. Applied for highload blocks, dynamic data, user fields. Key terms — highloadblock, HighloadBlockTable, compileEntity, DataManager, HLBLOCK_, UF_XML_ID.
+description: Use for highload blocks, dynamic data, user fields. Covers Highloadblock module — HighloadBlockTable manage API, compileEntity() and dynamic DataManager CRUD, user fields (HLBLOCK_{id}), directory property (UF_XML_ID), ORM events, rights (hl_element_*). Key terms — highloadblock, HighloadBlockTable, compileEntity, DataManager, HLBLOCK_, UF_XML_ID.
 ---
 
 # Highload Blocks (`highloadblock`)
