@@ -8,7 +8,7 @@
   </system_context>
 
   <domain_context>
-    PSR-12 + Bitrix deviations · vendor `{{VENDOR_NAME}}` / `{{vendor_name}}` (set in `AGENTS.md`).
+    PSR-12 + Bitrix deviations · vendor `{{VENDOR_NAME}}` / `{{vendor_name}}`.
   </domain_context>
 </context>
 
@@ -84,6 +84,6 @@
 ## Tooling
 
 - Dev deps: `squizlabs/php_codesniffer`, `friendsofphp/php-cs-fixer` — PSR-12 + Bitrix rules, run from
-  `/local/` (commands — `AGENTS.md`).
+  `/local/`.
 - Static analysis: `phpstan analyse <path> --level=5..8` or `psalm <path>` — level per project; auto-format
   only if tabs, Allman, 120, and component exceptions survive.

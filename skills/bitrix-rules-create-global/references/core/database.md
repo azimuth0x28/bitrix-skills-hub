@@ -29,9 +29,8 @@
   </rule>
 
   <rule id="db-table-prefix" scope="tables">
-    MUST prefix custom tables from the vendor name (e.g. `Acme` → `acme`),
-    confirmed at AGENTS.md initialization —  no more than 5 characters recommended;
-    format `{{db_prefix}}_table_name`
+    MUST prefix custom tables from the vendor name (e.g. `Acme` → `acme`) —  no more than 5 characters recommended;
+    format `{db_prefix}_table_name`
   </rule>
 
   <rule id="cross-dbms-awareness" scope="all">
@@ -42,7 +41,7 @@
 
 ## ORM (D7)
 
-- Place entity classes in `/local/modules/<vendor>.<module>/lib/Model/*Table.php`,`/local/php_interface/lib/Model/*Table.php`
+- Place entity classes in `/local/modules/<vendor_name>.<module>/lib/Model/*Table.php`,`/local/php_interface/lib/Model/*Table.php`
 - Use type-safe queries via `\Bitrix\Main\ORM\Query\Query`
 - Describe entity properties via `\Bitrix\Main\ORM\Fields` (including `Reference` for relations)
 

@@ -90,7 +90,7 @@
 - Register via `CAgent::AddAgent` in the module installer, not in `init.php`
 - Set reasonable intervals and protection against infinite loops
 - Log agent execution results for debugging
-- Module and installer structure — see @.agents/rules/core/architecture.md → «Typical {{vendor_name}}.<module> module structure»
+- Module and installer structure — see @.agents/rules/core/architecture.md → «Typical module structure»
 
 ## Components
 

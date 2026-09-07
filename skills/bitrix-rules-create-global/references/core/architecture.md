@@ -28,14 +28,14 @@
   </rule>
 
   <rule id="namespace-format" scope="classes">
-    Format: `\VendorName\<ModuleName>\<SubNamespace>\<ClassName>`; the fully qualified class name has
+    Format: `\{{VENDOR_NAME}}\<ModuleName>\<SubNamespace>\<ClassName>`; the fully qualified class name has
     the form: `\<NamespaceName>(\<SubNamespaceNames>)*\<ClassName>`
   </rule>
 
   <rule id="vendor-namespace" scope="classes">
     In Bitrix projects the vendor-level namespace is `\{{VENDOR_NAME}}\`
-    (set in `AGENTS.md`); module example: `vendorname.catalog` ->
-    `\VendorName\Catalog\Agents\PriceUpdateAgent`
+    (set in `AGENTS.md`); module example: `{{vendor_name}}.catalog` ->
+    `\{{VENDOR_NAME}}\Catalog\Agents\PriceUpdateAgent`
   </rule>
 
   <rule id="file-namespace-match" scope="classes">
@@ -116,7 +116,7 @@
     └── .gitignore                 # Git ignore for local
 ```
 
-## Typical {{vendor_name}}.<module> module structure:
+## Typical module structure:
 
 ```
 {{vendor_name}}.<module>/
@@ -267,16 +267,16 @@ One page — one `template.php` template. The class inherits the module's base c
 
 1. **Class placement**
     - Place new classes in `local/lib/` for monolith projects (e.g. DDD-based)
-    - Recommended for module-based projects: `local/modules/<vendor>.<modulename>/lib/`
+    - Recommended for module-based projects: `local/modules/{{vendor_name}}.<modulename>/lib/`
     - Follow the PSR-4 standard for autoloading
     - Use composer-compatible autoloading when possible within the project
 
 2. **Namespace**
-    - Format: `\VendorName\<ModuleName>\<SubNamespace>\<ClassName>`
+    - Format: `\{{VENDOR_NAME}}\<ModuleName>\<SubNamespace>\<ClassName>`
     - The fully qualified class name has the form: `\<NamespaceName>(\<SubNamespaceNames>)*\<ClassName>`
     - In Bitrix projects the vendor-level namespace is `\{{VENDOR_NAME}}\` (set in `AGENTS.md`)
-    - Module example: `vendorname.catalog` -> `\VendorName\Catalog\Agents\PriceUpdateAgent`
-    - Module in the file system: `local/modules/vendorname.catalog/`
+    - Module example: `{{vendor_name}}.catalog` -> `\{{VENDOR_NAME}}\Catalog\Agents\PriceUpdateAgent`
+    - Module in the file system: `local/modules/{{vendor_name}}.catalog/`
     - File names in a namespace must match the namespace notation: `{{VENDOR_NAME}}\Billing\Internal\QueueMessenger\Message\BalanceSyncMessage` => `local/modules/{{vendor_name}}.billing/lib/Internal/QueueMessenger/Message/BalanceSyncMessage.php`
 
 3. **File naming**
@@ -288,7 +288,7 @@ One page — one `template.php` template. The class inherits the module's base c
 ```
 local/
 └── modules/
-    └── vendorname.catalog/
+    └── {{vendor_name}}.catalog/
         ├── install/
         │   └── index.php
         ├── lib/
