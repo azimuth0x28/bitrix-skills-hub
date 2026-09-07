@@ -1,6 +1,6 @@
 ---
 name: bitrix-sessions
-description: "Covers Bitrix sessions — Application::getSession(), getKernelSession(), getLocalSession(), BX_SECURITY_SESSION_READONLY/VIRTUAL modes, alternative storages, separated mode, UserAuthActionTable::addLogoutAction(). Applied instead of direct $_SESSION access, for AJAX lock tuning, and revoking sessions across devices. Key terms — separated session, UserAuthActionTable, AUTH_ACTION_SKIP_LOGOUT."
+description: Use instead of direct $_SESSION access, for AJAX lock tuning, and revoking sessions across devices. Covers Bitrix sessions — Application::getSession(), getKernelSession()/getLocalSession(), BX_SECURITY_SESSION_READONLY/VIRTUAL modes, separated mode, UserAuthActionTable::addLogoutAction(). Key terms — separated session, UserAuthActionTable.
 ---
 
 # Bitrix Sessions

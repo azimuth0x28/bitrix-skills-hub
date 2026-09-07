@@ -1,6 +1,6 @@
 ---
 name: bitrix-sale
-description: Covers Sale module — API choice (D7 object model vs ORM vs CSale*), FUSER, Basket, Order create/update, properties, statuses, events, payments, delivery/shipments, discounts, coupons, reservation, permissions. Applied for cart/checkout, order lifecycle, pay/ship integration. Key terms — sale, Basket, Order, Fuser, Payment, Shipment, PaySystem\Manager, STATUS_ID, DiscountCouponsManager.
+description: Use for cart/checkout, order lifecycle, pay/ship integration. Covers Sale module — API choice (D7 object model vs ORM vs CSale*), FUSER, Basket, Order create/update, properties, statuses, events, payments, delivery/shipments, discounts, coupons. Key terms — sale, Basket, Order, Fuser, Payment, Shipment, PaySystem\Manager, DiscountCouponsManager.
 ---
 
 # Online Store (`sale`)

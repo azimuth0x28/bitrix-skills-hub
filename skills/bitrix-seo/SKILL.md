@@ -1,6 +1,6 @@
 ---
 name: bitrix-seo
-description: Covers SEO module — sitemap generation, robots.txt, webmaster/search-engine engines, keywords/tools orientation; links to iblock IPROPERTY / InheritedProperty for page meta. Applied for crawl maps, Webmaster/Search Console wiring, SEO tooling. Key terms — Sitemap, Generator, Job, RobotsFile, Webmaster, SearchEngine, InheritedProperty, IPROPERTY_TEMPLATES.
+description: Use for crawl maps, Webmaster/Search Console wiring, SEO tooling. Covers SEO module — sitemap generation, robots.txt, webmaster/search-engine engines, keywords/tools orientation; links to iblock IPROPERTY / InheritedProperty for page meta. Key terms — Sitemap, Generator, Job, RobotsFile, Webmaster, SearchEngine, IPROPERTY_TEMPLATES.
 ---
 
 # SEO Module (`seo`)

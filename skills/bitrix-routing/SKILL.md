@@ -1,6 +1,6 @@
 ---
 name: bitrix-routing
-description: RoutingConfigurator, /local/routes, PublicPageController, site-guard, urlrewrite migration. Use for public/API URLs.
+description: Use for public/API URLs. RoutingConfigurator, /local/routes, PublicPageController, site-guard, urlrewrite migration.
 ---
 
 # Routing in Bitrix
