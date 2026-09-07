@@ -1,6 +1,6 @@
 ---
 name: bitrix-skill-eval
-description: Covers quality evaluation of Bitrix Framework skills — blind test protocol (frozen spec, verbatim prompt, per-run isolation, time cap), Q1–Q10 grading rubric, hard gates, knowledge-point density, kernel verification. Applied when grading skill drafts, running blind tests, deciding acceptance. Key terms — Q1–Q10, knowledge point, density, hard gates, blind test, kernel verification.
+description: Use when grading skill drafts, running blind tests, deciding acceptance. Covers quality evaluation of Bitrix Framework skills — blind test protocol (frozen spec, verbatim prompt, time cap), Q1–Q10 grading rubric, hard gates, knowledge-point density, kernel verification. Key terms — Q1–Q10, knowledge point, density, hard gates, blind test.
 ---
 
 # Bitrix Skill Quality Evaluation

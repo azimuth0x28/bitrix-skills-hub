@@ -1,6 +1,6 @@
 ---
 name: skill-validator
-description: Covers mechanical validation of a skill folder before a PR — format check via quick_validate.py, security scan via prism-scanner, exit-code and grade A–F gates, .prismignore, batch validation. Applied when a skill is ready for a PR, when asked to validate, or after mass edits. Key terms — quick_validate.py, prism-scanner, --fail-on, exit code, grade A–F, .prismignore, pre-PR checks.
+description: Use when a skill is ready for a PR, when asked to validate, or after mass edits. Covers mechanical validation of a skill folder — format check via quick_validate.py, security scan via prism-scanner, exit-code and grade A–F gates, .prismignore, batch validation. Key terms — quick_validate.py, prism-scanner, --fail-on, grade A–F, .prismignore.
 ---
 
 # Skill Validation (Format + Security)

@@ -1,6 +1,6 @@
 ---
 name: bitrix-storage
-description: Covers choosing between Option, Persistent Storage, Cache and sessions — PersistentStorageInterface (main 25.1100+), DeferredStorageDecorator, Bitrix\Main\Config\Option for permanent module settings. Applied when deciding where to put config vs TTL state vs derived cache. Key terms — Option, PersistentStorage, DeferredStorageDecorator, Cache, TTL, default_option.php.
+description: Use when deciding where to put config vs TTL state vs derived cache. Covers choosing between Option, Persistent Storage, Cache and sessions — PersistentStorageInterface (main 25.1100+), DeferredStorageDecorator, Bitrix\Main\Config\Option for permanent module settings. Key terms — Option, PersistentStorage, Cache, TTL, default_option.php.
 ---
 
 # Storage Boundaries: Option / Persistent / Cache
