@@ -4,7 +4,8 @@
 
 - Files: `/local/modules/<vendor>.<module>/lib/Infrastructure/Controller/<Name>.php`.
 - Namespace (default): `\Vendor\Module\Infrastructure\Controller\<Name>`.
-- Public URL for AJAX: `/bitrix/services/main/ajax.php?action=vendor:module.<name>.<action>`.
+- Public URL for AJAX: `/bitrix/services/main/ajax.php?action=vendor:module.<name>.<action>` — e.g. `/bitrix/services/main/ajax.php?action=acme:favorites.favorites.add`.
+- Action string format: `<vendor>:<module>.<controller>.<action>`. The `:` after the vendor is **not** an error — this is the official format for addressing controllers of custom (`/local/modules/`) modules; removing or replacing it breaks the call.
 - URL can be rewritten by a route (see `bitrix-routing`).
 
 Namespace configuration — in `/local/modules/vendor.module/.settings.php`:
@@ -130,9 +131,12 @@ Custom DTO autowiring via `getAutoWiredParameters()`.
 
 ## Front-end Call
 
+Action string: `<vendor>:<module>.<controller>.<action>` — e.g. `acme:favorites.favorites.add` (vendor `acme`, module `favorites`, controller `Favorites`, action `add`).
+
 ```js
-BX.ajax.runAction('vendor:module.post.create', {
-    data: { title: 'Title', body: 'Body' },
+// the ':' between vendor and module is part of the format
+BX.ajax.runAction('acme:favorites.favorites.add', {
+    data: { id: 42 },
 }).then((response) => {
     console.log(response.data);
 });
