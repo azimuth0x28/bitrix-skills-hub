@@ -87,7 +87,7 @@ Every custom module is a composer package merged into the root project (`local/c
 |-------------------------------------------|--------------------------------------------------------------------------------------------------------------------|
 | `@.agents/rules/core/core-interaction.md` | Any work touching `init.php`, event handlers, agents (scheduled tasks), components, form handling/CSRF, or logging |
 | `@.agents/rules/core/database.md`         | Any work with D7 ORM entities, direct SQL (rare, ORM-first), migrations, or DB table naming (`{{db_prefix}}_`) |
-| `@.agents/rules/core/architecture.md`     | Creating or moving files: modules, components, classes, namespaces (PSR-4) |
+| `@.agents/rules/core/architecture.md`     | Creating or moving files: modules, components, classes, namespaces (PSR-4); resolving normative-source conflicts (Standards & conflicts) |
 | `@.agents/rules/core/code-style.md`       | Writing or editing any PHP code: naming, formatting (PSR-12 + Bitrix deviations), strict typing, PHPDoc |
 | `@.agents/rules/core/gitflow.md`          | Any git work: branches (Git Flow), commits (Conventional Commits), PRs, releases |
 

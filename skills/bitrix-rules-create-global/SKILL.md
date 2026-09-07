@@ -1,6 +1,6 @@
 ---
 name: bitrix-rules-create-global
-description: "Use when initializing a Bitrix project, onboarding, or replacing a generic init. Sets up global rules — a lean root `AGENTS.md` plus `.agents/rules/core/` files: Greenfield copies templates from `references/`, Brownfield turns a `bitrix-prime-codebase` analysis into evidence-backed rules. Key terms — AGENTS.md, rules, init, Greenfield, Brownfield."
+description: "Use when initializing a Bitrix project, onboarding, or replacing a generic init. Sets up global rules — a lean root `AGENTS.md` plus `.agents/rules/core/` files: Greenfield copies templates from `references/`, Brownfield turns a `bitrix-prime-codebase` analysis into evidence-backed rules and resolves its canon deviations with the user (Tier-1/2 confirmed, Tier-3 at agent discretion). Key terms — AGENTS.md, rules, init, Greenfield, Brownfield, canon deviations, DEV."
 ---
 
 # Bitrix Rules Create: Global Rules for a 1C-Bitrix (On-Premise) Project
@@ -39,6 +39,8 @@ description: "Use when initializing a Bitrix project, onboarding, or replacing a
       from this skill's embedded `references/` — **prescribed** standards, verbatim.
     - **Brownfield** (analysis passed): document the **actual** patterns of an existing
       codebase, backing every rule with path/class/symbol evidence — **observed** facts.
+      Canon deviations from the analysis (`DEV-<n>`) are resolved with the user before
+      rules are composed (rule `deviation-resolution`).
       The template is the backbone; significant insights extend it per rule
       `brownfield-adaptive`.
   </task_context>
@@ -103,6 +105,25 @@ description: "Use when initializing a Bitrix project, onboarding, or replacing a
     concern justifies a different arrangement — note every deviation in the chat report.
     Extras link to Tier-1 files instead of duplicating them; `brownfield-evidence` and
     `brownfield-no-inventory` apply to every addition.
+  </rule>
+
+  <rule id="deviation-resolution" scope="brownfield">
+    Canon deviations registered in the analysis (`DEV-<n>`, section 11 "Canon Deviations")
+    are resolved BEFORE any rule is composed — never silently:
+    - **Tier-1 and Tier-2 deviations → STOP and ask the user.** Present each deviation with its
+      canon rule, the observed practice, and resolution options; a silent pick is a defect.
+    - **Tier-3 deviations → agent discretion, guided by OVER-ASKING:** insignificant → decide
+      yourself (default: canon for new code, existing practice noted as legacy) and log the
+      decision in the chat report; plausibly significant (wide impact, security, breaks tooling)
+      → elevate into the user question batch.
+    - **Empty register** (the analysis states the fallback note "register not produced — canon
+      skills unavailable/applicable") → no questions about deviations: compose rules from facts
+      alone, exactly as before the register existed.
+    Encode every confirmed decision into the rules themselves: a convention rule in the matching
+    core file (canon reference + legacy carve-out + anchors), and — for global source-priority
+    decisions — the "Standards & conflicts" section in `architecture.md` plus an `AGENTS.md`
+    pointer. A canon consciously overridden by the user ("practice is the standard") is recorded
+    WITH the canon skill name, so future agents see a deliberate decision, not an accident.
   </rule>
 
   <rule id="english-only" scope="all-modes">
@@ -211,6 +232,10 @@ description: "Use when initializing a Bitrix project, onboarding, or replacing a
      (counted live in the repo, or cited to a file); anything unverifiable or drift-prone is
      dropped — purpose replaces the number. Grep trigger: `[0-9]+ (component|file|match|override|auth)`.
   9. **Density spot-check** — sample two sections; cut every line failing the line test.
+  10. **Deviation resolution** (Brownfield) — every Tier-1/Tier-2 `DEV-<n>` has a recorded user
+      decision; each decision surfaces in the rules as canon reference + legacy carve-out (or a
+      named override with the canon skill); Tier-3 decisions are listed in the chat report.
+      Empty register → no deviation questions were asked.
 </verification_method>
 
 <workflow>
@@ -326,10 +351,32 @@ description: "Use when initializing a Bitrix project, onboarding, or replacing a
     <step id="4.1" name="Read Analysis" required="true">
       Read the analysis document (produced by `bitrix-prime-codebase`). Probe all eight
       areas: directory structure, ORM usage, migrations, event handlers, agents, coding
-      style, component templates, git history. Note absences explicitly.
+      style, component templates, git history. Note absences explicitly. Read the section-11
+      `DEV-<n>` canon-deviation register — it drives step 4.2.
     </step>
 
-    <step id="4.2" name="Fill the Template Sections" required="true">
+    <step id="4.2" name="Resolve Canon Deviations" required="true">
+      Build a resolution table from the `DEV-<n>` register, grouped by domain / target core
+      file — one question batch, not one question per DEV:
+
+      | DEV | Canon | Observed | Options | Default |
+      | :-- | :---- | :------- | :------ | :------ |
+      | DEV-<n> | <skill> → rule | observed practice | (a) canon for new code, existing practice marked as legacy deviation · (b) practice becomes the project standard (canon consciously overridden — recorded with the canon skill name) · (c) migrate to canon | (a) |
+
+      - Tier-1/Tier-2: ask the user and get explicit confirmation per row (bulk confirmation
+        of defaults is acceptable). Record every decision — steps 4.3/4.4 consume it.
+      - Tier-3: decide per rule `deviation-resolution`; log decisions in the chat report;
+        suspiciously significant ones join the user batch.
+      - Empty register (canon skills were unavailable/applicable in the analysis) → skip this
+        step and compose rules from facts alone, as before.
+      - Global source-priority decisions (e.g. "canon skills outrank existing repo code") are
+        encoded as the "Standards & conflicts" section in `architecture.md` + an `AGENTS.md`
+        pointer — not only as a per-domain rule.
+
+      <checkpoint>Every Tier-1/Tier-2 DEV has a recorded user decision; Tier-3 decisions logged</checkpoint>
+    </step>
+
+    <step id="4.3" name="Fill the Template Sections" required="true">
       Convert findings into CONVENTION rules (not statistics), each anchored on 1-2
       representative file PATHS, class names, or code symbols — never line numbers:
 
@@ -348,18 +395,21 @@ description: "Use when initializing a Bitrix project, onboarding, or replacing a
       section or add one; keep the density test).
     </step>
 
-    <step id="4.3" name="Generate Core Rule Files" required="true">
+    <step id="4.4" name="Generate Core Rule Files" required="true">
       Write the five `.agents/rules/core/*.md` files from the same findings — observed
-      content per the output_format table, same evidence and no-inventory rules. Append the
-      skill-install block to `{{tier1_rule_file}}` (default `core-interaction.md`) so the
-      Tier-2 reference resolves — same block as Greenfield step 3.2.
+      content per the output_format table, same evidence and no-inventory rules. Embed the
+      confirmed DEV decisions (step 4.2) as canon reference + legacy carve-out in the
+      matching file. Append the skill-install block to `{{tier1_rule_file}}` (default
+      `core-interaction.md`) so the Tier-2 reference resolves — same block as Greenfield
+      step 3.2.
     </step>
 
-    <step id="4.4" name="Report Seams" required="true">
+    <step id="4.5" name="Report Seams and Resolutions" required="true">
       List seams — gaps where conventions are missing or inconsistent (e.g. "No migration
       system found", "legacy `CIBlockElement` in `/local/components/old.list/` while new code
       uses D7"). These are the highest-value findings for the team. Also note every
-      `brownfield-adaptive` deviation from the template here.
+      `brownfield-adaptive` deviation from the template here, and report every resolved
+      `DEV-<n>` decision (user-confirmed and agent-decided Tier-3 alike).
     </step>
 
     <output>
@@ -373,6 +423,12 @@ description: "Use when initializing a Bitrix project, onboarding, or replacing a
       ⚠️ Seams identified:
         - No migration system found. Consider implementing one.
         - Inconsistent ORM usage: D7 in /local/modules/, CIBlockElement in /local/components/.
+
+      Deviations resolved (DEV):
+        - DEV-1 [Tier-1] bitrix-modules namespace: canon `FirstBit\` for new code;
+          existing `Firstbit\` marked legacy (user confirmed, option (a))
+        - DEV-2 [Tier-3] logging via `addMessage2Log`: agent decision — PSR-3 logger for
+          new code (insignificant, logged)
 
       Summary: rules reflect the current state of the codebase. Update them as the project evolves.
     </output>
@@ -431,4 +487,5 @@ description: "Use when initializing a Bitrix project, onboarding, or replacing a
 - [ ] All generated files written in English; prose wrapped (soft 120; dense bullets/table rows follow template style, hard cap 400).
 - [ ] Links resolve: every `@`-rule target exists; every Tier-2 skill exists in `.agents/skills/` or the hub.
 - [ ] Seams reported when conventions are missing or inconsistent, plus every `brownfield-adaptive` deviation from the template.
+- [ ] Brownfield: every Tier-1/Tier-2 `DEV-<n>` canon deviation resolved with an explicit user decision; Tier-3 decisions logged; decisions embedded in the rules (canon reference + carve-out, or a named override). Empty register → deviation step skipped.
 - [ ] No filler — every rule changes the outcome if removed.

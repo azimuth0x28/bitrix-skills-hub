@@ -75,6 +75,34 @@
   </rule>
 </critical_rules>
 
+## Standards & conflicts
+
+Normative sources define how new artifacts are built. Existing code is evidence of current
+state, never a structural standard.
+
+Priority ladder (highest wins):
+
+1. Explicit user instruction for the current task
+2. Domain skill canon (e.g. `bitrix-modules` for module structure — normative: scaffolded
+   skeletons, generated core)
+3. Tier-1 rule files
+4. The root `AGENTS.md`
+5. Existing repo code — reference ONLY when no suitable skill covers the case, no rule covers
+   the case, and skill + rules give no solution approach; otherwise prefer kernel examples
+   (`/bitrix/modules`)
+
+Conflict protocol:
+
+- **Norm vs norm** (skill vs Tier-1 rule vs root file vs task doc): STOP — request explicit
+  user confirmation. Never resolve silently.
+- **Norm vs existing code:** the norm wins. Flag the code deviation; copying it is a defect.
+- A stale fact found in any rules file is fixed in the same change; distrust is scoped to
+  that fact only.
+- Every plan creating a module or component carries a canon-conformance self-review item;
+  deviations go under "Deviations — requires user approval".
+
+---
+
 ## Typical Project Structure
 
 ```
