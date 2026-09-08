@@ -25,6 +25,16 @@ Namespace configuration — in `/local/modules/vendor.module/.settings.php`:
 
 Access to `Web\PostController::getAction` → `?action=vendor:module.web.post.get`.
 
+## Controller Class Resolution (alias vs defaultNamespace)
+
+The engine splits `vendor:module.Controller.action` — vendor at the first `:`, module at the first `.`, controller/action at the last `.` — then resolves the class (`main/lib/engine/resolver.php`):
+
+1. **`namespaces` alias** — matches the first part of the controller path. Fires only for the alias-qualified form `vendor:module.<alias>.<Controller>.<action>`, e.g. `acme:favorites.web.favorites.add` → `Web\Favorites`.
+2. **Module-id namespace** — builds the namespace from the module id; fails the allowed-namespace check for custom modules (the real namespace differs).
+3. **`defaultNamespace`** — prefixes the controller short name with `defaultNamespace` from `.settings.php`.
+
+The plain form `vendor:module.<Controller>.<action>` resolves via **`defaultNamespace`** — the alias value in `namespaces` is never consulted for it, so changing a custom alias (`api`, `web`, anything) never requires JS changes. Project convention: API controllers map to `api`, REST handlers to `rapi`.
+
 ## Minimal Controller
 
 `ControllerBuilder` builds the controller with `Request` only (`newInstance($request)`). Do **not** put custom services in the controller constructor — inject them via **action method parameters** (autowire). Avoid manual `new Service()` / ServiceLocator lookups inside actions when autowire works.
