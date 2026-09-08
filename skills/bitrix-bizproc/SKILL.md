@@ -1,6 +1,8 @@
 ---
 name: bitrix-bizproc
-description: Use for approvals, document workflows, automation activities. Covers business processes (bizproc) — start/stop workflows from PHP, document types, custom activities in /local/activities/, boundary vs agents/Messenger. Key terms — CBPDocument, CBPRuntime, CBPWorkflow, CBPActivity, document type, Starter, workflow template, activities.
+description: "Use when building approval flows, document workflows, or automation activities. Covers business processes (bizproc) — start/stop workflows from PHP, document types, custom activities in /local/activities/, boundary vs agents/Messenger. Key terms — CBPDocument, CBPRuntime, CBPWorkflow, CBPActivity, Starter, workflow template."
+metadata:
+  type: knowledge
 ---
 
 # Business Processes (`bizproc`)

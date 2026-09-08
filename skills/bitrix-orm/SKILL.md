@@ -1,6 +1,8 @@
 ---
 name: bitrix-orm
-description: Use for entity design, reads, and persistence. D7 ORM tablets, ConditionTree queries, Objectify, batch/merge/deleteByFilter writes.
+description: "Use when designing D7 ORM entities, reading or persisting data via tablets, or choosing between DataManager and *Table classes. Covers D7 ORM — tablet map, field types, relations, user fields, ConditionTree queries, Objectify, batch/merge/deleteByFilter writes, events, cache. Key terms — DataManager, Tablet, ConditionTree, Objectify, deleteByFilter, addBatch."
+metadata:
+  type: knowledge
 ---
 
 # Bitrix D7 ORM

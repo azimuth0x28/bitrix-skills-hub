@@ -1,6 +1,8 @@
 ---
 name: bitrix-components
-description: "Use when building or editing components. Bitrix components: anatomy (complex/simple, class.php-only), placement, templates, cache, SEF, Controllerable AJAX."
+description: "Use when creating a new component or editing an existing one (adding/changing templates, cache, SEF flow, AJAX handlers). Covers Bitrix components — anatomy (complex/simple, class.php-only), placement, folder structure, $arParams/$arResult, templates, result_modifier, cache, SEF, Controllerable AJAX. Key terms — class.php, $arParams, $arResult, result_modifier, component_epilog, Controllerable."
+metadata:
+  type: knowledge
 ---
 
 # Bitrix Components

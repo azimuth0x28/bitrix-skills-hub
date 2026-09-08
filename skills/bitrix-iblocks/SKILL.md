@@ -1,6 +1,8 @@
 ---
 name: bitrix-iblocks
-description: Use for content iblock work. Iblock types/elements/sections, ORM compileEntity, properties, SEO templates.
+description: "Use when creating or editing iblock types, elements, sections, and properties, or when choosing between ORM and legacy iblock APIs. Covers Iblock module — hierarchy, IDs, API boundary, ORM classes compilation, programmatic creation, properties/sections/elements, selections/filters, SEO templates, rights. Key terms — CIBlock, iblock type, element, section, property, compileEntity, SEO."
+metadata:
+  type: knowledge
 ---
 
 # Information Blocks (`iblock`)
