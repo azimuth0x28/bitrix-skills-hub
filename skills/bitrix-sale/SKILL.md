@@ -1,6 +1,8 @@
 ---
 name: bitrix-sale
-description: Use for cart/checkout, order lifecycle, pay/ship integration. Covers Sale module — API choice (D7 object model vs ORM vs CSale*), FUSER, Basket, Order create/update, properties, statuses, events, payments, delivery/shipments, discounts, coupons. Key terms — sale, Basket, Order, Fuser, Payment, Shipment, PaySystem\Manager, DiscountCouponsManager.
+description: "Use when building cart/checkout, managing order lifecycle, or integrating payments and delivery. Covers Sale module — API choice (D7 object model vs ORM vs CSale*), FUSER, Basket, Order create/update, properties, statuses, events, payments, delivery/shipments, discounts, coupons. Key terms — Basket, Order, Fuser, Payment, Shipment, PaySystem\\Manager, DiscountCouponsManager."
+metadata:
+  type: knowledge
 ---
 
 # Online Store (`sale`)
@@ -19,7 +21,7 @@ description: Use for cart/checkout, order lifecycle, pay/ship integration. Cover
 | Create/change basket, order, payment, shipment | Object model `Bitrix\Sale\*` (validates, saves collections, fires events, writes history) |
 | Lists, reports, aggregates | ORM `Bitrix\Sale\Internals\*Table` (`OrderTable`, `BasketTable`, `PaymentTable`, `ShipmentTable`) — **read-only for order data** |
 | Settings/dictionaries via code | Profile ORM: `PersonTypeTable`, `OrderPropsTable`, `StatusTable` (+`StatusLangTable`), `OrderPropsGroupTable` — writes allowed |
-| Pick a configured service | Managers: `PaySystem\Manager`, `Delivery\Services\Manager`, `Cashbox\Manager`/`CheckManager`, `Services\Company\Manager`, `DiscountCouponsManager` |
+| Pick a configured service | Managers: `PaySystem\\Manager`, `Delivery\Services\Manager`, `Cashbox\Manager`/`CheckManager`, `Services\Company\Manager`, `DiscountCouponsManager` |
 | Operations with no full D7 replacement | Legacy `CSale*`: `CSaleOrder::CanUser*()` (rights), `CSaleOrderChange` (history read), `CSaleDiscount::Add/Update` (cart rules), `CSaleOrderUserProps` (buyer profiles), `CSaleUserAccount` (account balance), `CSaleOrderTax` (tax rows) |
 
 Never change an order via `OrderTable::update()` or create payments/shipments as raw ORM rows — collections, recalcs, events, and history desync. Never `Order::load()` in a loop for a list — use `OrderTable::getList()` / `Order::getList()`. Don't mix legacy `CSale*` writes with a loaded `Order` object in memory.
@@ -76,7 +78,7 @@ Order of operations matters: basket → order → person type → basket in → 
 
 use Bitrix\Sale\Delivery\Services\Manager as DeliveryManager;
 use Bitrix\Sale\Order;
-use Bitrix\Sale\PaySystem\Manager as PaySystemManager;
+use Bitrix\Sale\PaySystem\\Manager as PaySystemManager;
 use Bitrix\Sale\Services\Base\RestrictionManager;
 
 $order = Order::create($siteId, $userId); // currency: site's, else base
@@ -154,9 +156,9 @@ Register via `EventManager` in `init.php`. Key ones: `OnSaleOrderBeforeSaved` (m
 
 ## Payments
 
-- Create via `getPaymentCollection()->createItem($service)`; several payments per order = split/partial pay. Available: `PaySystem\Manager::getListWithRestrictions($payment, MODE_CLIENT|MODE_MANAGER)` (or `getListWithRestrictionsByOrder()` pre-payment).
+- Create via `getPaymentCollection()->createItem($service)`; several payments per order = split/partial pay. Available: `PaySystem\\Manager::getListWithRestrictions($payment, MODE_CLIENT|MODE_MANAGER)` (or `getListWithRestrictionsByOrder()` pre-payment).
 - Run: `$payment->getPaySystem()->initiatePay($payment, $request, BaseServiceHandler::STRING)` → `ServiceResult` (`getTemplate()`, `getPaymentUrl()`, QR). Manual confirm: `$payment->setPaid('Y')`; refund: `$payment->setReturn(Payment::RETURN_PS|RETURN_INNER|RETURN_NONE)`, partial via `Service::refund($payment, $sum)` (handler must implement `IRefund`). Recurring: `IRecurring`, `isRecurring()/repeatRecurrent()`.
-- Internal account pay system: `PaySystem\Manager::getInnerPaySystemId()`, `Payment::isInner()`. Balance itself: legacy `CSaleUserAccount::GetByUserID()` / `UpdateAccount($userId, $delta, ...)` — **pass the delta, not the new total**; journal read via `Internals\UserTransactTable`. Buyer aggregates: `Bitrix\Sale\BuyerStatistic` (per user+site+currency).
+- Internal account pay system: `PaySystem\\Manager::getInnerPaySystemId()`, `Payment::isInner()`. Balance itself: legacy `CSaleUserAccount::GetByUserID()` / `UpdateAccount($userId, $delta, ...)` — **pass the delta, not the new total**; journal read via `Internals\UserTransactTable`. Buyer aggregates: `Bitrix\Sale\BuyerStatistic` (per user+site+currency).
 - Custom handlers: `/local/php_interface/include/sale_payment/<code>/` (`handler.php` extending `PaySystem\ServiceHandler`, `.description.php`, `template/`). Legacy `/bitrix/modules/sale/payment/` unsupported since sale **22.200.0**. Callback entry: `/bitrix/tools/sale_ps_result.php` (verify signature/sum/currency; handle repeated notifications idempotently). Custom restrictions: extend `Services\Base\Restriction`, register on `onSalePaySystemRestrictionsClassNamesBuildList`.
 
 ## Delivery and Shipments

@@ -1,6 +1,8 @@
 ---
 name: bitrix-security
-description: Use when handling input or auditing security. CSRF, XSS, SQLi, SSRF, JWT/JWK, access rights, encryption.
+description: "Use when handling untrusted input, sanitizing output, or auditing a codebase for vulnerabilities. Covers Bitrix security — CSRF, XSS/HTML sanitization, SQL injection, SSRF, JWT/JWK, access rights, #[ActionAccess]/AccessCheckControllerInterface, secure cookies, value encryption. Key terms — CSRF, XSS, SQLi, SSRF, JWT, ActionAccess, AccessCheckControllerInterface."
+metadata:
+  type: knowledge
 ---
 
 # Security in Bitrix

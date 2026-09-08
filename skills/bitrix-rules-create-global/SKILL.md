@@ -1,6 +1,8 @@
 ---
 name: bitrix-rules-create-global
-description: "Use when initializing a Bitrix project, onboarding, or replacing a generic init. Sets up global rules — a lean root `AGENTS.md` plus `.agents/rules/core/` files: Greenfield copies templates from `references/`, Brownfield turns a `bitrix-prime-codebase` analysis into evidence-backed rules and resolves its canon deviations with the user (Tier-1/2 confirmed, Tier-3 at agent discretion). Key terms — AGENTS.md, rules, init, Greenfield, Brownfield, canon deviations, DEV."
+description: "Use when initializing a Bitrix project, onboarding, or replacing a generic init. Creates a lean root AGENTS.md plus .agents/rules/core/ files: Greenfield copies templates from references/, Brownfield turns a bitrix-prime-codebase analysis into evidence-backed rules and resolves canon deviations with the user. Key terms — AGENTS.md, Greenfield, Brownfield, canon deviations, DEV."
+metadata:
+  type: workflow
 ---
 
 # Bitrix Rules Create: Global Rules for a 1C-Bitrix (On-Premise) Project

@@ -1,6 +1,8 @@
 ---
 name: bitrix-pull
-description: Use for live UI updates, notifications, collaborative screens. Covers Pull module — sending realtime events to users/channels from PHP, JS subscription overview, watch tags, when to use Pull vs Messenger vs agents, link to BitrixVue. Key terms — pull, Bitrix\Pull\Event, CPullWatch, CPullChannel, BX.PULL.subscribe, extendWatch, queue server, push.
+description: "Use when pushing live UI updates, notifications, or collaborative screens to users. Covers Pull module — sending realtime events to users/channels from PHP, JS subscription overview, watch tags, when to use Pull vs Messenger vs agents, link to BitrixVue. Key terms — Bitrix\\Pull\\Event, CPullWatch, CPullChannel, BX.PULL.subscribe, extendWatch, queue server, push."
+metadata:
+  type: knowledge
 ---
 
 # Realtime Pull (`pull`)
@@ -23,7 +25,7 @@ Do not use Pull as a job queue. Do not use Messenger to push browser paint updat
 
 ## Send to User(s) from PHP
 
-Primary API: `Bitrix\Pull\Event::add($recipient, array $parameters, $channelType = \CPullChannel::TYPE_PRIVATE)`.
+Primary API: `Bitrix\\Pull\\Event::add($recipient, array $parameters, $channelType = \CPullChannel::TYPE_PRIVATE)`.
 
 Required in `$parameters`: `module_id`, and either `command` (+ optional `params`) or push payload fields.
 
@@ -31,7 +33,7 @@ Required in `$parameters`: `module_id`, and either `command` (+ optional `params
 <?php declare(strict_types=1);
 
 use Bitrix\Main\Loader;
-use Bitrix\Pull\Event;
+use Bitrix\\Pull\\Event;
 
 Loader::includeModule('pull');
 
