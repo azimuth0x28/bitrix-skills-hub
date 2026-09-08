@@ -1,6 +1,8 @@
 ---
 name: bitrix-settings
 description: Use when configuring kernel behavior. Covers kernel configuration — .settings.php sections (connections, cache, session, crypto, exception_handling, routing, messenger, pull, smtp, loggers, composer), .settings_extra.php, readonly flag. Key terms — .settings.php, settings, readonly, connections, exception_handling.
+metadata:
+  type: knowledge
 ---
 
 # Kernel Configuration (.settings.php)

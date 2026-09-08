@@ -1,6 +1,8 @@
 ---
 name: bitrix-project-structure
-description: Use for "where to put code" and autoloading decisions. Covers Bitrix project structure — /local vs /bitrix, class placement and namespaces, .settings.php, composer, routing, init.php. Module anatomy → bitrix-modules; component anatomy → bitrix-components. Key terms — /local, PSR-4, namespace, .settings.php, composer, /local/routes/, init.php.
+description: Use when creating a new module, component, class, or JS extension and when deciding where new code lives or wiring autoloading. Covers /local vs /bitrix, class placement and namespaces, .settings.php, composer, routing, init.php. Module anatomy → bitrix-modules; component anatomy → bitrix-components. Key terms — /local, PSR-4, /local/routes/.
+metadata:
+  type: knowledge
 ---
 
 # Project Structure and Autoloading in Bitrix

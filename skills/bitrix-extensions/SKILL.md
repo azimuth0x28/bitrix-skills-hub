@@ -1,6 +1,8 @@
 ---
 name: bitrix-extensions
 description: Use when adding frontend code to modules, components, or admin pages. Covers Bitrix JS/CSS extensions — /local/js/ structure, bundle.config.js, config.php, Extension::load, @bitrix/cli build, CoreJS imports. Key terms — extension, bundle, Extension::load, bundle.config.js, config.php, CoreJS.
+metadata:
+  type: knowledge
 ---
 
 # Bitrix JS/CSS Extensions

@@ -1,6 +1,8 @@
 ---
 name: bitrix-validation
 description: "Use when validating input of controllers, services, CLI commands, and forms. Covers input validation — ValidationService, attributes #[NotEmpty], #[Email], #[Length], #[Range], Request DTO via ValidationParameter autowire, custom validators, errors in ErrorCollection. Key terms — main.validation.service, ValidationParameter, validator, constraint."
+metadata:
+  type: knowledge
 ---
 
 # Validation in Bitrix

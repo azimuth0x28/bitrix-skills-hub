@@ -1,6 +1,8 @@
 ---
 name: bitrix-database
 description: Use when ORM is insufficient — bulk ops, raw SQL, migrations, external DBs. Covers direct database work — Application::getConnection(), SqlHelper, SqlExpression, raw SQL via query()/queryExecute(), transactions, DDL, schema migrations. Key terms — Connection, SqlHelper, SqlExpression, transaction, raw SQL.
+metadata:
+  type: knowledge
 ---
 
 # Direct Database Work

@@ -1,6 +1,8 @@
 ---
 name: bitrix-events
 description: Use when integrating modules, lifecycle hooks, publishing and subscribing to events. Covers Bitrix event system — new model (Bitrix\Main\Event, EventResult, EventManager::addEventHandler, make:event) and old model (OnBefore*/OnAfter* hooks). Key terms — Event, EventManager, EventResult, OnBefore, OnAfter, handler, subscriber, addEventHandler.
+metadata:
+  type: knowledge
 ---
 
 # Bitrix Events

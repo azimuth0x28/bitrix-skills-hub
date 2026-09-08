@@ -1,6 +1,8 @@
 ---
 name: rules-check-drift
 description: Use before a merge or inside a code-review pass. Checks whether your rules file (CLAUDE.md or AGENTS.md) still matches the codebase after recent changes — reports stale/now-false rules, drifted architecture-map entries, and any new invariant worth adding, each with the minimal edit. Advisory and anti-bloat.
+metadata:
+  type: workflow
 ---
 
 # Rules-File Drift Check

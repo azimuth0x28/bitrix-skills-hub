@@ -1,6 +1,8 @@
 ---
 name: bitrix-vue
 description: Use when building reactive admin/public UI with Vue inside Bitrix. Covers BitrixVue 3 — ui.vue3 / ui.vue3.bitrixvue, createApp, integration with Bitrix localization and REST, migration from Vue 2. Key terms — BitrixVue, ui.vue3.bitrixvue, Vue 3, createApp, Loc.
+metadata:
+  type: knowledge
 ---
 
 # BitrixVue 3

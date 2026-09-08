@@ -1,6 +1,8 @@
 ---
 name: bitrix-controllers
-description: "Use for AJAX/REST/routed endpoints. Engine Controller/JsonController: thin actions, filter attributes, CurrentUser, errors."
+description: "Use when creating a new controller or editing an existing one (adding or changing actions, filters, autowiring, error handling) and when building AJAX/REST/routed endpoints. Engine Controller/JsonController: thin actions, filter attributes, CurrentUser, errors."
+metadata:
+  type: knowledge
 ---
 
 # Bitrix Controllers
@@ -23,6 +25,7 @@ Progressive disclosure: open **only** the rule files that match the task. Do not
 Read `rules/basics.md` (`Location, thin controller, autowire`) when the task involves:
 
 - Location and Naming
+- Controller Class Resolution (alias vs defaultNamespace)
 - Minimal Controller
 - Action Parameter Autowiring
 - Controller Lifecycle

@@ -1,6 +1,8 @@
 ---
 name: bitrix-localization
 description: Use when adding phrases, multi-language sites, JS translations. Covers Bitrix localization — Bitrix\Main\Localization\Loc, lang/code/ language files, loadMessages, placeholders in getMessage, culture formats, JS localization via BX.message, translate:index. Key terms — Loc, getMessage, lang file, Culture, BX.message, loadMessages, i18n.
+metadata:
+  type: knowledge
 ---
 
 # Localization

@@ -1,6 +1,8 @@
 ---
 name: bitrix-modules
 description: Use when creating, installing, or including modules. Covers module creation and anatomy in /local/modules/vendor.module/ — CModule, lib/ subdirectories (Agent, Controller, Model, Service), Loader inclusion, events, agents, options, make:module. Key terms — CModule, DoInstall, DoUninstall, lib/, PSR-4, Loader, requireModule, vendor.module.
+metadata:
+  type: knowledge
 ---
 
 # Bitrix Modules
