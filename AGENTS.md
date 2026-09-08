@@ -42,7 +42,7 @@ Skills reference the Bitrix canons (DI, `/local/`, security, version policy) fro
 
 A new skill passes six steps; the owner of every step is a house skill — read it before acting.
 
-First classify the draft: a **knowledge skill** (teaches correct and incorrect usage of a development aspect and conveys best practices: kernel/module code, APIs) follows `bitrix-knowledge-skill-creator`; a **workflow skill** (processes, conventions, environment setup) follows `bitrix-workflow-skill-creator`. The six steps below apply to both types — the chosen creator and the `bitrix-skill-eval` §11 dispatch carry the per-type details.
+First classify the draft: a **knowledge skill** (teaches correct and incorrect usage of a development aspect and conveys best practices: kernel/module code, APIs) follows `bitrix-knowledge-skill-creator`; a **workflow skill** (processes, conventions, environment setup) follows `bitrix-workflow-skill-creator`. The six steps below apply to both types — the chosen creator and the `bitrix-skill-eval` §11 dispatch carry the per-type details. The type is fixed in the frontmatter (`metadata: {type: knowledge|workflow}`) at step 3 and drives both the creator spec and the eval dispatch.
 
 | Step | Owner | Output |
 | --- | --- | --- |
@@ -60,6 +60,7 @@ Editing an existing skill: follow `bitrix-knowledge-skill-creator` (§1, §4, §
 ## Content conventions
 
 - Skills: English, imperative, telegraphic bullets, tables for choices, fenced code with language tags. Zero marketing, zero "what is Bitrix".
+- Skill descriptions are situation-first per the creator specs: the trigger clause leads (`Use when` — an operation on a code artifact for knowledge skills; `Use before/after/when asked to` — a process point for workflow skills), then `Covers <topics>. Key terms — <unique tokens>`. Soft limit 350 chars, hard 400. Run the live-prompt test: 3–5 prompts in user wording, every prompt word must have a foothold in the description.
 - READMEs are bilingual: update `README.md` and `README.ru.md` in the same change, keeping the language of each file.
 - Commits: English only, [Conventional Commits](https://www.conventionalcommits.org/) format (`docs:`, `fix:`, `feat:`, `chore:`, `refactor:`), one concern per commit. A new skill and its catalog rows may go together; unrelated skills split.
 - Chat with the maintainer in Russian.
@@ -100,7 +101,7 @@ Gate: `--fail-on high` exits 0. Grade C (medium findings only) — attach a writ
 
 - [ ] Automated checks pass on the skill folder: `quick_validate.py` exits 0; `prism scan --fail-on high` exits 0 (see "Automated skill checks").
 
-- [ ] `name` frontmatter = folder name.
+- [ ] `name` frontmatter = folder name; `metadata: {type: knowledge|workflow}` present; description situation-first per the creator spec (soft ≤350 / hard ≤400 chars) and live-prompt tested.
 - [ ] Line counts within budget (monolith 100–310; router ≤60; each `rules/*.md` 45–135). Cut, never pad.
 - [ ] Every changed identifier kernel-verified; 2+ negative-knowledge statements present.
 - [ ] Prohibitions bold at the error site and echoed in the checklist; checklist items verifiable.
