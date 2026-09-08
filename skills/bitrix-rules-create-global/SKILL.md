@@ -386,8 +386,8 @@ description: "Use when initializing a Bitrix project, onboarding, or replacing a
       | Project tree skeleton | The ACTUAL tree with placement comments (template skeleton is the fallback shape) |
       | Project modules | Real registry rows — `{{vendor_name}}.<module>` + a one-line description each |
       | Vendor convention | Observed namespace/module/JS prefixes and DB prefix, anchored to `composer.json`, `local/modules/` |
-      | Routing — Tier 1 | The five core files created in this run; Use-When columns reflecting project reality |
-      | Routing — Tier 2 | Hub-skills table from the template as-is (universal) |
+      | Routing — Tier 1 | The five core files created in this run; Use-When triggers reflecting project reality |
+      | Routing — Tier 2 | Hub-skills list from the template as-is (universal) |
       | Tooling | Real commands verified against `composer.json` scripts / tool configs; state absence explicitly |
       | Environment & tech stack | Observed PHP (`composer.json`), DB (`.settings.php`), environment notes |
 
@@ -450,8 +450,8 @@ description: "Use when initializing a Bitrix project, onboarding, or replacing a
      identifier trust, module-registry upkeep, secrets, error handling.
   2. **Project facts** — `/local/` tree with placement comments, module registry table, vendor
      convention (Greenfield: template text; Brownfield: observed values with anchors).
-  3. **Routing** — priority hierarchy; Tier 1 always-load table (`@`-links to core files +
-     Use When); Tier 2 hub-skills table; Tooling commands; Environment & tech stack.
+  3. **Routing** — priority hierarchy; Tier 1 always-load bullets (`@`-links to core files +
+     Use When); Tier 2 hub-skills bullets; Tooling commands; Environment & tech stack.
   4. **Language** — file and reply-language conventions.
   Greenfield copies the template verbatim (minus the draft meta comment); Brownfield fills it
   with observed facts and may broaden sections or add new ones per rule `brownfield-adaptive`.

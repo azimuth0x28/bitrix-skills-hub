@@ -6,7 +6,9 @@
 
 ## Project rules & constraints
 
-- **Custom code lives in `/local/`.** The kernel (`bitrix/`, `bitrix/modules/*`) is read-only; system component overrides go to `local/components/bitrix/`, custom code to `local/components/{{vendor_name}}/`, `local/modules/`, `local/js/`.
+- **Custom code lives in `/local/`.** The kernel (`bitrix/`, `bitrix/modules/*`) is read-only; system
+  component overrides go to `local/components/bitrix/`, custom code to `local/components/{{vendor_name}}/`,
+  `local/modules/`, `local/js/`.
 - **Identifier trust.** Identifiers the change depends on or writes into code are
   confirmed against kernel source (`bitrix/modules/<module>/lib/...`) or project module
   code — model memory is not evidence; an absence claim ("there is no X") requires a
@@ -14,7 +16,8 @@
   identifiers already verified within a task are trusted — exhaustive kernel sweeps
   during planning are a defect. Newer platform features are marked **Since main X.Y**
   with fallback advice.
-- **Module registry.** The tree and the table in [Project modules](#project-modules-localmodules) mirror the actual state of `local/modules/` and are updated in the same change that adds, removes, or discovers a module.
+- **Module registry.** The tree and the table in [Project modules](#project-modules-localmodules) mirror the
+  actual state of `local/modules/` and are updated in the same change that adds, removes, or discovers a module.
 - **No secrets in code, logs, or commits** — credentials, tokens, personal data.
 - **Fail fast.** Error-handling convention: explicit error messages; silent error swallowing is a defect.
 
@@ -22,46 +25,48 @@
 
 Canonical facts live here and in Tier-1 rule files — referenced from other docs, kept current as the project changes.
 
-### Project tree skeleton (`/local/`-focussed)
+### Project tree skeleton (`/local/`-focused)
 
-Inline comments carry the placement conventions; the tree mirrors the actual project structure and is updated when the structure changes.
+Inline comments carry the placement conventions; the tree mirrors the actual project structure and is
+updated when the structure changes.
 
 ```
 <project-root>/
 ├── .gitignore / .editorconfig / .gitattributes
-├── .gitlab-ci.yml                  # CI/CD  (optional)
-├── AGENTS.md                       # agent rules file
-├── README.md                       # project conventions for developers
-└── local/                          # all custom code
-    ├── activities/custom/          # business process activities
-    ├── blocks/                     # Sites24 blocks
+├── .gitlab-ci.yml                           # CI/CD (optional)
+├── AGENTS.md                                # agent rules file
+├── README.md                                # project conventions for developers
+└── local/                                   # all custom code
+    ├── activities/custom/                   # business process activities
+    ├── blocks/                              # Sites24 blocks
     ├── components/
-    │   ├── bitrix/                 # overridden system components
-    │   └── {{vendor_name}}/               # custom components (see bitrix-components skill)
-    ├── gadgets/                    # desktop gadgets
-    ├── js/{{vendor_name}}/<extension>/    # JS extensions (see bitrix-extensions skill)
-    ├── modules/{{vendor_name}}.<module>/  # custom modules (see bitrix-modules skill)
+    │   ├── bitrix/                          # overridden system components
+    │   └── {{vendor_name}}/                 # custom components (see bitrix-components skill)
+    ├── gadgets/                             # desktop gadgets
+    ├── js/{{vendor_name}}/<extension>/      # JS extensions (see bitrix-extensions skill)
+    ├── modules/{{vendor_name}}.<module>/    # custom modules (see bitrix-modules skill)
     ├── php_interface/
-    │   ├── lib/                    # shared libs — when no module fits; include.php wires handlers
-    │   ├── init.php                # loaded on every hit; minimal: autoload + lib/include.php
-    │   ├── cron_events.php         # cron task entrypoint
-    │   ├── after_connect_d7.php    # after DB connect (charset, sql_mode, TZ)
-    │   ├── dbconn.php              # Since main 24.100 — can live here
-    │   ├── this_site_support.php   # site support info in admin footer (html document)
-    │   └── user_lang/              # user interface translations, overrides system messages
+    │   ├── lib/                             # shared libs — when no module fits; include.php wires handlers
+    │   ├── init.php                         # loaded on every hit; minimal: autoload + lib/include.php
+    │   ├── cron_events.php                  # cron task entrypoint
+    │   ├── after_connect_d7.php             # after DB connect (charset, sql_mode, TZ)
+    │   ├── dbconn.php                       # Since main 24.100 — can live here
+    │   ├── this_site_support.php            # site support info in admin footer (html document)
+    │   └── user_lang/                       # user interface translations, overrides system messages
     ├── routes/
-    │   └── web.php                 # routing entry — global routing.config lists files here (see bitrix-routing skill)
-    ├── templates/<id>/             # site templates + /components/, /page_templates/
-    ├── vendor/                     # composer dependencies
-    ├── composer.json               # Project dependencies with module composer.json includes
-    ├── .settings.php               # kernel config — Since main 24.100
-    ├── .settings_extra.php         # overrides without API — Since main 24.100
-    ├── .phpcs.xml                 # PHP CodeSniffer config (optional)
-    ├── .php-cs-fixer.dist.php     # PHP CS Fixer config (optional)
-    └── .gitignore                 # Git ignore for local
+    │   └── web.php                          # routing entry — files listed in routing.config (bitrix-routing skill)
+    ├── templates/<id>/                      # site templates + /components/, /page_templates/
+    ├── vendor/                              # composer dependencies
+    ├── composer.json                        # project dependencies with module composer.json includes
+    ├── .settings.php                        # kernel config — Since main 24.100
+    ├── .settings_extra.php                  # overrides without API — Since main 24.100
+    ├── .phpcs.xml                           # PHP CodeSniffer config (optional)
+    ├── .php-cs-fixer.dist.php               # PHP CS Fixer config (optional)
+    └── .gitignore                           # git ignore for local
 ```
 
-> Need deeper guidance on project structure recommendations and placement rules? — load the `bitrix-project-structure` skill.
+> Need deeper guidance on project structure recommendations and placement rules? — load the
+> `bitrix-project-structure` skill.
 
 ### Project modules (`local/modules/`)
 
@@ -84,14 +89,13 @@ add composer setup when the module is next touched.
 - Module prefix: `{{vendor_name}}.<modulename>`
 - Custom components live in: `local/components/{{vendor_name}}/`
 - JS extension IDs: `{{vendor_name}}.<module>...` (e.g. `{{vendor_name}}.<module>.ui.<feature>-editor`)
-- DB table prefix: `{{db_prefix}}_` — used as `{{db_prefix}}_<table_name>` in `{{VENDOR_NAME}}\<Module>\Model\...Table` ORM entities
+- DB table prefix: `{{db_prefix}}_` — used as `{{db_prefix}}_<table_name>` in
+  `{{VENDOR_NAME}}\<Module>\Model\...Table` ORM entities
 
 ### Canon deviations (deliberate practice-to-canon gaps)
 
 | DEV | Domain | For new code | Legacy practice (kept as-is) |
 |:----|:-------|:-------------|:-----------------------------|
-
-
 
 ## Routing
 
@@ -118,34 +122,50 @@ current state, never a structural standard.
   item; deviations go under "Deviations — requires user approval".
 - Full doctrine: `.agents/rules/core/architecture.md` → "Standards & conflicts".
 
-
 ### Tier 1 — always load
 
-| Rule | Use When |
-|-------------------------------------------|--------------------------------------------------------------------------------------------------------------------|
-| `@.agents/rules/core/core-interaction.md` | Any work touching `init.php`, event handlers, agents (scheduled tasks), components, form handling/CSRF, or logging |
-| `@.agents/rules/core/database.md`         | Any work with D7 ORM entities, direct SQL (rare, ORM-first), migrations, or DB table naming (`{{db_prefix}}_`) |
-| `@.agents/rules/core/architecture.md`     | Creating or moving files: modules, components, classes, namespaces (PSR-4); resolving normative-source conflicts (Standards & conflicts) |
-| `@.agents/rules/core/code-style.md`       | Writing or editing any PHP code: naming, formatting (PSR-12 + Bitrix deviations), strict typing, PHPDoc |
-| `@.agents/rules/core/gitflow.md`          | Any git work: branches (Git Flow), commits (Conventional Commits), PRs, releases |
+- `@.agents/rules/core/core-interaction.md` — Any work touching `init.php`, event handlers, agents (scheduled
+  tasks), components, form handling/CSRF, or logging
+- `@.agents/rules/core/database.md` — Any work with D7 ORM entities, direct SQL (rare, ORM-first), migrations,
+  or DB table naming (`{{db_prefix}}_`)
+- `@.agents/rules/core/architecture.md` — Creating or moving files: modules, components, classes, namespaces
+  (PSR-4); resolving normative-source conflicts (Standards & conflicts)
+- `@.agents/rules/core/code-style.md` — Writing or editing any PHP code: naming, formatting (PSR-12 + Bitrix
+  deviations), strict typing, PHPDoc
+- `@.agents/rules/core/gitflow.md` — Any git work: branches (Git Flow), commits (Conventional Commits), PRs,
+  releases
 
 ### Tier 2 — skills, load on demand
 
 Path pattern: `.agents/skills/<name>/SKILL.md`. Load when the task matches; the skill's own description decides scope.
 
-| Domain | Skills | Load when |
-|---|---|---|
-| Placement & kernel config | `bitrix-project-structure`, `bitrix-settings` | Placing code, `.settings.php`/`.settings_extra.php`, `Loader` & composer autoload wiring |
-| Data | `bitrix-orm`, `bitrix-database`, `bitrix-sprint-migration`, `bitrix-highloadblock`, `bitrix-iblocks` | ORM entities (`Table`/`DataManager`), `GetList` queries, raw SQL, migrations, Highloadblocks, iblock fields |
-| HTTP layer | `bitrix-controllers`, `bitrix-routing`, `bitrix-request-response`, `bitrix-validation`, `bitrix-rest` | AJAX/REST endpoints, `web.php` route registration, input validation, webhooks |
-| Services & runtime | `bitrix-service-locator`, `bitrix-result-and-errors`, `bitrix-events`, `bitrix-background-jobs`, `bitrix-datetime`, `bitrix-modules`, `bitrix-console-commands` | DI, result & error wrapping, events, agents/queues, datetime & timezone, module lifecycle, CLI |
-| Performance & state | `bitrix-caching`, `bitrix-storage`, `bitrix-performance`, `bitrix-postgresql` | Cache tags/TTL/layers, options state, high-load tuning, Postgres indexing & query plans |
-| UI & frontend | `bitrix-components`, `bitrix-extensions`, `bitrix-ui`, `bitrix-vue`, `bitrix-cms-basics`, `bitrix-landing`, `bitrix-seo` | Components, JS extensions (AMD), Vue, admin UI, pages/menus/templates, landing pages, SEO maps |
-| B24 automation & CRM | `bitrix-bizproc`, `bitrix-catalog`, `bitrix-sale`, `bitrix-pull` | Business-process activities, catalog & shop logic, order workflows, realtime push |
-| Hardening & integrations | `bitrix-security`, `bitrix-sessions`, `bitrix-logger`, `bitrix-localization`, `bitrix-http-client` | CSRF/XSS/SQLi hardening, session config, logging, i18n, external HTTP APIs |
-| Process & upkeep | `bitrix-prime-codebase`, `bitrix-rules-create-global`, `bitrix-knowledge-skill-creator`, `bitrix-workflow-skill-creator`, `bitrix-skill-eval`, `rules-check-drift`, `skill-validator` | Codebase onboarding, rule & skill authoring, skill grading, drift checks, format & security validation |
+- **Placement & kernel config** — `bitrix-project-structure`, `bitrix-settings`: Placing code,
+  `.settings.php`/`.settings_extra.php`, `Loader` & composer autoload wiring
+- **Data** — `bitrix-orm`, `bitrix-database`, `bitrix-sprint-migration`, `bitrix-highloadblock`,
+  `bitrix-iblocks`: ORM entities (`Table`/`DataManager`), `GetList` queries, raw SQL, migrations, Highloadblocks,
+  iblock fields
+- **HTTP layer** — `bitrix-controllers`, `bitrix-routing`, `bitrix-request-response`, `bitrix-validation`,
+  `bitrix-rest`: AJAX/REST endpoints, `web.php` route registration, input validation, webhooks
+- **Services & runtime** — `bitrix-service-locator`, `bitrix-result-and-errors`, `bitrix-events`,
+  `bitrix-background-jobs`, `bitrix-datetime`, `bitrix-modules`, `bitrix-console-commands`: DI, result & error
+  wrapping, events, agents/queues, datetime & timezone, module lifecycle, CLI
+- **Performance & state** — `bitrix-caching`, `bitrix-storage`, `bitrix-performance`, `bitrix-postgresql`:
+  Cache tags/TTL/layers, options state, high-load tuning, Postgres indexing & query plans
+- **UI & frontend** — `bitrix-components`, `bitrix-extensions`, `bitrix-ui`, `bitrix-vue`, `bitrix-cms-basics`,
+  `bitrix-landing`, `bitrix-seo`: Components, JS extensions (AMD), Vue, admin UI, pages/menus/templates,
+  landing pages, SEO maps
+- **B24 automation & CRM** — `bitrix-bizproc`, `bitrix-catalog`, `bitrix-sale`, `bitrix-pull`:
+  Business-process activities, catalog & shop logic, order workflows, realtime push
+- **Hardening & integrations** — `bitrix-security`, `bitrix-sessions`, `bitrix-logger`, `bitrix-localization`,
+  `bitrix-http-client`: CSRF/XSS/SQLi hardening, session config, logging, i18n, external HTTP APIs
+- **Process & upkeep** — `bitrix-prime-codebase`, `bitrix-rules-create-global`,
+  `bitrix-knowledge-skill-creator`, `bitrix-workflow-skill-creator`, `bitrix-skill-eval`, `rules-check-drift`,
+  `skill-validator`: Codebase onboarding, rule & skill authoring, skill grading, drift checks, format & security
+  validation
 
-> A skill listed above that is missing from `.agents/skills/` is installed from the hub on user approval — `npx skills add azimuth0x28/bitrix-skills-hub --skill <skill-name>`; the full install procedure (incl. the no-`npx` fallback) lives in `{{tier1_rule_file}}`.
+> A skill listed above that is missing from `.agents/skills/` is installed from the hub on user approval —
+> `npx skills add azimuth0x28/bitrix-skills-hub --skill <skill-name>`; the full install procedure (incl. the
+> no-`npx` fallback) lives in `{{tier1_rule_file}}`.
 
 ### Tooling
 
@@ -160,7 +180,7 @@ cd local
 php -l <file>
 
 # 2. Fix and Beautify
-php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php  <path>
+php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php <path>
 php vendor/bin/phpcbf --standard=.phpcs.xml --extensions=php <path>
 
 # 3. Single-file style check
@@ -179,4 +199,5 @@ php vendor/bin/php-cs-fixer check --format=json --config=.php-cs-fixer.dist.php 
 
 - This file, Tier-1 rules, and skills are written in **English**.
 - Project default reply language: `{{REPLY_LANGUAGE}}`.
-- User-facing strings and lang files: follow the project's existing files (typically `install/lang/ru/...` for RU-first projects).
+- User-facing strings and lang files: follow the project's existing files (typically `install/lang/ru/...`
+  for RU-first projects).
