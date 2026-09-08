@@ -7,7 +7,13 @@
 ## Project rules & constraints
 
 - **Custom code lives in `/local/`.** The kernel (`bitrix/`, `bitrix/modules/*`) is read-only; system component overrides go to `local/components/bitrix/`, custom code to `local/components/{{vendor_name}}/`, `local/modules/`, `local/js/`.
-- **Identifier trust.** Every class, service, method, event, and setting identifier is confirmed against kernel source (`bitrix/modules/<module>/lib/...`) or project module code — model memory is not evidence; an absence claim ("there is no X") requires a positive search for X first. Newer platform features are marked **Since main X.Y** with fallback advice.
+- **Identifier trust.** Identifiers the change depends on or writes into code are
+  confirmed against kernel source (`bitrix/modules/<module>/lib/...`) or project module
+  code — model memory is not evidence; an absence claim ("there is no X") requires a
+  positive search for X first. Verification is batched once at design time;
+  identifiers already verified within a task are trusted — exhaustive kernel sweeps
+  during planning are a defect. Newer platform features are marked **Since main X.Y**
+  with fallback advice.
 - **Module registry.** The tree and the table in [Project modules](#project-modules-localmodules) mirror the actual state of `local/modules/` and are updated in the same change that adds, removes, or discovers a module.
 - **No secrets in code, logs, or commits** — credentials, tokens, personal data.
 - **Fail fast.** Error-handling convention: explicit error messages; silent error swallowing is a defect.
@@ -59,7 +65,10 @@ Inline comments carry the placement conventions; the tree mirrors the actual pro
 
 ### Project modules (`local/modules/`)
 
-Every custom module is a composer package merged into the root project (`local/composer.json`) via `{{COMPOSER_MERGE}}`.
+Every custom module is a composer package (`type: bitrix-d7-module`, PSR-4 `lib/`)
+merged into the root project (`local/composer.json`) via `{{COMPOSER_MERGE}}`
+(canon `bitrix-modules`). Modules without `composer.json` are a legacy deviation —
+add composer setup when the module is next touched.
 
 | Module | Description |
 |---|---|
@@ -77,9 +86,38 @@ Every custom module is a composer package merged into the root project (`local/c
 - JS extension IDs: `{{vendor_name}}.<module>...` (e.g. `{{vendor_name}}.<module>.ui.<feature>-editor`)
 - DB table prefix: `{{db_prefix}}_` — used as `{{db_prefix}}_<table_name>` in `{{VENDOR_NAME}}\<Module>\Model\...Table` ORM entities
 
+### Canon deviations (deliberate practice-to-canon gaps)
+
+| DEV | Domain | For new code | Legacy practice (kept as-is) |
+|:----|:-------|:-------------|:-----------------------------|
+
+
+
 ## Routing
 
-**Hierarchy:** the Project rules & constraints above always win. Below them, the most specific loaded file refines the general one: per-agent tool instructions > Tier-1 rule files > this file. An unreachable referenced file blocks the task until resolved — no work against a partial ruleset.
+**Hierarchy:** explicit user instruction wins first; below it: domain skill canon
+(e.g. `bitrix-modules` for module structure) > Tier-1 rule files > this file >
+existing repo code — the last resort, used ONLY when no suitable skill covers the
+case, no rule covers the case, and skill + rules give no solution approach; otherwise
+prefer kernel examples (`/bitrix/modules`). Per-agent tool instructions refine the
+most specific loaded file. An unreachable referenced file blocks the task until
+resolved — no work against a partial ruleset.
+
+### Source priority & conflict protocol
+
+Normative sources define how new artifacts are built; existing code is evidence of
+current state, never a structural standard.
+
+- **Norm vs norm** (skill vs Tier-1 rule vs root file vs task doc): STOP — request
+  explicit user confirmation. Never resolve silently.
+- **Norm vs existing code:** the norm wins. Flag the code deviation; copying it is
+  a defect.
+- A stale fact found in any rules file is fixed in the same change; distrust is
+  scoped to that fact only.
+- Every plan creating a module or component carries a canon-conformance self-review
+  item; deviations go under "Deviations — requires user approval".
+- Full doctrine: `.agents/rules/core/architecture.md` → "Standards & conflicts".
+
 
 ### Tier 1 — always load
 
