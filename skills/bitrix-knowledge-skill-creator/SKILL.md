@@ -1,6 +1,8 @@
 ---
 name: bitrix-knowledge-skill-creator
 description: Use when creating, editing, or reviewing a knowledge skill. Covers authoring conventions — correct and incorrect usage of a development aspect, best practices for kernel and module APIs (patterns, prohibitions, negative knowledge, morphology, density). Key terms — SKILL.md, rules/, router, baseline, Since, API matrix, kernel verification.
+metadata:
+  type: workflow
 ---
 
 # Knowledge Skill Authoring Conventions
@@ -48,7 +50,7 @@ Thin skills follow this skeleton verbatim — the wording is stable across the c
 ```markdown
 ---
 name: <skill-name>
-description: Use for/when <situations>. <topics, comma-separated>.
+description: Use when <situations>. <topics, comma-separated>.
 ---
 
 # <Topic> (`<module id>`)
@@ -88,21 +90,19 @@ Router invariants:
 ## 3. Frontmatter
 
 - `name` equals the folder name exactly.
-- The description is the trigger surface. The trigger clause leads — `Use when`/`Applied when` first; topic coverage and key terms follow. Two templates:
-
-Monolith:
-
-```
-Use when/for <task situations>. Covers <topic> — <enumerated subtopics>. Key terms — <8–12 searchable tokens: class names, API ids, domain words>.
-```
-
-Router:
+- `metadata: {type: knowledge}` — the type is declared in the frontmatter (`workflow` for process skills, which follow `bitrix-workflow-skill-creator`); the validator allows the `metadata` key and does not inspect nested keys.
+- The description is the trigger surface. The trigger clause leads — a `Use when <situation>` first; situation before domain, always. **The situation is the operation the user asks for** ("create a controller", "change a filter", "new module"), not the topic ("controllers", "filters", "modules") — a user prompt matches the situation, not the domain label. Topic coverage and key terms follow. Template:
 
 ```
-Use for/when <situations>. <topics, comma-separated>.
+Use when creating a new <X> or editing an existing <Y> (adding/changing <parts>)
+and when <building/deciding Z>. Covers <topics>. Key terms — <unique tokens>.
 ```
 
-Rules: English only; concrete identifiers as key terms (they are what a user prompt matches); if the description contains `#` or `[` (attribute names like `#[NotEmpty]`), quote the whole value.
+Assemble in order: situations → coverage → key terms. Drop from `Key terms` any token already carried by `Covers` (it is already searchable there). Key terms are the asker's vocabulary — artifact names and API ids as a user would type them.
+
+**Live-prompt test:** before hand-off, draft 3–5 real task prompts in the words a user would use ("create a controller with an action", "where do I put the module", "change the filter"). Every key word of every prompt must have a foothold in the description. A prompt word with no foothold = the description needs that token.
+
+Rules: English only; concrete identifiers as key terms (they are what a user prompt matches); if the description contains `#` or `[` (attribute names like `#[NotEmpty]`), quote the whole value; backslashes in key terms (`Bitrix\Pull\Event`) are escaped as `\\` inside double quotes.
 
 Length: **soft limit 350 characters** — at 350+, trim before hand-off (drop redundant key terms, merge subtopics); **hard limit 400** — a draft over it fails review. The agent-skills spec allows 1024; this collection stays deliberately tighter.
 
@@ -167,7 +167,7 @@ A draft is accepted when all of the following hold. These are the criteria for c
 | # | Criterion | Measure |
 | --- | --- | --- |
 | Q1 | Structure compliance | Morphology per §1; sizes within budget; templates of §2–§4 followed |
-| Q2 | Triggerability | Description matches §3 template and carries concrete key terms |
+| Q2 | Triggerability | Description matches the §3 template (situation-first, `Use when`), carries concrete key terms, and passes the §3 live-prompt test |
 | Q3 | Coverage | Every major API layer, operation class, and integration point of the domain appears; API-choice matrix present where layers exist |
 | Q4 | Precision | Zero invented identifiers; verified facts only; 2+ negative-knowledge statements |
 | Q5 | Code quality | Examples complete: strict_types, imports, Result handling, why-comments; pipeline order explained where semantic |
@@ -191,8 +191,8 @@ Exit code 0 = pass. The script enforces the agent-skills spec: `SKILL.md` presen
 
 ## Pre-submit checklist for the skill author
 
-- [ ] `name` = folder name; description matches the template and carries key terms.
-- [ ] Description length: soft ≤350 chars, hard ≤400 chars.
+- [ ] `name` = folder name; `metadata: {type: knowledge}` present; description matches the §3 template (situation-first) and carries key terms.
+- [ ] Description length: soft ≤350 chars, hard ≤400 chars; live-prompt test run (3–5 prompts, every prompt word has a description foothold).
 - [ ] Line count within budget after the reconciliation pass (cut, never pad).
 - [ ] Format check passes on the final draft ("Validation after authoring"): exit code 0, errors fixed at the source.
 - [ ] Morphology matches the decision rule; sizes within budget.

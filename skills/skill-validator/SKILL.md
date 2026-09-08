@@ -1,6 +1,8 @@
 ---
 name: skill-validator
 description: Use when a skill is ready for a PR, when asked to validate, or after mass edits. Covers mechanical validation of a skill folder — format check via quick_validate.py, security scan via prism-scanner, exit-code and grade A–F gates, .prismignore, batch validation. Key terms — quick_validate.py, prism-scanner, --fail-on, grade A–F, .prismignore.
+metadata:
+  type: workflow
 ---
 
 # Skill Validation (Format + Security)
@@ -22,7 +24,7 @@ Both tools are local, read-only, and never execute the scanned code.
 uv run --with pyyaml https://raw.githubusercontent.com/anthropics/skills/main/skills/skill-creator/scripts/quick_validate.py skills/<name>/
 ```
 
-`quick_validate.py` enforces: `SKILL.md` present, valid YAML frontmatter, only allowed keys (`name`, `description`, `license`, `allowed-tools`, `metadata`, `compatibility`), `name` kebab-case ≤64 chars, `description` ≤1024 chars without `<`/`>`, `compatibility` ≤500 chars.
+`quick_validate.py` enforces: `SKILL.md` present, valid YAML frontmatter, only allowed keys (`name`, `description`, `license`, `allowed-tools`, `metadata`, `compatibility`), `name` kebab-case ≤64 chars, `description` ≤1024 chars without `<`/`>`, `compatibility` ≤500 chars. Nested keys under `metadata` are not checked — the collection uses `metadata: {type: workflow|knowledge}` to declare the skill type; values outside that pair pass validation too.
 
 2. Security scan (exit code 0 = pass):
 

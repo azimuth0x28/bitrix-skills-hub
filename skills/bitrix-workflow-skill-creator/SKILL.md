@@ -1,6 +1,8 @@
 ---
 name: bitrix-workflow-skill-creator
 description: Use when creating, editing, or reviewing a workflow skill — a process, convention, or environment skill (code style, project rules, DevOps setup, review rules). Covers decision tables, verifiable procedures, project-fact verification, tool-version anchoring. Key terms — workflow skill, decision table, runbook, project facts, tool versions.
+metadata:
+  type: workflow
 ---
 
 # Workflow Skill Authoring Conventions
@@ -32,7 +34,7 @@ Pick the creator before drafting:
 | Kernel classes, service ids, tables, module APIs — code the agent writes against | `bitrix-knowledge-skill-creator` | Knowledge skill |
 | How to work: conventions, code style, processes, environment setup, review steps — process the agent follows | This skill | Workflow skill |
 
-A workflow skill may reference kernel identifiers inside examples or config keys — every such identifier is still verified per `bitrix-knowledge-skill-creator` §9. An API-choice-matrix-shaped draft is a knowledge skill: reclassify and switch creators. Declare the type when requesting evaluation — `bitrix-skill-eval` dispatches rubric measures per type (its §11).
+A workflow skill may reference kernel identifiers inside examples or config keys — every such identifier is still verified per `bitrix-knowledge-skill-creator` §9. An API-choice-matrix-shaped draft is a knowledge skill: reclassify and switch creators. Declare the type in the frontmatter (`metadata: {type: workflow}`) when drafting — `bitrix-skill-eval` dispatches rubric measures per type (its §11).
 
 ## 2. Morphology
 
@@ -42,7 +44,7 @@ Same decision rule and budgets as `bitrix-knowledge-skill-creator` §1: monolith
 
 ## 3. Frontmatter and templates
 
-- `name` equals the folder name; description per `bitrix-knowledge-skill-creator` §3 templates (trigger clause first, soft limit 350 chars, hard 400). Key terms are tool names, paths, and command names — what a user prompt matches.
+- `name` equals the folder name; `metadata: {type: workflow}` present. Description per `bitrix-knowledge-skill-creator` §3 templates with a workflow trigger clause: **`Use before <X>` / `when asked to <Y>` / `after <Z>`** — the situation is a process point or stage, not a code artifact ("commit", "review", "estimate a task", "before a merge"). Soft limit 350 chars, hard 400. Key terms are tool names, paths, and command names — what a user prompt matches. Guard skills (verification-before-completion, rules-check-drift) name the moment of temptation: "before a merge", "when about to claim work is complete", "after mass edits".
 - No `argument-hint` / `arguments` keys — the agent-skills spec has no argument concept. Declare optional input in the body (`<input>` block or stage 1), including its default.
 - H1: `# <Topic>` — no module id.
 - **Never write a `Baseline:` line.** Kernel versioning (`main X.Y`) does not apply to a process; a Baseline line in a workflow skill is a defect.
@@ -90,7 +92,7 @@ Accept when all hold. Measures align with the workflow dispatch in `bitrix-skill
 | # | Criterion | Measure |
 | --- | --- | --- |
 | Q1 | Structure compliance | Morphology per §2; templates of §3–§6 followed |
-| Q2 | Triggerability | Description per §3; concrete tool/path/command key terms |
+| Q2 | Triggerability | Description per §3 (workflow trigger clause, situation-first); concrete tool/path/command key terms |
 | Q3 | Coverage | Every stage, decision fork, environment fact, and procedure of the declared scenario scope appears |
 | Q4 | Precision | Zero invented paths, config keys, commands, versions; 2+ negative statements |
 | Q5 | Completeness | Commands copy-runnable; config snippets complete for scope; step order explained where semantic |
@@ -107,7 +109,7 @@ Run the format check and the security gate packaged in `skill-validator` — sam
 ## Pre-submit checklist for the skill author
 
 - [ ] Type dispatch correct: process/convention content → this skill; kernel-heavy content → `bitrix-knowledge-skill-creator`.
-- [ ] `name` = folder name; description per §3 template; length soft ≤350, hard ≤400 chars.
+- [ ] `name` = folder name; `metadata: {type: workflow}` present; description per §3 template with workflow trigger clause; length soft ≤350, hard ≤400 chars.
 - [ ] Line count within budget (monolith 100–310; router ≤60; rules 45–135). Cut, never pad.
 - [ ] No `Baseline:` line; tool versions anchored to project manifests or CI configs.
 - [ ] Decision table present where recurring forks exist.

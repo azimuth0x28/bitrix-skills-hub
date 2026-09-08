@@ -1,6 +1,8 @@
 ---
 name: bitrix-skill-eval
 description: Use when grading skill drafts, running blind tests, deciding acceptance. Covers quality evaluation of Bitrix Framework skills — blind test protocol (frozen spec, verbatim prompt, time cap), Q1–Q10 grading rubric, hard gates, knowledge-point density, kernel verification. Key terms — Q1–Q10, knowledge point, density, hard gates, blind test.
+metadata:
+  type: workflow
 ---
 
 # Bitrix Skill Quality Evaluation
@@ -39,7 +41,7 @@ A single deliverable file fits tighter caps; multi-file (router + rules) deliver
 | # | Criterion | 10 = | Automatic fail |
 | --- | --- | --- | --- |
 | Q1 | Structure | morphology per spec §1; sizes within budgets; templates followed (or the optional mixed XML + Markdown body style per the creator spec) | — |
-| Q2 | Triggerability | description matches the spec template, carries concrete key terms | — |
+| Q2 | Triggerability | description matches the spec template (situation-first, `Use when`), carries concrete key terms, passes the creator spec's live-prompt test | — |
 | Q3 | Coverage | ≥85% of reference knowledge points + spec-mandated extras | <60% |
 | Q4 | Precision | 0 invented identifiers (kernel-verified), 2+ negative facts | any invented id |
 | Q5 | Code quality | strict_types, imports, error handling, why-comments; full exception family + catch order; constructor signatures verified | invented API in code |
@@ -112,7 +114,7 @@ When no reference skill exists for the domain (a first-of-its-kind skill), grade
 
 ## 11. Skill types and rubric dispatch
 
-Two skill types are graded under one rubric. The author declares the type when requesting evaluation; the evaluator confirms it from the draft's content — an API-choice matrix, kernel identifiers, and code examples signal a knowledge skill; decision tables, procedures, and environment facts signal a workflow skill. The creator skill that was followed is the treatment record.
+Two skill types are graded under one rubric. The author declares the type in the frontmatter (`metadata: {type: knowledge|workflow}`) when drafting; the evaluator confirms it from the draft's content — an API-choice matrix, kernel identifiers, and code examples signal a knowledge skill; decision tables, procedures, and environment facts signal a workflow skill. The declared type and the creator skill that was followed are the treatment record.
 
 | Type | Creator spec | Rubric |
 | --- | --- | --- |
@@ -140,7 +142,7 @@ Unswapped criteria (Q2, Q6–Q8, Q10) and the acceptance bar (§4) apply unchang
 - [ ] Time cap + poll cadence set; cancel at cap; directory re-checked after cancel (flushed writes).
 - [ ] Reference measured (lines, points, density) and self-graded before grading the draft.
 - [ ] No reference? Domain surface enumerated before launch; density graded against the 3–5 L/pt band.
-- [ ] Skill type declared and confirmed; workflow drafts graded with the §11 measure swaps.
+- [ ] Skill type (`metadata: {type: ...}`) present in the frontmatter and confirmed; workflow drafts graded with the §11 measure swaps.
 - [ ] Kernel checks recorded with `file:line`; unverifiable claims listed separately.
 - [ ] Gaps classified spec-caused vs agent-caused before any spec patch.
 - [ ] Iteration log updated after every run.
