@@ -63,22 +63,22 @@ public function up()
         'ID' => 'content',
         'LANG' => [
             'ru' => [
-                'NAME' => 'Контент',
-                'SECTION_NAME' => 'Разделы',
-                'ELEMENT_NAME' => 'Элементы',
+                'NAME' => 'Content',
+                'SECTION_NAME' => 'Sections',
+                'ELEMENT_NAME' => 'Elements',
             ],
         ],
     ]);
 
     $iblockId = $helper->Iblock()->saveIblock([
-        'NAME' => 'Новости',
+        'NAME' => 'News',
         'CODE' => 'content_news',
         'LID' => ['s1'],
         'IBLOCK_TYPE_ID' => 'content',
     ]);
 
     $helper->Iblock()->saveProperty($iblockId, [
-        'NAME' => 'Ссылка',
+        'NAME' => 'Link',
         'CODE' => 'LINK',
     ]);
 }
