@@ -1,6 +1,6 @@
 ---
 name: bitrix-localization
-description: Covers Bitrix localization — Loc, lang/code/ language files, Context::getCulture(), JS via BX.message and $Bitrix.Loc, user_lang overrides of kernel phrases. Applied when adding phrases, overriding kernel/module/component phrases without forking, multi-language sites, JS translations. Key terms — Loc, getMessage, lang file, user_lang, MESS, Culture, BX.message, loadMessages, i18n.
+description: Use when adding phrases, overriding kernel/module/component phrases without forking, or building multi-language sites and JS translations. Covers Loc, lang/code/ language files, getMessage placeholders, culture formats, user_lang phrase overrides. Key terms — Loc, getMessage, lang file, user_lang, MESS, Culture, BX.message, loadMessages, i18n.
 metadata:
   type: knowledge
 ---
