@@ -220,6 +220,7 @@ Skills covering D7 core topics and adjacent areas. Each one is a self-contained 
 | [bitrix-highloadblock](skills/bitrix-highloadblock/SKILL.md) | HighloadBlockTable, compileEntity, DataManager CRUD, UF, ORM events | Custom entities, dynamic data models |
 | [bitrix-components](skills/bitrix-components/SKILL.md) | class.php, templates, cache, SEF, Controllerable AJAX | Building or editing components |
 | [bitrix-extensions](skills/bitrix-extensions/SKILL.md) | /local/js/ structure, bundle.config.js, Extension::load, @bitrix/chef | Adding frontend code to modules |
+| [bitrix-chef](skills/bitrix-chef/SKILL.md) | @bitrix/chef CLI: create/init/build/test/lint/diag, bundle.config(.ts\|.js), chef.config.ts, @bitrix/cli migration | Building Bitrix JS extensions, migrating from deprecated @bitrix/cli |
 | [bitrix-ui](skills/bitrix-ui/SKILL.md) | Popup, SidePanel, MessageBox, entity-selector, grid, alerts, toasts | Admin interfaces, public UI components |
 | [bitrix-vue](skills/bitrix-vue/SKILL.md) | BitrixVue 3, ui.vue3.bitrixvue, createApp, REST integration | Reactive admin/public UI with Vue |
 | [bitrix-cms-basics](skills/bitrix-cms-basics/SKILL.md) | Sites, templates, menus, includes, breadcrumbs, styles, user fields | Site structure, content management |
