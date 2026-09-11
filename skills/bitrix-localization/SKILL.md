@@ -1,6 +1,6 @@
 ---
 name: bitrix-localization
-description: Use when adding phrases, multi-language sites, JS translations. Covers Bitrix localization — Bitrix\Main\Localization\Loc, lang/code/ language files, loadMessages, placeholders in getMessage, culture formats, JS localization via BX.message, translate:index. Key terms — Loc, getMessage, lang file, Culture, BX.message, loadMessages, i18n.
+description: Covers Bitrix localization — Loc, lang/code/ language files, Context::getCulture(), JS via BX.message and $Bitrix.Loc, user_lang overrides of kernel phrases. Applied when adding phrases, overriding kernel/module/component phrases without forking, multi-language sites, JS translations. Key terms — Loc, getMessage, lang file, user_lang, MESS, Culture, BX.message, loadMessages, i18n.
 metadata:
   type: knowledge
 ---
@@ -93,6 +93,50 @@ How to fix:
 - **Move the code** to the correct file if it physically ended up in the wrong place.
 
 Do not copy automatically — you might duplicate phrases; investigate the cause.
+
+## Overriding Kernel Phrases (`user_lang`)
+
+Reword a kernel-module or system-component phrase without forking it: put overrides into `php_interface/user_lang/<lang>/lang.php`. The kernel reads it via `getLocal()` — `/local/php_interface/user_lang/...` wins over `/bitrix/php_interface/user_lang/...` (`Loc::loadUserMessages()` in `bitrix/modules/main/lib/localization/loc.php`, legacy `__IncludeLang()` in `bitrix/modules/main/tools.php`).
+
+Format: `$MESS` keys are **paths to the lang file** from the site root — leading `/` mandatory, matched via `realpath(DOCUMENT_ROOT . $key)`; values are `code => text` arrays:
+
+```php
+$MESS['/bitrix/modules/main/lang/ru/interface/index.php']['admin_index_sec'] = 'New wording';
+$MESS['/bitrix/components/bitrix/system.auth.form/templates/.default/lang/ru/template.php']['AUTH_PROFILE'] = 'My profile';
+```
+
+**Never** key by the PHP file that calls `getMessage` — the merge fires only on the `lang/<lang>/...` file's `realpath()`; a wrong key never applies and fails silently.
+
+### Which path to key
+
+One component template can be served from several physical locations — the override fires only for the actually loaded one:
+
+| Path (from site root) | When |
+| --- | --- |
+| `/local/templates/<tmpl>/components/<ns>/<name>/templates/<t>/lang/ru/<file>.php` | site-template copy — wins first |
+| `/local/components/<ns>/<name>/templates/<t>/lang/ru/<file>.php` | local component copy |
+| `/bitrix/components/<ns>/<name>/templates/<t>/lang/ru/<file>.php` | standard copy — module updates place install components here |
+| `/bitrix/modules/<module>/install/components/<ns>/<name>/templates/<t>/lang/ru/<file>.php` | direct module source |
+
+When the dev mirror does not show the live layout (`bitrix/` is often partially mirrored), write one `$MESS` entry per plausible path — unmatched keys are ignored — and verify the live one with `ls` on the host.
+
+### Locating a phrase code
+
+```bash
+grep -rn '"PHRASE_CODE"' bitrix/modules/<module>/ local/   # definition + usages, PHP and JS
+```
+
+- Definitions live only in `lang/` trees: `bitrix/modules/<module>/lang/ru/...` (kernel/admin) and `.../install/components/<ns>/<name>/templates/<t>/lang/ru/<file>.php` (component templates).
+- Component JS reads `BX.message('CODE')` — the template publishes its lang file (`BX.message(phpToJsObject(Loc::loadLanguageFile(__FILE__)))` in `template.php`); override the lang file, **never** patch `script.min.js`.
+- The same code may exist in several dialogs of one module (old and new UI) — grep the whole module tree before keying a single file.
+- Rewording only → `user_lang`; layout/logic changes → copy the component template (see skill `bitrix-components`).
+
+### Limits
+
+- A `/local/` user_lang file **shadows** `/bitrix/php_interface/user_lang/<lang>/lang.php` entirely — if the admin *Translation* UI already wrote one, merge its entries.
+- Mail event templates are DB rows (`b_event`, *Settings → Mail & SMS*) — phrase overrides have no effect there.
+- HTML/composite caches keep already-emitted `BX.message` — flush caches after deploy.
+- Override only languages the portal serves (usually `ru`); other `lang/` variants keep originals.
 
 ## Regional Settings (`Culture`)
 
@@ -197,6 +241,8 @@ Indexes language files so that the *Settings → Localization → View Files* pa
 
 - Hardcoding strings in services/controllers. `Error` message texts should be via `Loc::getMessage`.
 - `getMessage('CODE')` in one file when the phrase is defined in another → scanning all files, slowdown.
+- Rewording kernel phrases by editing `bitrix/` files or `script.min.js` — overrides go to `user_lang`.
+- A `user_lang` key pointing at the PHP file instead of its `lang/<lang>/` file — the override never fires.
 - Copying phrases between modules via `BX_MESS_LOG` without analysis — risk of duplication and confusion.
 - Outputting dates via `date('d.m.Y')` instead of `Culture::getDateFormat()` — breaks multilingual projects.
 - Mixing UTF-8 and CP1251 in `lang/` — Bitrix will "re-convert" and you'll get garbled text.
