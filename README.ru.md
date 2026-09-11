@@ -233,6 +233,14 @@ cp -r bitrix-skills-hub/skills/bitrix-orm ваш-проект/.agents/skills/
 | [bitrix-catalog](skills/bitrix-catalog/SKILL.md) | Продукты, SKU/офферы, цены, инвентарь, скидки, бандлы | Электронная коммерция: цены, остатки, API каталога |
 | [bitrix-sale](skills/bitrix-sale/SKILL.md) | Basket, Order, FUSER, оплата, доставка, скидки, купоны | Корзина/checkout, жизненный цикл заказа |
 | [bitrix-bizproc](skills/bitrix-bizproc/SKILL.md) | CBPDocument, CBPRuntime, шаблоны workflows, кастомные activities | Согласования, документооборот, автоматизация |
+| [bitrix-crm-smart](skills/bitrix-crm-smart/SKILL.md) | Смарт-процессы (динамические CRM-сущности): Service Container, Factory, операции, Item | Чтение/фильтрация/обновление элементов смарт-процессов из кода |
+
+### Битрикс24: совместная работа
+
+| Skill | Что делает | Когда использовать |
+| --- | --- | --- |
+| [bitrix-tasks](skills/bitrix-tasks/SKILL.md) | Сервисы tasks V2 + Internals ORM: TaskTable, MemberTable, UpdateTaskService, смена ответственного | Чтение/обновление задач, перепоручение, фильтры по статусу |
+| [bitrix-socialnetwork](skills/bitrix-socialnetwork/SKILL.md) | Рабочие группы и проекты: UserToGroupTable, WorkgroupTable, CSocNetUserToGroup, роли, SetOwner | Изменение состава, смена ролей/владельца, выборки по участникам |
 
 ### Правила проекта и онбординг
 

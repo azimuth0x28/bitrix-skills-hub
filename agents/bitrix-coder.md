@@ -44,7 +44,8 @@ Skills are the canonical source of Bitrix domain rules — how the task is done 
 | Services & runtime | `bitrix-service-locator`, `bitrix-result-and-errors`, `bitrix-events`, `bitrix-background-jobs`, `bitrix-datetime`, `bitrix-modules`, `bitrix-console-commands` | DI, result & error wrapping, events, agents/queues, datetime & timezone, module lifecycle, CLI |
 | Performance & state | `bitrix-caching`, `bitrix-storage`, `bitrix-performance`, `bitrix-postgresql` | Cache tags/TTL/layers, options state, high-load tuning, Postgres indexing & query plans |
 | UI & frontend | `bitrix-components`, `bitrix-extensions`, `bitrix-ui`, `bitrix-vue`, `bitrix-cms-basics`, `bitrix-landing`, `bitrix-seo` | Components, JS extensions (AMD), Vue, admin UI, pages/menus/templates, landing pages, SEO maps |
-| B24 automation & CRM | `bitrix-bizproc`, `bitrix-catalog`, `bitrix-sale`, `bitrix-pull` | Business-process activities, catalog & shop logic, order workflows, realtime push |
+| B24 automation & CRM | `bitrix-bizproc`, `bitrix-crm-smart`, `bitrix-catalog`, `bitrix-sale`, `bitrix-pull` | Business-process activities, smart-process items, catalog & shop logic, order workflows, realtime push |
+| B24 collaboration | `bitrix-tasks`, `bitrix-socialnetwork` | Task reads/updates & reassignment, workgroup membership, roles, owner transfer |
 | Hardening & integrations | `bitrix-security`, `bitrix-sessions`, `bitrix-logger`, `bitrix-localization`, `bitrix-http-client` | CSRF/XSS/SQLi hardening, session config, logging, i18n, external HTTP APIs |
 | Process & upkeep | `bitrix-prime-codebase`, `bitrix-rules-create-global`, `bitrix-knowledge-skill-creator`, `bitrix-workflow-skill-creator`, `bitrix-skill-eval`, `rules-check-drift`, `skill-validator` | Codebase onboarding, rule & skill authoring, skill grading, drift checks, format & security validation |
 

@@ -233,6 +233,14 @@ Skills covering D7 core topics and adjacent areas. Each one is a self-contained 
 | [bitrix-catalog](skills/bitrix-catalog/SKILL.md) | Products, SKU/offers, prices, inventory, discounts, bundles | E-commerce: prices, stock, catalog API |
 | [bitrix-sale](skills/bitrix-sale/SKILL.md) | Basket, Order, FUSER, payments, delivery, discounts, coupons | Cart/checkout, order lifecycle, pay/ship |
 | [bitrix-bizproc](skills/bitrix-bizproc/SKILL.md) | CBPDocument, CBPRuntime, workflow templates, custom activities | Approvals, document workflows, automation |
+| [bitrix-crm-smart](skills/bitrix-crm-smart/SKILL.md) | Smart processes (CRM dynamic entities): Service Container, Factory, operations, Item | Reading/filtering/updating smart-process items from code |
+
+### Bitrix24 workspace
+
+| Skill | What It Does | Use When |
+| --- | --- | --- |
+| [bitrix-tasks](skills/bitrix-tasks/SKILL.md) | Tasks V2 services + Internals ORM: TaskTable, MemberTable, UpdateTaskService, responsible changes | Reading/updating tasks, reassignment, status filters |
+| [bitrix-socialnetwork](skills/bitrix-socialnetwork/SKILL.md) | Workgroups & projects: UserToGroupTable, WorkgroupTable, CSocNetUserToGroup, roles, SetOwner | Membership changes, role/owner transfer, member queries |
 
 ### Project Rules & Onboarding
 
