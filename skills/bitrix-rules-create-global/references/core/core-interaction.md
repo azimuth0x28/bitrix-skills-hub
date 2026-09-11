@@ -84,6 +84,19 @@
 - Move handler logic into a class, not into closures
 - Check module availability (`Loader::includeModule`) before registering a handler for another module's events
 - Give handlers meaningful names: `module:OnEventName` → `onEventNameHandler`
+- Event entry points (`on*` methods registered in the module's
+  `lib/Module/EventManager.php`) are dispatchers only: `try/catch` + delegation,
+  zero business logic. This applies to shared hub handler classes that collect
+  many events (e.g. `vendor.module/lib/Integration/Main/EventHandler.php`).
+- When a dedicated class is created for a single event, its entry-point method
+  may carry the processing directly — do not extract a separate method when it
+  would add nothing but indirection
+  (e.g. `vendor.module/lib/Integration/Crm/EventHandler/DynamicItemHandler.php`).
+- Internal processing methods are named after what they do (domain verb + object),
+  never after event timing: `requirePasswordChangeOnNextLogin()`, not
+  `handleBeforeUserAdd()`. One method = one concern; if an entry point bundles
+  unrelated features, it dispatches to separate methods instead of one
+  catch-all.
 
 ## Agents
 
