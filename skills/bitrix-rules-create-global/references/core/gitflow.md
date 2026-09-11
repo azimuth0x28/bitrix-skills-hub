@@ -21,8 +21,7 @@
   </rule>
 
   <rule id="conventional-commits" scope="commits">
-    MUST use Conventional Commits: `type(scope): subject`, types limited to
-    `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`; subject in
+    MUST use Conventional Commits in Russian (`feat(import): Добавлена поддержка XML`): `type(scope): subject`, types limited to `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`; subject in
     the imperative mood, body explains "why" for complex changes.
   </rule>
 
