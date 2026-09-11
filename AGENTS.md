@@ -1,13 +1,13 @@
 # AGENTS.md
 
-Guide for AI agents contributing to **bitrix-skills-hub** — a hub of 43 AI skills for **1C-Bitrix / Bitrix Framework** (D7).
+Guide for AI agents contributing to **bitrix-skills-hub** — a hub of AI skills for **1C-Bitrix / Bitrix Framework** (D7).
 
 ## Project overview
 
-- Plain markdown repository: 39 domain skills + 4 meta-skills under `skills/`. One skill = one folder.
+- Plain markdown repository: domain skills + meta-skills under `skills/`. One skill = one folder.
 - A skill teaches an agent one Bitrix domain: `SKILL.md` (router, ≤60 lines) + optional `rules/*.md` (45–135 lines each, progressive disclosure).
 - No build, no test suite. Quality is enforced by mechanical checks (`skills/skill-validator/`), the review checklist, and the evaluation protocol in `skills/bitrix-skill-eval/`.
-- User-facing docs: `README.md` (English, primary) and `README.ru.md` (Russian). The catalog of all 43 skills lives in both.
+- User-facing docs: `README.md` (English, primary) and `README.ru.md` (Russian). The catalog of all skills lives in both.
 
 ## Repository structure
 
