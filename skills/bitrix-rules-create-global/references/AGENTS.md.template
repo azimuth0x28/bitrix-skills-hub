@@ -183,7 +183,7 @@ php -l <file>
 php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php <path>
 php vendor/bin/phpcbf --standard=.phpcs.xml --extensions=php <path>
 
-# 3. Single-file style check
+# 3. File style check
 php vendor/bin/phpcs --standard=.phpcs.xml --extensions=php --report=json <path>
 php vendor/bin/php-cs-fixer check --format=json --config=.php-cs-fixer.dist.php <path>
 ```
@@ -192,6 +192,8 @@ php vendor/bin/php-cs-fixer check --format=json --config=.php-cs-fixer.dist.php 
 
 - PHP: `{{PHP_VERSION}}`
 - DB: `{{DB_ENGINE}}`
+- JS: ES2024
+- JS Bitrix Extensions: TypeScript + @bitrix/chef (@bitrix/cli is deprecated)
 - Environment: `{{ENVIRONMENT_NOTES}}`
 - `{{OTHER_TOOLING}}`
 
