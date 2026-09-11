@@ -29,11 +29,11 @@ on its events.
 
 | `UserToGroupTable` const | Value | Meaning               |
 |--------------------------|-------|-----------------------|
-| `ROLE_OWNER`             | `A`   | руководитель/владелец |
-| `ROLE_MODERATOR`         | `E`   | модератор             |
-| `ROLE_USER`              | `K`   | участник              |
-| `ROLE_BAN`               | `T`   | исключён              |
-| `ROLE_REQUEST`           | `Z`   | заявка на вступление  |
+| `ROLE_OWNER`             | `A`   | owner (руководитель/владелец)       |
+| `ROLE_MODERATOR`         | `E`   | moderator (модератор)               |
+| `ROLE_USER`              | `K`   | member (участник)                   |
+| `ROLE_BAN`               | `T`   | banned (исключён)                   |
+| `ROLE_REQUEST`           | `Z`   | join request (заявка на вступление) |
 
 Global defines `SONET_ROLES_*` in `socialnetwork/include.php` mirror them — prefer class constants.
 

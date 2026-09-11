@@ -134,7 +134,7 @@ Stores the target record's numeric `ID`. `SETTINGS`: `HLBLOCK_ID` (required, tar
 
 ## Directory Property (Iblock ← HL)
 
-Iblock property of type Справочник stores the **`UF_XML_ID`** of the HL record (not the `ID`). Create with `PROPERTY_TYPE => 'S'`, `USER_TYPE => 'directory'`, `USER_TYPE_SETTINGS => ['TABLE_NAME' => $hl['TABLE_NAME']]`; multiplicity via property `MULTIPLE`, not `USER_TYPE_SETTINGS`.
+Iblock property of type "directory" («Справочник») stores the **`UF_XML_ID`** of the HL record (not the `ID`). Create with `PROPERTY_TYPE => 'S'`, `USER_TYPE => 'directory'`, `USER_TYPE_SETTINGS => ['TABLE_NAME' => $hl['TABLE_NAME']]`; multiplicity via property `MULTIPLE`, not `USER_TYPE_SETTINGS`.
 
 Directory service fields: `UF_XML_ID` (required, stable, unique — no auto constraint), `UF_NAME`, `UF_SORT`, `UF_FILE`, `UF_DEF` (default flag), `UF_DESCRIPTION`, `UF_FULL_DESCRIPTION`, `UF_LINK`. Resolve values: read property → query HL data class with `'@UF_XML_ID' => $values`. After a `TABLE_NAME` rename, update the property's `USER_TYPE_SETTINGS` or its options stop loading. For cross-environment transfer keep `UF_XML_ID` stable; numeric `ID`s differ per environment.
 

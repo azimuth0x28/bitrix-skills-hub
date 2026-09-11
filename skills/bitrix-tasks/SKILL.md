@@ -31,8 +31,8 @@ search index.
 - `Entity\Task` readonly props: `creator`, `responsible` (`?User`, `->getId()`), `accomplices`, `auditors` (
   `?UserCollection`), `status`. Modify via `$task->cloneWith([...])` — whole-list replacement.
 - `UserCollection`: `mapFromIds([1,2])`, `->getFirstEntity()`, `->getIdList()`.
-- `MemberTable` (`b_tasks_member`): `MEMBER_TYPE_ORIGINATOR`=`O` (постановщик), `MEMBER_TYPE_RESPONSIBLE`=`R`,
-  `MEMBER_TYPE_ACCOMPLICE`=`A` (соисполнитель), `MEMBER_TYPE_AUDITOR`=`U` (наблюдатель).
+- `MemberTable` (`b_tasks_member`): `MEMBER_TYPE_ORIGINATOR`=`O` (originator, постановщик), `MEMBER_TYPE_RESPONSIBLE`=`R` (responsible),
+  `MEMBER_TYPE_ACCOMPLICE`=`A` (accomplice, соисполнитель), `MEMBER_TYPE_AUDITOR`=`U` (auditor, наблюдатель).
 - `Status`: `NEW`=1, `PENDING`=2, `IN_PROGRESS`=3, `SUPPOSEDLY_COMPLETED`=4, `COMPLETED`=5, `DEFERRED`=6, `DECLINED`
   =7. "Not completed" → `whereNotIn('STATUS', [4, 5])`.
 - `UpdateConfig` named args: `userId` (acting user), `needCorrectDatePlan`, `needAutoclose`, `skipNotifications`,
