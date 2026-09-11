@@ -219,7 +219,7 @@ cp -r bitrix-skills-hub/skills/bitrix-orm ваш-проект/.agents/skills/
 | [bitrix-iblocks](skills/bitrix-iblocks/SKILL.md) | Типы/элементы/секции инфоблоков, ORM compileEntity, свойства, SEO | Работа с инфоблоками, структурированные данные |
 | [bitrix-highloadblock](skills/bitrix-highloadblock/SKILL.md) | HighloadBlockTable, compileEntity, DataManager CRUD, UF, ORM-события | Кастомные сущности, динамические модели данных |
 | [bitrix-components](skills/bitrix-components/SKILL.md) | class.php, шаблоны, кеш, SEF, Controllerable AJAX | Создание или редактирование компонентов |
-| [bitrix-extensions](skills/bitrix-extensions/SKILL.md) | /local/js/, bundle.config.js, Extension::load, @bitrix/cli | Добавление фронтенд-кода в модули |
+| [bitrix-extensions](skills/bitrix-extensions/SKILL.md) | /local/js/, bundle.config.js, Extension::load, @bitrix/chef | Добавление фронтенд-кода в модули |
 | [bitrix-ui](skills/bitrix-ui/SKILL.md) | Popup, SidePanel, MessageBox, entity-selector, grid, alerts, toasts | Админ-интерфейсы, публичные UI-компоненты |
 | [bitrix-vue](skills/bitrix-vue/SKILL.md) | BitrixVue 3, ui.vue3.bitrixvue, createApp, интеграция с REST | Реактивный UI на Vue в Bitrix |
 | [bitrix-cms-basics](skills/bitrix-cms-basics/SKILL.md) | Сайты, шаблоны, меню, инклюды, хлебные крошки, стили, user fields | Структура сайта, управление контентом |

@@ -126,7 +126,7 @@ Conflict protocol:
     │
     ├── js/                        # JavaScript
     │   └── <vendor>/
-    │       ├── <extension>/      # Bitrix extension @bitrix/cli
+    │       ├── <extension>/      # Bitrix extension @bitrix/chef
     │
     ├── modules/                   # Modules
     │   └── <vendor>.<modulename>  # Custom modules

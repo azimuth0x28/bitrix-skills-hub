@@ -1,6 +1,6 @@
 ---
 name: bitrix-extensions
-description: Use when adding frontend code to modules, components, or admin pages. Covers Bitrix JS/CSS extensions — /local/js/ structure, bundle.config.js, config.php, Extension::load, @bitrix/cli build, CoreJS imports. Key terms — extension, bundle, Extension::load, bundle.config.js, config.php, CoreJS.
+description: Use when adding frontend code to modules, components, or admin pages. Covers Bitrix JS/CSS extensions — /local/js/ structure, bundle.config.js, config.php, Extension::load, @bitrix/chef build, CoreJS imports. Key terms — extension, bundle, Extension::load, bundle.config.js, config.php, CoreJS.
 metadata:
   type: knowledge
 ---
@@ -31,7 +31,7 @@ Baseline: **main 23.0+**. Extensions organize JavaScript and CSS into bundles lo
 
 Required: `src`, `dist`, `bundle.config.js`, `config.php`.
 
-Scaffold with `@bitrix/cli`: `bitrix create` (in extension directory).
+Scaffold with `@bitrix/chef`: `chef create` (in extension directory). **`@bitrix/cli` is deprecated** — migration map in skill `bitrix-chef`.
 
 ## bundle.config.js
 
@@ -88,11 +88,13 @@ In component templates — load before inline scripts that use the extension.
 
 ## Build
 
-From extension directory (with `@bitrix/cli` installed):
+From extension directory (with `@bitrix/chef` installed):
 
 ```bash
-npx bitrix build
+chef build
 ```
+
+`@bitrix/cli` and `npx bitrix build` are **deprecated** — migration: skill `bitrix-chef`.
 
 `dist/` bundles are committed and deployed. Source lives in `src/`.
 
