@@ -8,9 +8,9 @@ metadata:
 # Smart processes (`crm` dynamic entities)
 
 Smart processes are CRM dynamic entities: resolve everything through `Bitrix\Crm\Service\Container` (dir
-`crm/lib/Service` — capital S). Related skills: `bitrix-bizproc` (automation), `bitrix-orm` (query syntax). 
+`crm/lib/Service` — capital S). Related skills: `bitrix-bizproc` (automation), `bitrix-orm` (query syntax).
 
-Baseline: **main 23.0+**; facts verified against crm **25.700.0** in this project's kernel.
+Baseline: **main 23.0+**; facts verified against crm **25.700.0**.
 
 ## API choice matrix
 
