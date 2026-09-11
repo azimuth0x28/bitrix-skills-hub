@@ -13,7 +13,7 @@ A component fetches data via module APIs and renders HTML. Decide the anatomy **
 One class file, several pages via SEF routing. `templates/.default/` contains **one file per page** (list.php, detail.php, error_page.php), not a single `template.php` — the page is included by name via `IncludeComponentTemplate($componentPage)`.
 
 ```
-vendor.module.start/                 # complex (reference: deputy.schedule.start)
+vendor.module.start/                 # complex (reference: acme.schedule.start)
 ├── .description.php
 ├── .parameters.php                  # SEF_MODE, SEF_FOLDER, SEF_URL_TEMPLATES
 ├── class.php                        # \Vendor\Module\Component\StartComponent
@@ -37,10 +37,10 @@ vendor.module.start/                 # complex (reference: deputy.schedule.start
 
 ## Simple Component
 
-One page — one `template.php`. The class inherits the module's base component class (`lib/Component/`, reference: `TabletGridComponent`) or `\CBitrixComponent`; all logic in `executeComponent()`.
+One page — one `template.php`. The class inherits the module's base component class (`lib/Component/`, reference: `ScheduleGridComponent`) or `\CBitrixComponent`; all logic in `executeComponent()`.
 
 ```
-vendor.module.item.list/             # simple (reference: deputy.schedule.item.list)
+vendor.module.item.list/             # simple (reference: acme.schedule.item.list)
 ├── .description.php
 ├── .parameters.php
 ├── class.php                        # \Vendor\Module\Component\ItemListComponent

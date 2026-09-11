@@ -233,7 +233,7 @@ Manages several pages via SEF routing. The page file is included by name via
 (list.php, detail.php...), not a single `template.php`.
 
 ```
-{{vendor_name}}.<module>.start/          # complex component (reference: deputy.schedule.start)
+{{vendor_name}}.<module>.start/          # complex component (reference: acme.schedule.start)
 ├── .description.php                     # description for the admin panel
 ├── .parameters.php                      # parameters: SEF_MODE, SEF_FOLDER, SEF_URL_TEMPLATES, ...
 ├── class.php                            # class: \{{VENDOR_NAME}}\<Module>\Component\<Name>Component
@@ -265,10 +265,10 @@ Manages several pages via SEF routing. The page file is included by name via
 ### Simple component
 
 One page — one `template.php` template. The class inherits the module's base component class
-(`lib/Component/`, reference: `TabletGridComponent`) or `\CBitrixComponent`; all logic lives in `executeComponent()`.
+(`lib/Component/`, reference: `ScheduleGridComponent`) or `\CBitrixComponent`; all logic lives in `executeComponent()`.
 
 ```
-{{vendor_name}}.<module>.<name>/         # simple component (reference: deputy.schedule.item.list, deputy.schedule.item.detail)
+{{vendor_name}}.<module>.<name>/         # simple component (reference: acme.schedule.item.list, acme.schedule.item.detail)
 ├── .description.php
 ├── .parameters.php
 ├── class.php                            # class: \{{VENDOR_NAME}}\<Module>\Component\<Name>Component

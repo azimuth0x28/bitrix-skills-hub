@@ -427,8 +427,8 @@ metadata:
         - Inconsistent ORM usage: D7 in /local/modules/, CIBlockElement in /local/components/.
 
       Deviations resolved (DEV):
-        - DEV-1 [Tier-1] bitrix-modules namespace: canon `FirstBit\` for new code;
-          existing `Firstbit\` marked legacy (user confirmed, option (a))
+        - DEV-1 [Tier-1] bitrix-modules namespace: canon `Acme\` (StudlyCaps) for new code;
+          existing lowercase `acme\` marked legacy (user confirmed, option (a))
         - DEV-2 [Tier-3] logging via `addMessage2Log`: agent decision — PSR-3 logger for
           new code (insignificant, logged)
 
