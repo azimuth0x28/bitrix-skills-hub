@@ -50,7 +50,7 @@ metadata:
 
 <critical_rules enforcement="strict">
   <rule id="protect-existing-rules" scope="all-modes">
-    If a rules file already exists, back it up first (e.g. `AGENTS.md.bak`)
+    If a rules file already exists, back it up first (e.g. `AGENTS.md.bak` `CLAUDE.md.bak`)
     so existing content is never overwritten without a trace.
   </rule>
 
