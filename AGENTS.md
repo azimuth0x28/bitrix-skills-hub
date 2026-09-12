@@ -65,6 +65,23 @@ Editing an existing skill: follow `bitrix-knowledge-skill-creator` (§1, §4, §
 - Commits: English only, [Conventional Commits](https://www.conventionalcommits.org/) format (`docs:`, `fix:`, `feat:`, `chore:`, `refactor:`), one concern per commit. A new skill and its catalog rows may go together; unrelated skills split.
 - Chat with the maintainer in Russian.
 
+### Skill versioning
+
+- Every `SKILL.md` declares `metadata: {type: knowledge|workflow, version: "X.Y.Z"}` — semver per skill, travels with the folder when installed on consumer projects.
+- Bump table:
+
+| Bump | What warrants it |
+| --- | --- |
+| patch | typos, formatting, wording without meaning change |
+| minor | rule-content changes, new/edited rules file, description changes (description optimization included), new examples |
+| major | baseline change, reversed recommendation, deprecation |
+
+- A new skill starts at `1.0.0`.
+- Any file change under `skills/<name>/` requires a version bump in the same PR. CI gate: `python3 .github/scripts/check-versions.py <base-sha>`.
+- minor+ bumps reference a fresh eval record (`bitrix-skill-eval` archive) in the PR; patch bumps need mechanical checks only.
+- Line budgets are ratcheted: violations listed in `.github/scripts/budget-baseline.txt` are grandfathered; a fix must remove its baseline line (stale lines fail CI).
+- `plugin.json` version tracks the latest release tag; the catalog smoke fails on drift.
+
 ## Fact discipline
 
 - Verify every identifier against kernel source (`bitrix/modules/<module>/lib/...`) or a project-local module's own code (`local/modules/<vendor>.<module>/`), then user-provided docs, then docs.1c-bitrix.ru as last resort.
@@ -76,12 +93,14 @@ Editing an existing skill: follow `bitrix-knowledge-skill-creator` (§1, §4, §
 
 A new skill passes two automated checks before a PR is opened; the procedure is packaged as the `skill-validator` skill. Both are local, read-only, and run against the final skill folder. The same gates run in CI on every PR (`.github/workflows/validate.yml`): the catalog smoke job and the prism security scan (`fail-on high`, action pinned by SHA).
 
+Run the line-budget ratchet locally too: `bash .github/scripts/check-budgets.sh` (exit 0 = pass; a stale baseline entry fails). The version gate (`python3 .github/scripts/check-versions.py <base-sha>`) runs in CI on every PR against the base SHA — see "Skill versioning".
+
 ### Format: skill-creator scripts
 
 `quick_validate.py` from [anthropics/skills › skill-creator](https://github.com/anthropics/skills/tree/main/skills/skill-creator) validates the agent-skills spec: `SKILL.md` present, valid YAML frontmatter, `name` kebab-case ≤64 chars, `description` ≤1024 chars without angle brackets, allowed frontmatter keys only.
 
 ```bash
-uv run --with pyyaml https://raw.githubusercontent.com/anthropics/skills/main/skills/skill-creator/scripts/quick_validate.py skills/<name>/   # exit code 0 = pass
+uv run --with pyyaml skills/skill-validator/scripts/quick_validate.py skills/<name>/   # exit code 0 = pass (vendored Apache-2.0 copy; raw-URL fallback in skill-validator's negative knowledge)
 ```
 
 Fix every reported error at the source.
@@ -103,6 +122,7 @@ Gate: `--fail-on high` exits 0. Grade C (medium findings only) — attach a writ
 
 - [ ] `name` frontmatter = folder name; `metadata: {type: knowledge|workflow}` present; description situation-first per the creator spec (soft ≤350 / hard ≤400 chars) and live-prompt tested.
 - [ ] Line counts within budget (monolith 100–310; router ≤60; each `rules/*.md` 45–135). Cut, never pad.
+- [ ] Changed skill folders carry a bumped `metadata.version` per "Skill versioning"; minor+ bumps carry a fresh eval record in the PR.
 - [ ] Every changed identifier kernel-verified; 2+ negative-knowledge statements present.
 - [ ] Prohibitions bold at the error site and echoed in the checklist; checklist items verifiable.
 - [ ] Cross-links use exact catalog names; AGENTS.md canons referenced, never duplicated.

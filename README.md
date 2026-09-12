@@ -284,12 +284,24 @@ Pre-configured specialist personas for Bitrix development:
 
 ```
 skills/<name>/
-├── SKILL.md      # router: description, triggers, links to rules
+├── SKILL.md      # router: name, version, description, triggers, links to rules
 ├── rules/*.md    # rules by topic; the agent reads only the ones it needs
 └── references/   # template assets (some workflow skills): copied verbatim into the target project
 ```
 
 Fat skills use progressive disclosure: the agent opens `SKILL.md` first, then only the `rules/` files it needs. Skills are self-sufficient and anchored to the core: verified against **main 26.150.0**, baseline patterns **main 23.0+**.
+
+## Versioning
+
+Every skill carries a semantic version in `metadata: {type, version}`; the folder ships it to consumer projects, so any change bumps it.
+
+| Bump | When |
+| --- | --- |
+| patch | typos, formatting, wording — no meaning change |
+| minor | rule-content changes, new/edited rules file, description changes (incl. optimization), new examples |
+| major | baseline change, reversed recommendation, deprecation |
+
+CI enforces the bump on every PR (`check-versions.py`, `check-budgets.sh`); `plugin.json` tracks the latest release tag — the catalog smoke fails on drift.
 
 ## Adding your own
 
