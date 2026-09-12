@@ -1,7 +1,7 @@
 ---
 name: bitrix-chef
 description: Use when building, creating, or configuring Bitrix JS extensions with @bitrix/chef — scaffold, dev/production builds, tests, lint, diag — and when migrating from deprecated @bitrix/cli. Covers bundle.config(.ts|.js) schema and chef.config.ts rules. Key terms — chef build, chef init, chef create, bundle.config.ts, chef.config, resolveNodeModules.
-metadata: {type: knowledge}
+metadata: {type: knowledge, version: "1.0.0"}
 ---
 
 # @bitrix/chef — build tool for Bitrix JS extensions

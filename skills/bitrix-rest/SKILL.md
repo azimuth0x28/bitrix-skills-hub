@@ -3,6 +3,7 @@ name: bitrix-rest
 description: Use when exposing module APIs to apps, webhooks, or marketplace integrations. Covers REST module — registering methods from a custom module, scopes, webhook and OAuth, rest / restIntegration settings, ActionFilter\Scope::REST. Key terms — rest, OnRestServiceBuildDescription, CRestUtil, scope, webhook, OAuth, Scope::REST, BX.rest.callMethod.
 metadata:
   type: knowledge
+  version: "1.0.0"
 ---
 
 # REST API (`rest`)

@@ -3,6 +3,7 @@ name: bitrix-prime-codebase
 description: "Use when onboarding a codebase or before generating project rules. Analyzes layout, ORM usage, migrations, event handlers, coding style, git history; produces codebase-analysis.md with file:line evidence and a tiered canon-deviation register (DEV-N) against hub canon skills, feeding bitrix-rules-create-global. Key terms — prime, codebase analysis, Brownfield, seams, canon deviations, DEV."
 metadata:
   type: workflow
+  version: "1.0.0"
 ---
 
 # Bitrix Prime Codebase: Analyze a 1C-Bitrix Project's Real Conventions

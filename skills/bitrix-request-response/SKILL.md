@@ -3,6 +3,7 @@ name: bitrix-request-response
 description: "Use instead of raw $_GET/$_POST and header access — reading request input or building responses. Covers Bitrix request/response — HttpRequest, ParameterDictionary, HttpResponse and built-in response classes, encrypted cookies, Uri, UuidGenerator. Key terms — HttpRequest, HttpResponse, ParameterDictionary, AjaxJson, Redirect, UuidGenerator."
 metadata:
   type: knowledge
+  version: "1.0.0"
 ---
 
 # Application, Context, Request, Response

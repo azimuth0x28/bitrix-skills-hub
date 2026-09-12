@@ -3,6 +3,7 @@ name: bitrix-pull
 description: "Use when pushing live UI updates, notifications, or collaborative screens to users. Covers Pull module — sending realtime events to users/channels from PHP, JS subscription overview, watch tags, when to use Pull vs Messenger vs agents, link to BitrixVue. Key terms — Bitrix\\Pull\\Event, CPullWatch, CPullChannel, BX.PULL.subscribe, extendWatch, queue server, push."
 metadata:
   type: knowledge
+  version: "1.0.0"
 ---
 
 # Realtime Pull (`pull`)

@@ -3,6 +3,7 @@ name: bitrix-result-and-errors
 description: Use when designing service APIs, returning errors from modules and controllers. Covers Bitrix unified operation results — Bitrix\Main\Result, Error, ErrorCollection, typed descendants (AddResult, UpdateResult, DeleteResult, EventResult), Result vs exceptions, addError. Key terms — Result, Error, ErrorCollection, AddResult, UpdateResult, addError.
 metadata:
   type: knowledge
+  version: "1.0.0"
 ---
 
 # Result and Errors in Bitrix

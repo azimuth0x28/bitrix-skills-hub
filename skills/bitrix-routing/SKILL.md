@@ -3,6 +3,7 @@ name: bitrix-routing
 description: "Use when adding public or API URLs to a project, or when migrating legacy urlrewrite rules. Covers Bitrix routing — setup and module wiring, web.php routes/handlers, methods, groups, names/URL generation, PublicPageController, site-guard, urlrewrite migration. Key terms — RoutingConfigurator, /local/routes, web.php, PublicPageController, site-guard, urlrewrite."
 metadata:
   type: knowledge
+  version: "1.0.0"
 ---
 
 # Routing in Bitrix

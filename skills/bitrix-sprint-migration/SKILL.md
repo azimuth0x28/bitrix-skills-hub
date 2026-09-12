@@ -3,6 +3,7 @@ name: bitrix-sprint-migration
 description: Use when creating or applying DB/schema/content migrations, exporting via builders, or debugging state. Covers sprint.migration — Version, HelperManager (Iblock/Hlblock/Option/Agent), builders, CLI migrate.php, configs migrations.*.php, restartable batches. Key terms — sprint.migration, Version, HelperManager, saveIblock, saveHlblock, migrate.php.
 metadata:
   type: knowledge
+  version: "1.0.0"
 ---
 
 # Bitrix sprint.migration

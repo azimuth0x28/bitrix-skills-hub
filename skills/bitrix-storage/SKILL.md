@@ -3,6 +3,7 @@ name: bitrix-storage
 description: Use when deciding where to put config vs TTL state vs derived cache. Covers choosing between Option, Persistent Storage, Cache and sessions — PersistentStorageInterface (main 25.1100+), DeferredStorageDecorator, Bitrix\Main\Config\Option for permanent module settings. Key terms — Option, PersistentStorage, Cache, TTL, default_option.php.
 metadata:
   type: knowledge
+  version: "1.0.0"
 ---
 
 # Storage Boundaries: Option / Persistent / Cache

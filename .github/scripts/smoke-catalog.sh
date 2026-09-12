@@ -87,6 +87,38 @@ else
   echo "  ✓ All $FOLDER_COUNT SKILL.md files present"
 fi
 
+# --- 4. plugin.json version alignment ---
+# plugin.json must carry a valid semver >= the latest git tag (closes the
+# observed drift where plugin.json stayed 1.0.0 while tags moved to v1.2.0).
+echo "--- plugin.json version alignment ---"
+ver_ge() { # ver_ge A B -> 0 (true) if A >= B, X.Y.Z numeric comparison
+  local a=(${1//./ }) b=(${2//./ })
+  for i in 0 1 2; do
+    if (( ${a[$i]:-0} > ${b[$i]:-0} )); then return 0; fi
+    if (( ${a[$i]:-0} < ${b[$i]:-0} )); then return 1; fi
+  done
+  return 0
+}
+
+PLUGIN_VERSION="$(python3 -c 'import json; print(json.load(open("plugin.json"))["version"])' 2>/dev/null || true)"
+if [[ -z "$PLUGIN_VERSION" || ! "$PLUGIN_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+  echo "::error::plugin.json version invalid or unreadable: '${PLUGIN_VERSION:-<none>}' (expected semver X.Y.Z)"
+  FAILED=true
+else
+  LATEST_TAG="$(git describe --tags --abbrev=0 2>/dev/null || true)"
+  if [[ -z "$LATEST_TAG" ]]; then
+    echo "  ⏭ No tags found — plugin.json version alignment skipped"
+  else
+    TAG_VERSION="${LATEST_TAG#v}"
+    if [[ "$TAG_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] && ! ver_ge "$PLUGIN_VERSION" "$TAG_VERSION"; then
+      echo "::error::plugin.json version drift — plugin ${PLUGIN_VERSION} < latest tag ${LATEST_TAG}"
+      FAILED=true
+    else
+      echo "  ✓ plugin.json $PLUGIN_VERSION >= latest tag $LATEST_TAG"
+    fi
+  fi
+fi
+
 # --- Final verdict ---
 if [[ "$FAILED" == "true" ]]; then
   echo ""

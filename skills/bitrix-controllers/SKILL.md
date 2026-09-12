@@ -3,6 +3,7 @@ name: bitrix-controllers
 description: "Use when creating a new controller or editing an existing one (adding or changing actions, filters, autowiring, error handling) and when building AJAX/REST/routed endpoints. Engine Controller/JsonController: thin actions, filter attributes, CurrentUser, errors."
 metadata:
   type: knowledge
+  version: "1.0.0"
 ---
 
 # Bitrix Controllers

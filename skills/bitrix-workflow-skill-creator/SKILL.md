@@ -3,6 +3,7 @@ name: bitrix-workflow-skill-creator
 description: Use when creating, editing, or reviewing a workflow skill — a process, convention, or environment skill (code style, project rules, DevOps setup, review rules). Covers decision tables, verifiable procedures, project-fact verification, tool-version anchoring. Key terms — workflow skill, decision table, runbook, project facts, tool versions.
 metadata:
   type: workflow
+  version: "1.0.0"
 ---
 
 # Workflow Skill Authoring Conventions
@@ -44,7 +45,8 @@ Same decision rule and budgets as `bitrix-knowledge-skill-creator` §1: monolith
 
 ## 3. Frontmatter and templates
 
-- `name` equals the folder name; `metadata: {type: workflow}` present. Description per `bitrix-knowledge-skill-creator` §3 templates with a workflow trigger clause: **`Use before <X>` / `when asked to <Y>` / `after <Z>`** — the situation is a process point or stage, not a code artifact ("commit", "review", "estimate a task", "before a merge"). Soft limit 350 chars, hard 400. Key terms are tool names, paths, and command names — what a user prompt matches. Guard skills (verification-before-completion, rules-check-drift) name the moment of temptation: "before a merge", "when about to claim work is complete", "after mass edits".
+- `name` equals the folder name; `metadata: {type: workflow}` present.
+- New skills declare `metadata: {type: workflow, version: "1.0.0"}`; later edits bump the version per AGENTS.md "Skill versioning" (semver) — reference it, never restate the bump table. Description per `bitrix-knowledge-skill-creator` §3 templates with a workflow trigger clause: **`Use before <X>` / `when asked to <Y>` / `after <Z>`** — the situation is a process point or stage, not a code artifact ("commit", "review", "estimate a task", "before a merge"). Soft limit 350 chars, hard 400. Key terms are tool names, paths, and command names — what a user prompt matches. Guard skills (verification-before-completion, rules-check-drift) name the moment of temptation: "before a merge", "when about to claim work is complete", "after mass edits".
 - No `argument-hint` / `arguments` keys — the agent-skills spec has no argument concept. Declare optional input in the body (`<input>` block or stage 1), including its default.
 - H1: `# <Topic>` — no module id.
 - **Never write a `Baseline:` line.** Kernel versioning (`main X.Y`) does not apply to a process; a Baseline line in a workflow skill is a defect.

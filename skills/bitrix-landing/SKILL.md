@@ -3,6 +3,7 @@ name: bitrix-landing
 description: "Use when building landing pages, storefronts, or knowledge bases on Sites24, or when publishing/unpublishing a landing. Covers Landing module — sites/landings, blocks repository, publish/unpublish flow, hooks (Metrika/GA/pixels), customization limits vs classic CMS. Key terms — Landing, Site, Block, BlockRepo, publication, unpublic, hooks, PAGE, STORE."
 metadata:
   type: knowledge
+  version: "1.0.0"
 ---
 
 # Landing Sites (`landing`)

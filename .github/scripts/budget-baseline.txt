@@ -1,0 +1,15 @@
+skills/bitrix-background-jobs/rules/background-job.md 32
+skills/bitrix-background-jobs/rules/messenger.md 209
+skills/bitrix-components/rules/structure.md 160
+skills/bitrix-controllers/SKILL.md 67
+skills/bitrix-controllers/rules/basics.md 155
+skills/bitrix-modules/SKILL.md 366
+skills/bitrix-performance/SKILL.md 63
+skills/bitrix-postgresql/SKILL.md 77
+skills/bitrix-request-response/SKILL.md 74
+skills/bitrix-request-response/rules/application-context.md 42
+skills/bitrix-request-response/rules/response.md 150
+skills/bitrix-request-response/rules/uri-uuid.md 38
+skills/bitrix-rules-create-global/SKILL.md 494
+skills/bitrix-sprint-migration/SKILL.md 104
+skills/bitrix-sprint-migration/rules/writing.md 182

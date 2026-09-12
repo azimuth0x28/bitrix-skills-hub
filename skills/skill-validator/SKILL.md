@@ -1,8 +1,9 @@
 ---
 name: skill-validator
-description: Use when a skill is ready for a PR, when asked to validate, or after mass edits. Covers mechanical validation of a skill folder — format check via quick_validate.py, security scan via prism-scanner, exit-code and grade A–F gates, .prismignore, batch validation. Key terms — quick_validate.py, prism-scanner, --fail-on, grade A–F, .prismignore.
+description: Use when a skill is ready for a PR, when asked to validate, or after mass edits. Covers mechanical validation of a skill folder — format check via vendored quick_validate.py, security scan via prism-scanner, grade A–F gates, .prismignore, batch validation. Key terms — quick_validate.py, vendored, offline, prism-scanner, --fail-on, .prismignore.
 metadata:
   type: workflow
+  version: "1.1.0"
 ---
 
 # Skill Validation (Format + Security)
@@ -11,8 +12,10 @@ Mechanical gate for a skill folder before a PR. Editorial quality (blind test, Q
 
 | Check | Tool | Command |
 | --- | --- | --- |
-| Format (agent-skills spec) | `quick_validate.py` — [anthropics/skills › skill-creator](https://github.com/anthropics/skills/tree/main/skills/skill-creator) | `uv run --with pyyaml <raw-url> skills/<name>/` |
+| Format (agent-skills spec) | `quick_validate.py` — vendored at `scripts/quick_validate.py`, source [anthropics/skills › skill-creator](https://github.com/anthropics/skills/tree/main/skills/skill-creator) (Apache-2.0) | `uv run --with pyyaml skills/skill-validator/scripts/quick_validate.py skills/<name>/` |
 | Security (static analysis, grade A–F) | [prism-scanner](https://github.com/aidongise-cell/prism-scanner) | `uvx --from prism-scanner prism scan skills/<name>/ --fail-on high` |
+| Version bump (changed skills) | `.github/scripts/check-versions.py` | `python3 .github/scripts/check-versions.py <base-sha>` |
+| Line budgets (ratchet) | `.github/scripts/check-budgets.sh` + `budget-baseline.txt` | `bash .github/scripts/check-budgets.sh` |
 
 Both tools are local, read-only, and never execute the scanned code.
 
@@ -21,8 +24,10 @@ Both tools are local, read-only, and never execute the scanned code.
 1. Format check (exit code 0 = pass):
 
 ```bash
-uv run --with pyyaml https://raw.githubusercontent.com/anthropics/skills/main/skills/skill-creator/scripts/quick_validate.py skills/<name>/
+uv run --with pyyaml skills/skill-validator/scripts/quick_validate.py skills/<name>/
 ```
+
+The script is vendored inside this skill (`scripts/quick_validate.py`, Apache-2.0, pinned to an upstream commit) — it travels with the folder and needs no download. When pyyaml is already installed, plain `python3 skills/skill-validator/scripts/quick_validate.py skills/<name>/` works too.
 
 `quick_validate.py` enforces: `SKILL.md` present, valid YAML frontmatter, only allowed keys (`name`, `description`, `license`, `allowed-tools`, `metadata`, `compatibility`), `name` kebab-case ≤64 chars, `description` ≤1024 chars without `<`/`>`, `compatibility` ≤500 chars. Nested keys under `metadata` are not checked — the collection uses `metadata: {type: workflow|knowledge}` to declare the skill type; values outside that pair pass validation too.
 
@@ -34,7 +39,16 @@ uvx --from prism-scanner prism scan skills/<name>/ --fail-on high
 
 Drop `--fail-on high` for the full report with the grade; add `--format json` for machine-readable findings.
 
-3. Report as a table: skill, check, grade, finding, action. State only observed output.
+3. Budget + version gates (exit code 0 = pass):
+
+```bash
+bash .github/scripts/check-budgets.sh
+python3 .github/scripts/check-versions.py <base-sha>
+```
+
+Line budgets are ratcheted via `.github/scripts/budget-baseline.txt`; the version gate compares `metadata.version` between base and HEAD per AGENTS.md "Skill versioning".
+
+4. Report as a table: skill, check, grade, finding, action. State only observed output.
 
 ## Interpret grades
 
@@ -74,8 +88,9 @@ After mass edits, run both checks over every folder:
 
 ```bash
 for d in skills/*/; do
-  uv run --with pyyaml https://raw.githubusercontent.com/anthropics/skills/main/skills/skill-creator/scripts/quick_validate.py "$d" >/dev/null 2>&1 || echo "FORMAT: $d"
+  uv run --with pyyaml skills/skill-validator/scripts/quick_validate.py "$d" >/dev/null 2>&1 || echo "FORMAT: $d"
   uvx --from prism-scanner prism scan "$d" --fail-on high >/dev/null 2>&1 || echo "SECURITY: $d"
+  bash .github/scripts/check-budgets.sh >/dev/null 2>&1 || echo "BUDGETS: $d"
 done
 ```
 
@@ -85,8 +100,16 @@ Every folder must appear in either the pass set or the report — a folder check
 
 - The package executable is `prism`; `uvx prism-scanner ...` fails with "executable not provided" — use `uvx --from prism-scanner prism`.
 - `quick_validate.py` never compares `name` with the folder name and never checks line budgets or cross-links — those stay in the `AGENTS.md` PR checklist.
+- A top-level `version` frontmatter key fails `quick_validate.py` (allowed-keys list) — the version lives inside `metadata`, never at the top level.
+- The version gate (`check-versions.py`) only checks folders changed between base and HEAD; untouched skills are never compared.
+- A legacy base without `metadata.version` passes the gate once HEAD carries a valid version (adoption).
+- A fixed violation still listed in `budget-baseline.txt` fails as "stale baseline entry" — fixes must remove their baseline line.
+- The version gate runs on `pull_request` events only; pushes to `main` skip it (`validate.yml` job condition).
 - prism-scanner performs no format validation — a format-broken skill can grade A.
 - `--fail-on` accepts `critical`, `high`, `medium` — there is no `low` threshold.
+- The vendored copy is pinned to upstream commit `34040c9c` (Apache-2.0, `scripts/LICENSE.txt`); upstream evolves independently — re-sync deliberately with a diff, never assume parity.
+- Sibling scripts in the upstream `scripts/` (`run_eval.py`, `run_loop.py`, `improve_description.py`, `generate_report.py`, `aggregate_benchmark.py`) shell out to `claude -p` — evaluation tooling owned by `bitrix-skill-eval`, out of scope here.
+- `package_skill.py` upstream packages `.skill` archives and imports `scripts.quick_validate` package-relative — it breaks when copied standalone and stays out of this skill.
 
 ## Checklist
 

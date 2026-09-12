@@ -3,6 +3,7 @@ name: bitrix-tasks
 description: "Use when reading, filtering, searching or updating tasks from PHP code: change responsible, creator, accomplices, auditors; transfer/reassign tasks; filter by status. Covers tasks V2 services, UpdateTaskService, UpdateConfig, TaskTable, MemberTable, Status. Key terms — cloneWith, UserCollection, MEMBER_TYPE_ACCOMPLICE, b_tasks_member."
 metadata:
   type: knowledge
+  version: "1.0.0"
 ---
 
 # Tasks module (`tasks`)

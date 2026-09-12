@@ -3,6 +3,7 @@ name: bitrix-background-jobs
 description: "Use when deferring work to background agents or Messenger queues, or when choosing between CAgent, addBackgroundJob, and Messenger brokers. Covers background jobs — CAgent anatomy and cycles, Application::addBackgroundJob, Messenger queue workers and consume. Key terms — CAgent, addBackgroundJob, Messenger, queue, worker."
 metadata:
   type: knowledge
+  version: "1.0.0"
 ---
 
 # Background Tasks in Bitrix

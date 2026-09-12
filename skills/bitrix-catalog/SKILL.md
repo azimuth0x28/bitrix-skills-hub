@@ -3,6 +3,7 @@ name: bitrix-catalog
 description: "Use when building e-commerce features — product listings, prices, stock, offers — or when deciding which Catalog API to use. Covers Trade Catalog module — products, SKU/offers, prices, inventory, discounts, bundles, export/import, catalog API choice. Key terms — SKU, offer, price type, CCatalogProduct."
 metadata:
   type: knowledge
+  version: "1.0.0"
 ---
 
 # Trade Catalog Module

@@ -3,6 +3,7 @@ name: bitrix-performance
 description: "Use when optimizing a high-load site beyond basic caching — composite, replication, sharding. Covers Bitrix performance — composite site, query optimization, replication/clustering, sharding, hot/cold sessions. Key terms — composite, NGINX, replication, sharding, query optimization."
 metadata:
   type: knowledge
+  version: "1.0.0"
 ---
 
 # Performance Optimization

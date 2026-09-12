@@ -3,6 +3,7 @@ name: bitrix-datetime
 description: Use when building schedules, converting time zones, comparing dates, working with DateField/DatetimeField. Covers date and time — Bitrix\Main\Type\Date and DateTime, parsing/formatting by kernel masks, arithmetic, time zones via toUserTime/disableUserTime, Context::getCulture(). Key terms — Date, DateTime, toUserTime, timezone, Culture, DateField.
 metadata:
   type: knowledge
+  version: "1.0.0"
 ---
 
 # Date and Time in Bitrix

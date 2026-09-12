@@ -3,6 +3,7 @@ name: bitrix-socialnetwork
 description: "Use when managing workgroup/project membership or ownership from code: add/remove members, read or change roles, transfer group owner, query groups by member. Covers UserToGroupTable, WorkgroupTable, CSocNetUserToGroup, SetOwner. Key terms — SONET_ROLES_OWNER, b_sonet_user2group, AddUsersToGroup, OWNER_ID."
 metadata:
   type: knowledge
+  version: "1.0.0"
 ---
 
 # Workgroups & projects (`socialnetwork`)

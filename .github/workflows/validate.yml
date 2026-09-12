@@ -19,11 +19,37 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0 # tags needed for plugin.json alignment check
 
       - name: Catalog consistency smoke
         run: |
           bash .github/scripts/smoke-catalog.sh
         # Exit 0 expected — every README catalog entry matches a skills/ folder and SKILL.md exists.
+
+  consistency:
+    name: Version & budget gates
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install pyyaml
+        run: pip install pyyaml
+
+      - name: Version bump gate
+        run: python3 .github/scripts/check-versions.py "${{ github.event.pull_request.base.sha }}"
+
+      - name: Line budget gate (ratchet)
+        run: bash .github/scripts/check-budgets.sh
 
   security:
     name: Skill security scan (prism)

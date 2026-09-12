@@ -3,6 +3,7 @@ name: bitrix-knowledge-skill-creator
 description: Use when creating, editing, or reviewing a knowledge skill. Covers authoring conventions — correct and incorrect usage of a development aspect, best practices for kernel and module APIs (patterns, prohibitions, negative knowledge, morphology, density). Key terms — SKILL.md, rules/, router, baseline, Since, API matrix, kernel verification.
 metadata:
   type: workflow
+  version: "1.1.0"
 ---
 
 # Knowledge Skill Authoring Conventions
@@ -91,6 +92,7 @@ Router invariants:
 
 - `name` equals the folder name exactly.
 - `metadata: {type: knowledge}` — the type is declared in the frontmatter (`workflow` for process skills, which follow `bitrix-workflow-skill-creator`); the validator allows the `metadata` key and does not inspect nested keys.
+- `metadata: {type: knowledge, version: "1.0.0"}` for a new skill — later edits bump the version per AGENTS.md "Skill versioning" (semver); reference it, never restate the bump table.
 - The description is the trigger surface. The trigger clause leads — a `Use when <situation>` first; situation before domain, always. **The situation is the operation the user asks for** ("create a controller", "change a filter", "new module"), not the topic ("controllers", "filters", "modules") — a user prompt matches the situation, not the domain label. Topic coverage and key terms follow. Template:
 
 ```
@@ -181,10 +183,11 @@ Counting rule for Q8: count knowledge points as you write; if a section spends m
 
 ## Validation after authoring
 
-A finished draft must pass the format check before hand-off — run it even if the `skill-validator` skill is unavailable. The instruction below is self-contained: the script is fetched straight from the canonical repo of the base skill this file refines, so a missing system skill-creator blocks nothing.
+A finished draft must pass the format check before hand-off. Prefer the copy vendored in the `skill-validator` skill — it travels with the hub and needs no download; the raw-URL fallback below keeps the check runnable when that skill folder is absent.
 
 ```bash
-uv run --with pyyaml https://raw.githubusercontent.com/anthropics/skills/main/skills/skill-creator/scripts/quick_validate.py skills/<name>/
+uv run --with pyyaml skills/skill-validator/scripts/quick_validate.py skills/<name>/   # preferred — vendored copy (Apache-2.0)
+uv run --with pyyaml https://raw.githubusercontent.com/anthropics/skills/main/skills/skill-creator/scripts/quick_validate.py skills/<name>/   # fallback — upstream raw URL
 ```
 
 Exit code 0 = pass. The script enforces the agent-skills spec: `SKILL.md` present, valid YAML frontmatter, allowed frontmatter keys only, `name` kebab-case ≤64 chars, `description` ≤1024 chars without angle brackets. Fix every reported error at the source and re-run until clean — never bypass or weaken a check. The full mechanical gate (format + security scan) is packaged as the `skill-validator` skill.
