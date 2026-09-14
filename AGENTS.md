@@ -22,7 +22,9 @@ skills/skill-validator/       # meta-skill: format validation + prism security s
 agents/bitrix-coder.md        # Bitrix canons for skill consumers (D7, DI, /local/, security)
 README.md / README.ru.md      # project docs + skill catalog
 .github/workflows/validate.yml  # CI: smoke test + prism scan on every PR
-plugin.json                   # Codex plugin manifest
+plugin.json                   # Antigravity plugin manifest (release version)
+.codex-plugin/plugin.json     # Codex plugin manifest (release version)
+.claude-plugin/               # Claude Code manifests: plugin.json + marketplace.json (release version)
 ```
 
 ### Related rulebooks
@@ -80,7 +82,7 @@ Editing an existing skill: follow `bitrix-knowledge-skill-creator` (§1, §4, §
 - Any file change under `skills/<name>/` requires a version bump in the same PR. CI gate: `python3 .github/scripts/check-versions.py <base-sha>`.
 - minor+ bumps reference a fresh eval record (`bitrix-skill-eval` archive) in the PR; patch bumps need mechanical checks only.
 - Line budgets are ratcheted: violations listed in `.github/scripts/budget-baseline.txt` are grandfathered; a fix must remove its baseline line (stale lines fail CI).
-- `plugin.json` version tracks the latest release tag; the catalog smoke fails on drift.
+- Release consistency: the repo carries one release semver, anchored to the latest release tag. Every plugin manifest — `plugin.json`, `.codex-plugin/plugin.json`, `.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json` — states it, and a release bumps all four in the same commit; a manifest left behind is a release blocker. The catalog smoke fails on drift (it gates `plugin.json` only — sync the rest by hand and in review).
 
 ## Fact discipline
 
@@ -123,6 +125,7 @@ Gate: `--fail-on high` exits 0. Grade C (medium findings only) — attach a writ
 - [ ] `name` frontmatter = folder name; `metadata: {type: knowledge|workflow}` present; description situation-first per the creator spec (soft ≤350 / hard ≤400 chars) and live-prompt tested.
 - [ ] Line counts within budget (monolith 100–310; router ≤60; each `rules/*.md` 45–135). Cut, never pad.
 - [ ] Changed skill folders carry a bumped `metadata.version` per "Skill versioning"; minor+ bumps carry a fresh eval record in the PR.
+- [ ] Release-version changes update all four plugin manifests together (`plugin.json`, `.codex-plugin/plugin.json`, `.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json`) — verified by grep, each states the release semver.
 - [ ] Every changed identifier kernel-verified; 2+ negative-knowledge statements present.
 - [ ] Prohibitions bold at the error site and echoed in the checklist; checklist items verifiable.
 - [ ] Cross-links use exact catalog names; AGENTS.md canons referenced, never duplicated.
