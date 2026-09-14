@@ -196,7 +196,7 @@ Skills covering D7 core topics and adjacent areas. Each one is a self-contained 
 | [bitrix-modules](skills/bitrix-modules/SKILL.md) | CModule, install/index.php, DoInstall/DoUninstall, make:module | Creating new modules, registration |
 | [bitrix-console-commands](skills/bitrix-console-commands/SKILL.md) | CLI tools, make:* generators, Symfony Console commands | Scaffolding, cron, queue workers |
 | [bitrix-controllers](skills/bitrix-controllers/SKILL.md) | Engine Controller/JsonController, actions, filters, CurrentUser | AJAX/REST/routed endpoints |
-| [bitrix-routing](skills/bitrix-routing/SKILL.md) | RoutingConfigurator, /local/routes, PublicPageController, urlrewrite | Public/API URL setup |
+| [bitrix-routing](skills/bitrix-routing/SKILL.md) | RoutingConfigurator, /local/routes, PublicPageController, getCustomRoots, matchPage | Public/API URL setup, CRM page URLs |
 | [bitrix-orm](skills/bitrix-orm/SKILL.md) | D7 ORM tablets, ConditionTree, Objectify, batch/merge/deleteByFilter | Entity design, reads, persistence |
 | [bitrix-events](skills/bitrix-events/SKILL.md) | Event system: new model (EventManager) + legacy (OnBefore*/OnAfter*) | Module integration, lifecycle hooks |
 | [bitrix-validation](skills/bitrix-validation/SKILL.md) | ValidationService, #[NotEmpty]/#[Email]/#[Length], Request DTO | Input validation for controllers/services |

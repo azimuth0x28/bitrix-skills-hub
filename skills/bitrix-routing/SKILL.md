@@ -1,26 +1,19 @@
 ---
 name: bitrix-routing
-description: "Use when adding public or API URLs to a project, or when migrating legacy urlrewrite rules. Covers Bitrix routing — setup and module wiring, web.php routes/handlers, methods, groups, names/URL generation, PublicPageController, site-guard, urlrewrite migration. Key terms — RoutingConfigurator, /local/routes, web.php, PublicPageController, site-guard, urlrewrite."
+description: "Use when adding public or API URLs to a project, migrating legacy urlrewrite rules, or detecting CRM pages (kanban, detail, smart-process URLs). Covers routing setup and wiring, web.php routes/handlers, groups, URL generation, PublicPageController, site-guard, urlrewrite migration, CRM Router custom sections. Key terms — RoutingConfigurator, /local/routes, getCustomRoots, matchPage, /page/."
 metadata:
   type: knowledge
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # Routing in Bitrix
 
 Baseline: **main 23.0+**. Features newer than baseline are marked **Since**.
 
-Progressive disclosure: open **only** the rule files that match the task. Do not read every `rules/*.md`.
-
 ## How to use
 
-1. Identify the layer the task touches.
-2. Open the matching `rules/*.md` below.
-3. Prefer framework-native Bitrix patterns over custom abstractions.
-
-## Routing style: check the project first
-
-New-style routing is recommended for new projects; most existing projects still route through `urlrewrite.php`. Before registering routes or touching the `routing` config section, determine the project's active routing: web-server rewrite target (`urlrewrite.php` vs `routing_index.php`) and presence of `/local/routes/`. On a legacy project follow its existing style or migrate explicitly — do not force new routing onto it. Migration → `rules/matching-legacy.md`.
+1. Identify the layer the task touches; open **only** the matching `rules/*.md` below — never every file.
+2. Check the project's active routing first (`urlrewrite.php` vs `routing_index.php`, presence of `/local/routes/`); on a legacy project follow its style or migrate explicitly (`rules/matching-legacy.md`).
 
 ## Choose a rule file
 
@@ -52,7 +45,16 @@ Read `rules/matching-legacy.md` (`Matching, PublicPageController, site-guard`) w
 - Migration from `urlrewrite.php`
 - Checklist
 
+### When to read `rules/crm-pages.md`
+
+Read `rules/crm-pages.md` (`CRM page URLs and detection`) when the task involves:
+
+- URL structure: standard `/crm/` roots
+- Custom sections (`/page/`)
+- Detecting the current page
+- OnProlog asset injection pattern
+- Checklist
+
 ## Checklist
 
-- [ ] Opened only the rule file(s) needed for this task.
-- [ ] Followed DI / `/local/` / security canons from `AGENTS.md`.
+- [ ] Opened only the rule file(s) needed for this task; followed DI / `/local/` / security canons from `AGENTS.md`; forced the project's active routing style, legacy migrated explicitly.

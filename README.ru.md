@@ -196,7 +196,7 @@ cp -r bitrix-skills-hub/skills/bitrix-orm ваш-проект/.agents/skills/
 | [bitrix-modules](skills/bitrix-modules/SKILL.md) | CModule, install/index.php, DoInstall/DoUninstall, make:module | Создание новых модулей, регистрация |
 | [bitrix-console-commands](skills/bitrix-console-commands/SKILL.md) | CLI-инструменты, генераторы make:*, Symfony Console | Скелеты, cron, queue workers |
 | [bitrix-controllers](skills/bitrix-controllers/SKILL.md) | Engine Controller/JsonController, actions, фильтры, CurrentUser | AJAX/REST/routed эндпоинты |
-| [bitrix-routing](skills/bitrix-routing/SKILL.md) | RoutingConfigurator, /local/routes, PublicPageController, urlrewrite | Настройка публичных/API URL |
+| [bitrix-routing](skills/bitrix-routing/SKILL.md) | RoutingConfigurator, /local/routes, PublicPageController, getCustomRoots, matchPage | Настройка публичных/API URL, CRM-страницы |
 | [bitrix-orm](skills/bitrix-orm/SKILL.md) | D7 ORM: tablet'ы, ConditionTree, Objectify, batch/merge/deleteByFilter | Проектирование сущностей, чтение, персистентность |
 | [bitrix-events](skills/bitrix-events/SKILL.md) | Система событий: новая модель (EventManager) + легаси (OnBefore*/OnAfter*) | Интеграция модулей, хуки жизненного цикла |
 | [bitrix-validation](skills/bitrix-validation/SKILL.md) | ValidationService, #[NotEmpty]/#[Email]/#[Length], Request DTO | Валидация ввода для контроллеров/сервисов |

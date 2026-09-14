@@ -3,13 +3,14 @@ name: bitrix-crm-smart
 description: "Use when reading, filtering or updating CRM dynamic (smart process) items from code: search items by fields, replace users in fields, bulk transfer, stage/category filters. Covers Crm Service Container, Factory\\Dynamic, getDataClass, getUpdateOperation, Item, Context. Key terms — entityTypeId, getFactory, disableAllChecks, crm.type.factory, launch."
 metadata:
   type: knowledge
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # Smart processes (`crm` dynamic entities)
 
 Smart processes are CRM dynamic entities: resolve everything through `Bitrix\Crm\Service\Container` (dir
-`crm/lib/Service` — capital S). Related skills: `bitrix-bizproc` (automation), `bitrix-orm` (query syntax).
+`crm/lib/Service` — capital S). Related skills: `bitrix-bizproc` (automation), `bitrix-orm` (query syntax),
+`bitrix-routing` → `rules/crm-pages.md` (smart-process page URLs, kanban/detail detection in OnProlog).
 
 Baseline: **main 23.0+**; facts verified against crm **25.700.0**.
 
