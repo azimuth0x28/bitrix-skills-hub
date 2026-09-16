@@ -129,8 +129,8 @@ cp bitrix-skills-hub/skills/bitrix-orm/SKILL.md .windsurf/rules/bitrix-orm.mdc
 Install as a native Codex plugin (Codex CLI v0.122+):
 
 ```bash
-codex plugin marketplace add azimuth0x28/azimuth0x28-marketplace
-codex plugin add azimuth0x28-marketplace@bitrix-skills
+codex plugin marketplace add azimuth0x28/bitrix-skills-hub
+codex plugin add bitrix-skills@azimuth0x28-marketplace
 ```
 
 The first command registers the marketplace; the second installs the plugin. Codex reads the root `skills/` directory through `.codex-plugin/plugin.json`. Once installed, invoke skills in chat using `@`.
