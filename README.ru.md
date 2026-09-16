@@ -42,7 +42,7 @@ npx skills add azimuth0x28/bitrix-skills-hub --skill bitrix-orm bitrix-component
 
 ```
 /plugin marketplace add azimuth0x28/bitrix-skills-hub
-/plugin install bitrix-skills-hub
+/plugin install bitrix-skills
 ```
 
 Или локально:
@@ -130,7 +130,7 @@ cp bitrix-skills-hub/skills/bitrix-orm/SKILL.md .windsurf/rules/bitrix-orm.mdc
 
 ```bash
 codex plugin marketplace add azimuth0x28/bitrix-skills-hub
-codex plugin add bitrix-skills-hub@bitrix-skills-hub
+codex plugin add bitrix-skills@azimuth0x28-marketplace
 ```
 
 Первая команда регистрирует маркетплейс, вторая устанавливает плагин. Codex читает корневую папку `skills/` через `.codex-plugin/plugin.json`. После установки вызывайте скиллы через `@`.
