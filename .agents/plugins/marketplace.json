@@ -1,0 +1,21 @@
+﻿{
+    "name": "azimuth0x28-marketplace",
+    "interface": {
+        "displayName": "Azimuth0x28 Marketplace"
+    },
+    "plugins": [
+        {
+            "name": "bitrix-skills",
+            "source": {
+                "source": "url",
+                "url": "https://github.com/azimuth0x28/bitrix-skills-hub.git",
+                "ref": "v1.4.0"
+            },
+            "policy": {
+                "installation": "INSTALLED_BY_DEFAULT",
+                "authentication": "ON_USE"
+            },
+            "category": "Developer Tools"
+        }
+    ]
+}
