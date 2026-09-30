@@ -3,7 +3,7 @@ name: bitrix-performance
 description: "Use when optimizing a high-load site beyond basic caching — composite, replication, sharding. Covers Bitrix performance — composite site, query optimization, replication/clustering, sharding, hot/cold sessions. Key terms — composite, NGINX, replication, sharding, query optimization."
 metadata:
   type: knowledge
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # Performance Optimization
@@ -14,7 +14,7 @@ Baseline: **main 23.0+**. Complements skills `bitrix-caching`, `bitrix-sessions`
 
 Technology caching static HTML while loading dynamic blocks via AJAX. Kernel entry points: `\Bitrix\Main\Composite\Engine`, `\Bitrix\Main\Composite\Responder`.
 
-1. Mark dynamic zones: `<div data-dynamic="true">...</div>` or frame mode APIs.
+1. Mark dynamic zones with frame APIs: `$frame = $this->createFrame(); $frame->begin(); ... $frame->end();` — emits `start_frame_cache_*` / `end_frame_cache_*` markers. Dynamic zones can also be declared via `\Bitrix\Main\Composite\StaticArea` / `BufferArea`. (There is no `data-dynamic` HTML attribute.)
 2. Enable in Admin → Settings → Composite Site (Autocomposite or Composite mode).
 3. Configure NGINX to serve composite cache pool directly.
 4. Clear component cache before enabling.
