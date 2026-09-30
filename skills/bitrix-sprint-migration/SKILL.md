@@ -3,7 +3,7 @@ name: bitrix-sprint-migration
 description: Use when creating or applying DB/schema/content migrations, exporting via builders, or debugging state. Covers sprint.migration — Version, HelperManager (Iblock/Hlblock/Option/Agent), builders, CLI migrate.php, configs migrations.*.php, restartable batches. Key terms — sprint.migration, Version, HelperManager, saveIblock, saveHlblock, migrate.php.
 metadata:
   type: knowledge
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # Bitrix sprint.migration
@@ -45,7 +45,7 @@ Official wiki: https://github.com/andreyryabin/sprint.migration/wiki
 | Class prefix | `Version` + timestamp `YmdHis` (name must contain a valid timestamp) |
 | Extend class | `Sprint\Migration\Version` |
 | CLI entry | `php {module}/tools/migrate.php` |
-| Extra configs | `{local\|bitrix}/php_interface/migrations.<name>.php` → dir `migrations.<name>`, table `sprint_migration_<name>` |
+| Extra configs | `{local\|bitrix}/php_interface/migrations.<name>.php` — the `<name>` sets no dir/table itself; set `migration_dir` / `migration_table` explicitly in the file (or generate via the `config:create` CLI, which writes both), else the common `…/php_interface/migrations` dir and `sprint_migration_versions` table are used |
 
 ## Choose a rule file
 

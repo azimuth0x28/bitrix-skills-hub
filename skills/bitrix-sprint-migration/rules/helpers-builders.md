@@ -19,11 +19,11 @@ A helper throws `HelperException` if its Bitrix module is not installed/enabled.
 | `UserGroup()` | Groups | `saveGroup`, `deleteGroup` |
 | `User()` | Users (rare in migrations) | helper methods on user entity |
 | `Agent()` | Agents | `saveAgent`, `deleteAgent` |
-| `Option()` | `COption` / module options | `saveOption`, `deleteOption` |
-| `Event()` | Mail events / templates | `saveEvent`, `saveEventType` |
+| `Option()` | `COption` / module options | `saveOption`, `deleteOptions` |
+| `Event()` | Mail events / templates | `saveEventType`, `saveEventMessage` |
 | `Form()` | Web forms | form export/save helpers |
 | `Forum()` / `Blog()` / `Vote()` / `Subscribe()` | Corresponding modules | module-specific `save*` |
-| `Site()` / `Lang()` / `Culture()` | Sites, languages, cultures | `saveSite`, language helpers |
+| `Site()` / `Lang()` / `Culture()` | Sites, languages, cultures | `setSiteTemplates`, `saveLang` |
 | `UserOptions()` | User / grid options | export/save UI options |
 | `Sql()` | Controlled SQL helpers | use sparingly; prefer ORM |
 | `Medialib()` / `MedialibExchange()` | Media library | collections/items |
@@ -38,7 +38,8 @@ For iblock/HL **domain semantics** beyond migration helpers, also open
 
 - **`save*`** — upsert to match exported/desired state (best default for schema).
 - **`add*IfNotExists`** — create once; will not update drifted fields.
-- **`*IfExists`** — safe get/delete when absence is OK.
+- **`get*IfExists`** — read with a **`HelperException`** thrown when the object is absent (e.g. `getSitesIfExists`, `getLangsIfExists`).
+- **`delete*IfExists`** — safe no-ops when the object is absent (e.g. `deleteAgentIfExists`, `deleteIblockIfExists`); returns `false` without error.
 - Identify entities by **CODE / XML_ID / NAME**, not by numeric ID from another
   environment.
 
