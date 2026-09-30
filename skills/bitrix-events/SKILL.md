@@ -3,7 +3,7 @@ name: bitrix-events
 description: Use when integrating modules, lifecycle hooks, publishing and subscribing to events. Covers Bitrix event system — new model (Bitrix\Main\Event, EventResult, EventManager::addEventHandler, make:event) and old model (OnBefore*/OnAfter* hooks). Key terms — Event, EventManager, EventResult, OnBefore, OnAfter, handler, subscriber, addEventHandler.
 metadata:
   type: knowledge
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # Bitrix Events
@@ -107,7 +107,7 @@ final class NotifyAuthorHandler
 
 ```php
 \Bitrix\Main\EventManager::getInstance()->registerEventHandler(
-    fromModule: 'vendor.blog',
+    fromModuleId: 'vendor.blog',
     eventType: \Vendor\Blog\Public\Event\Post\PostCreatedEvent::class,
     toModuleId: 'vendor.notify',
     toClass: \Vendor\Notify\Internals\Integration\Blog\EventHandler\NotifyAuthorHandler::class,
@@ -123,7 +123,7 @@ Old events have string names: `OnBeforeUserAdd`, `OnAfterUserAdd`, `OnEpilog`, `
 
 - `true`/nothing — continue;
 - `false` + `$APPLICATION->ThrowException(...)` — cancel action;
-- array with `'FIELDS' => [...]` — modify fields (for `OnBefore*`).
+- a returned array (including a `'FIELDS'` key) is ignored: legacy (`ExecuteModuleEventEx`) handlers mutate the passed args **by reference** (`&$arFields`).
 
 Registering handlers accepting the **old** signature:
 
