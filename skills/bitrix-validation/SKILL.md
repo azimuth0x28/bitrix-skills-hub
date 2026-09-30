@@ -3,7 +3,7 @@ name: bitrix-validation
 description: "Use when validating input of controllers, services, CLI commands, and forms. Covers input validation — ValidationService, attributes #[NotEmpty], #[Email], #[Length], #[Range], Request DTO via ValidationParameter autowire, custom validators, errors in ErrorCollection. Key terms — main.validation.service, ValidationParameter, validator, constraint."
 metadata:
   type: knowledge
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # Validation in Bitrix
@@ -125,7 +125,7 @@ final class User extends Controller
 
 ## Request DTO in Controller (`ValidationParameter` autowire)
 
-For a set of related values create a DTO and register it via `getAutoWiredParameters()` with `Bitrix\Main\Validation\Engine\AutoWire\ValidationParameter` (an AutoWire rule, **not** a parameter attribute). It builds the DTO through the given factory and validates it before it reaches the action; on validation errors the action is not called and the controller returns the errors.
+For a set of related values create a DTO and register it via `getAutoWiredParameters()` with `Bitrix\Main\Validation\Engine\AutoWire\ValidationParameter` (**Since main 25.575**; an AutoWire rule, **not** a parameter attribute). It builds the DTO through the given factory and validates it before it reaches the action; on validation errors the action is not called and the controller returns the errors.
 
 ```php
 use Bitrix\Main\Engine\Controller;
