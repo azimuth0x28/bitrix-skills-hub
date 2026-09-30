@@ -3,7 +3,7 @@ name: bitrix-database
 description: Use when ORM is insufficient — bulk ops, raw SQL, migrations, external DBs. Covers direct database work — Application::getConnection(), SqlHelper, SqlExpression, raw SQL via query()/queryExecute(), transactions, DDL, schema migrations. Key terms — Connection, SqlHelper, SqlExpression, transaction, raw SQL.
 metadata:
   type: knowledge
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # Direct Database Work
@@ -123,7 +123,7 @@ $db->queryExecute(
 );
 ```
 
-`add`/`addMulti` silently **discard keys** with non-existent columns and escape values themselves. Convenient for fixtures and migrations.
+`add`/`addMulti` **discard keys** with non-existent columns (a per-column `E_USER_WARNING` is raised) and escape values themselves. Convenient for fixtures and migrations.
 
 > IMPORTANT: the `$binds` parameter in `query/queryScalar/queryExecute` **does not** create prepared statements — these are only placeholders for LOBs in some drivers. Protect against SQL injections via `SqlExpression` or `SqlHelper`.
 
@@ -136,7 +136,7 @@ $h->quote('table.id');            // `table`.`id`
 $h->forSql($userInput);           // escapes quotes
 $h->convertToDb($value);          // 'v' | 'NULL' | '123'
 $h->convertToDbString(null);      // ''
-$h->convertToDbString('long', 5); // 'long '  (truncated)
+$h->convertToDbString('longer_string', 5); // 'longe'  (truncated)
 $h->convertToDbInteger('x');      // 0
 $h->convertToDbInteger(1e10, 4);  // 2147483647 — 4 byte limit
 $h->convertToDbFloat(1.2345, 1);  // '1.2'
@@ -194,7 +194,7 @@ Placeholders:
 - `?#` — identifier (table/column name, wrapped in quotes).
 - `?v` — `VALUES(...)` for INSERT/UPDATE.
 
-For dates in `Date`/`DateTime` use `?` — you'll get `'2025-01-01 00:00:00'`; `?s` will give string representation in site format.
+For dates use `?` — a `Date` yields `'2025-01-01'`, a `DateTime` yields `'2025-01-01 00:00:00'`.
 
 ## Transactions
 
@@ -217,11 +217,13 @@ Keep transactions short. ORM operations inside a transaction are supported — u
 Enable SQL query logging for debugging. Call `startTracker()`, then `startFileLog($path)` to dump queries to a file in development:
 
 ```php
-$tracker = \Bitrix\Main\Application::getConnection()->startTracker();
+$db = \Bitrix\Main\Application::getConnection();
+$tracker = $db->startTracker();
 $tracker->startFileLog($_SERVER['DOCUMENT_ROOT'] . '/mysql_debug.sql');
 // ... queries ...
 $queries = $tracker->getQueries();
-$tracker->stop();
+$tracker->stopFileLog();
+$db->stopTracker();
 ```
 
 Use only in development (same pattern as kernel `$DBDebugToFile` in `start.php`).
@@ -232,4 +234,4 @@ Use only in development (same pattern as kernel `$DBDebugToFile` in `start.php`)
 
 ## after_connect_d7.php
 
-Place post-connect hooks in `/local/php_interface/after_connect_d7.php` (charset, `sql_mode`, DB timezone). Included by `ConnectionPool` after a successful connect — see skill `bitrix-project-structure`.
+Place post-connect hooks in `/local/php_interface/after_connect_d7.php` (charset, `sql_mode`, DB timezone). Included by `ConnectionPool` after a successful connect to the **default** connection — see skill `bitrix-project-structure`.
