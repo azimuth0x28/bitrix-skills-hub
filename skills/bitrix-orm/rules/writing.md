@@ -10,8 +10,8 @@
 | Object state / relations | `EntityObject::save()` / collection `save()` |
 | Many homogeneous rows | `addMulti()` / `updateMulti()` |
 | Mass delete by filter (no per-row lifecycle) | `DeleteByFilterTrait::deleteByFilter()` with a **narrow** filter |
-| Upsert: update on conflict | `MergeTrait::merge()` or `AddMergeTrait` |
-| Upsert: ignore duplicate | `AddInsertIgnoreTrait` / `InsertIgnoreByDefaultTrait` |
+| Upsert: update on conflict | `MergeTrait::merge()` (baseline); `AddMergeTrait` **Since main 25.575** — fallback on older kernels: plain `add` + catch of the duplicate error |
+| Upsert: ignore duplicate (**Since main 25.575**) | `AddInsertIgnoreTrait` / `InsertIgnoreByDefaultTrait` — fallback on older kernels: `add` + catch, or legacy `CPrice` / raw SQL |
 
 Rules:
 
@@ -99,6 +99,8 @@ ArchivedPostTable::deleteByFilter(
 ```
 
 ### Merge / InsertIgnore
+
+`MergeTrait` (`\Bitrix\Main\ORM\Data\Internal\MergeTrait`) exists at baseline (23.0+). The AddStrategy traits `AddMergeTrait`, `AddInsertIgnoreTrait`, `InsertIgnoreByDefaultTrait` are **Since main 25.575**. On older kernels fall back to plain `add` + catch of the duplicate error, or the legacy `CPrice` / raw SQL.
 
 ```php
 use Bitrix\Main\ORM\Data\Internal\MergeTrait;

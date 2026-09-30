@@ -115,4 +115,4 @@ $post = PostTable::getByPrimary($id)->fetchObject();
 $posts = PostTable::query()->where('ACTIVE', 'Y')->fetchCollection();
 ```
 
-Collection methods: `save()`, `delete()`, `fill()` (eager load relations). Use `fetchCollection()` instead of looping `fetchObject()` to avoid N+1.
+Collection methods: `save()`, `remove()` / `removeByPrimary()` (in-memory only — removed objects are never persisted), `fill()` (eager load relations). Use `fetchCollection()` instead of looping `fetchObject()` to avoid N+1.
