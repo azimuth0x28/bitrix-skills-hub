@@ -3,7 +3,7 @@ name: bitrix-seo
 description: "Use when generating sitemaps or robots.txt, or wiring Webmaster/Search Console engines. Covers SEO module — sitemap generation, robots.txt, webmaster/search-engine engines, keywords/tools orientation; links to iblock IPROPERTY / InheritedProperty for page meta. Key terms — Sitemap, Generator, Job, RobotsFile, Webmaster, SearchEngine, IPROPERTY_TEMPLATES."
 metadata:
   type: knowledge
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # SEO Module (`seo`)
@@ -44,7 +44,7 @@ Job::markToRegenerate($sitemapId);
 
 // Or drive steps in-process (admin/stepper style)
 $generator = new Generator($sitemapId);
-$done = $generator->run(); // false while more steps remain
+$done = $generator->run(); // false only on error; progress/completion via $generator->getStep()
 ```
 
 `Job::addJob($sitemapId)` registers a row; `Job::doJobAgent($sitemapId)` is the agent entry. Statuses: `Job::STATUS_REGISTER|PROCESS|FINISH|ERROR`.
