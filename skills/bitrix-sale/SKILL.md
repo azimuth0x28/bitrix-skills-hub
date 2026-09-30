@@ -3,7 +3,7 @@ name: bitrix-sale
 description: "Use when building cart/checkout, managing order lifecycle, or integrating payments and delivery. Covers Sale module — API choice (D7 object model vs ORM vs CSale*), FUSER, Basket, Order create/update, properties, statuses, events, payments, delivery/shipments, discounts, coupons. Key terms — Basket, Order, Fuser, Payment, Shipment, PaySystem\\Manager, DiscountCouponsManager."
 metadata:
   type: knowledge
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # Online Store (`sale`)
@@ -173,7 +173,7 @@ Register via `EventManager` in `init.php`. Key ones: `OnSaleOrderBeforeSaved` (m
 
 - Cart rules are created via legacy `CSaleDiscount::Add()/Update()` (`CONDITIONS`/`ACTIONS` trees, `PRIORITY`+`SORT`, `LAST_DISCOUNT`) — no full D7 replacement; delete via `Internals\DiscountTable::delete()`. Never compute discounts by hand or write final prices.
 - Calculation: standalone basket → `Discount::buildFromBasket()` + `calculate()` + `applyDiscount()`; saved order → `Order::doFinalAction(true)` (never `buildFromBasket()` on an order basket).
-- Coupons: `DiscountCouponsManager::init(MODE_CLIENT|MODE_MANAGER|MODE_ORDER [, userId/orderId])` → `add($code)`. **`add() === true` does not mean the discount applied** — recalc, then `get(true, ['COUPON' => $code], true, true)` and check `STATUS === STATUS_APPLYED`. Coupon rows: `Internals\DiscountCouponTable` (`TYPE_ONE_ORDER`, `TYPE_MULTI_ORDER` + `MAX_USE`).
+- Coupons: `DiscountCouponsManager::init(MODE_CLIENT|MODE_MANAGER|MODE_ORDER, ['userId' => …, 'orderId' => …])` → `add($code)`. **`add() === true` does not mean the discount applied** — recalc, then `get(true, ['COUPON' => $code], true, true)` and check `STATUS === STATUS_APPLYED`. Coupon rows: `Internals\DiscountCouponTable` (`TYPE_ONE_ORDER`, `TYPE_MULTI_ORDER` + `MAX_USE`).
 - Applied result: `$order->getDiscount()->getApplyResult()`; saved orders: `OrderDiscount::loadResultFromDb($orderId)`, rows in `Internals\OrderRulesTable`.
 
 ## Reservation and Deduction
