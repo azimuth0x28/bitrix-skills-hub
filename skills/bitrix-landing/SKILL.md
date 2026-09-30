@@ -3,7 +3,7 @@ name: bitrix-landing
 description: "Use when building landing pages, storefronts, or knowledge bases on Sites24, or when publishing/unpublishing a landing. Covers Landing module — sites/landings, blocks repository, publish/unpublish flow, hooks (Metrika/GA/pixels), customization limits vs classic CMS. Key terms — Landing, Site, Block, BlockRepo, publication, unpublic, hooks, PAGE, STORE."
 metadata:
   type: knowledge
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # Landing Sites (`landing`)
@@ -27,7 +27,7 @@ Block-based sites (Sites24 / Landing) live in module `landing`, not in classic s
 
 `Site` and `Landing` extend `\Bitrix\Landing\Internals\BaseTable` and expose ORM-style `getList` / `add` / `update` / `delete`. Prefer facades over raw internals.
 
-Site types (see `\Bitrix\Landing\Site\Type`): `PAGE`, `STORE`, `SMN`, scopes `KNOWLEDGE`, `GROUP`, `MAINPAGE`, pseudo-scope `crm_forms`.
+Site types (see `\Bitrix\Landing\Site\Type`): `PAGE`, `STORE`, `SMN`, scopes `KNOWLEDGE`, `GROUP`, `VIBE` (legacy alias `MAINPAGE` maps to `VIBE`), pseudo-scope `crm_forms`.
 
 Publication paths (constants on `\Bitrix\Landing\Manager`):
 
@@ -74,10 +74,11 @@ Blocks are HTML fragments from a repository (`BlockRepo::BLOCKS_DIR = 'blocks'`)
 use Bitrix\Landing\Block;
 use Bitrix\Landing\Block\BlockRepo;
 
-$landing = Landing::createInstance($landingId, ['skip_files' => false]);
+$landing = Landing::createInstance($landingId, ['skip_blocks' => false]);
 
-// Add block by repository code (e.g. '01.big_with_text')
-$block = $landing->addBlock('01.big_with_text', [
+// Add block by repository code (e.g. '01.big_with_text');
+// returns the new block id (int|false), not a Block instance
+$blockId = $landing->addBlock('01.big_with_text', [
     // optional content overrides
 ]);
 
