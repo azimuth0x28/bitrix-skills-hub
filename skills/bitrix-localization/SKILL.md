@@ -3,7 +3,7 @@ name: bitrix-localization
 description: Use when adding phrases, overriding kernel/module/component phrases without forking, or building multi-language sites and JS translations. Covers Loc, lang/code/ language files, getMessage placeholders, culture formats, user_lang phrase overrides. Key terms — Loc, getMessage, lang file, user_lang, MESS, Culture, BX.message, loadMessages, i18n.
 metadata:
   type: knowledge
-  version: "1.1.0"
+  version: "1.2.0"
 ---
 
 # Localization
@@ -128,7 +128,7 @@ grep -rn '"PHRASE_CODE"' bitrix/modules/<module>/ local/   # definition + usages
 ```
 
 - Definitions live only in `lang/` trees: `bitrix/modules/<module>/lang/ru/...` (kernel/admin) and `.../install/components/<ns>/<name>/templates/<t>/lang/ru/<file>.php` (component templates).
-- Component JS reads `BX.message('CODE')` — the template publishes its lang file (`BX.message(phpToJsObject(Loc::loadLanguageFile(__FILE__)))` in `template.php`); override the lang file, **never** patch `script.min.js`.
+- Component JS reads `BX.message('CODE')` — the template publishes its lang file (`BX.message(<?= CUtil::PhpToJSObject(Loc::loadLanguageFile(__FILE__)) ?>)` in `template.php`); override the lang file, **never** patch `script.min.js`.
 - The same code may exist in several dialogs of one module (old and new UI) — grep the whole module tree before keying a single file.
 - Rewording only → `user_lang`; layout/logic changes → copy the component template (see skill `bitrix-components`).
 
