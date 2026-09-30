@@ -3,7 +3,7 @@ name: bitrix-settings
 description: Use when configuring kernel behavior. Covers kernel configuration — .settings.php sections (connections, cache, session, crypto, exception_handling, routing, messenger, pull, smtp, loggers, composer), .settings_extra.php, readonly flag. Key terms — .settings.php, settings, readonly, connections, exception_handling.
 metadata:
   type: knowledge
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # Kernel Configuration (.settings.php)
@@ -142,7 +142,7 @@ Keys applied in `Application::initializeExceptionHandler()` (verified):
 ```
 
 - **`log_file` vs `logFile`** (kernel `Smtp\Mailer::getActualConfiguration`): when a per-sender SMTP connection is used (role 1), the kernel reads `log_file` from the section; when the section itself is the default server (role 2), the raw section array is used and the key read is `logFile`. Set the matching key for your case (or both). If omitted, the log goes to `mailer.log` in `DOCUMENT_ROOT`; `debug` is the same key in both cases.
-- The default server (role 2) is used only when both `host` and `login` are filled; `port` defaults to 465, `connection_timeout` to 30 s.
+- The default server (role 2) requires `host` and a `password`; `login` is required only when `password` is set (`SMTPAuth` is derived from `password` alone). `port` defaults to 465, `connection_timeout` to 30 s.
 - `encryption_type`: `'smtps'` (lowercase) — kernel picks SMTPS on port 465, STARTTLS on other ports; `'smtp'` = no encryption. There is no separate `'starttls'` value.
 - Extra key `force_from => true` — rewrite the `From:` header of every message with the section's `from`.
 - Use encryption with a **valid CA-signed certificate** matching the server name — a self-signed certificate fails TLS verification.
