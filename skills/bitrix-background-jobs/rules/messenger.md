@@ -60,9 +60,7 @@ final class SendWelcomeEmailHandler extends AbstractReceiver
 {
     public function __construct(
         private readonly \Vendor\Module\Application\Service\Mailer $mailer,
-    ) {
-        parent::__construct();
-    }
+    ) {} // base AbstractReceiver has no constructor — no parent::__construct() call
 
     protected function process(MessageInterface $message): void
     {
@@ -75,7 +73,7 @@ final class SendWelcomeEmailHandler extends AbstractReceiver
 }
 ```
 
-**Handler MUST be registered in module `services`** — `QueueConfig::createReceiver()` resolves it via `ServiceLocator::get($handler)`:
+**Handler registration in module `services` is optional** — `QueueConfig::createReceiver()` resolves it via `ServiceLocator::get($handler)`, which autowires an unregistered handler FQCN. Register only for explicit constructor arguments or closures:
 
 ```php
 // /local/modules/vendor.module/.settings.php
@@ -170,7 +168,7 @@ Notes:
 - The `default` broker must always exist in global config.
 - Put queues in the module `.settings.php` they belong to; global config only for cross-module queues.
 - Custom broker table: extend `MessengerMessageTable`, register in `brokers`, create table in module installer.
-- Queue `handler` FQCN must also exist under module `services` (see above).
+- Queue `handler` FQCN needs no `services` entry — `ServiceLocator::get()` autowires it; register only for explicit constructor args or closures (see above).
 - `limit` default **50**, `total_processing_limit` default **100**. Consume throws `ArgumentOutOfRangeException` if `limit > total_processing_limit`.
 
 ### 5. Consumer (CLI mode)
@@ -186,7 +184,7 @@ Flags:
 - `-t, --time-limit` — process lifetime in seconds.
 - `--sleep` — pause between iterations when queue is empty (default 1).
 
-Queue names are separate CLI arguments (`messenger:consume q1 q2`), not a comma-separated string. There is **no** `--limit` option in main 26.650.100 (it is commented out in `ConsumeMessagesCommand`); set `limit` / `total_processing_limit` on the queue in `.settings.php`.
+Queue names are separate CLI arguments (`messenger:consume q1 q2`), not a comma-separated string. There is **no** `--limit` option in main 26.400.0 (it is commented out in `ConsumeMessagesCommand`); set `limit` / `total_processing_limit` on the queue in `.settings.php`.
 
 For production with heavy queues, prefer `cli` mode with a supervisor over `web` mode.
 
@@ -203,7 +201,7 @@ For production with heavy queues, prefer `cli` mode with a supervisor over `web`
 - [ ] Agents registered by the module are removed in `DoUninstall`.
 - [ ] For CLI queues, `time-limit`, supervisor restart, and `run_mode=cli` are configured.
 - [ ] Messages contain scalars/DTOs with all data needed at processing time; no `EntityObject` with loaded relations.
-- [ ] Handler is registered in `services` and is idempotent: re-processing the same message is safe.
+- [ ] Handler is idempotent: re-processing the same message is safe. (Register it in `services` only if it needs explicit constructor arguments.)
 - [ ] `total_processing_limit` >= `limit` in queue config.
 - [ ] Errors inside tasks are logged via PSR-3 logger, not silently suppressed.
 - [ ] `addBackgroundJob` uses `JOB_PRIORITY_NORMAL` (100) / `JOB_PRIORITY_LOW` (50), not arbitrary `0`.

@@ -2,7 +2,7 @@
 
 ## `Application::addBackgroundJob()`
 
-Deferred call **after** sending the response (before `fastcgi_finish_request` / in `onAfterEpilog`). Ideal for metrics, welcome emails, or other short tail work.
+Deferred call that runs **after** `fastcgi_finish_request()`, inside `Application::terminate()` → `runBackgroundJobs()`. Ideal for metrics, welcome emails, or other short tail work.
 
 Signature: `addBackgroundJob(callable $job, array $args = [], $priority = Application::JOB_PRIORITY_NORMAL)`.
 

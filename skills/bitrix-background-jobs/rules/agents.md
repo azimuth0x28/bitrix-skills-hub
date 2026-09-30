@@ -39,7 +39,7 @@ final class QueueAgent
 
 - An agent works either on hits or via cron (Admin Panel → Agent Settings).
 - For heavy agents **always** enable cron — otherwise they block user hits.
-- An agent running longer than 10 minutes is blocked by the kernel.
+- The kernel neither blocks nor terminates a long-running agent; `LOCK_TIME = 600` (+30 s loop delta) only delays re-selection, so a later hit may start the same agent again in parallel.
 - Periodic (`period = 'Y'`) vs non-periodic (`period = 'N'`) agents differ in how `next_exec` is calculated.
 - In module's `DoUninstall`: `CAgent::RemoveModuleAgents('vendor.module')`.
 - Do not keep state in statics between calls — the process may change.
