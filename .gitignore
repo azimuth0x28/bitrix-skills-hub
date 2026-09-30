@@ -25,3 +25,6 @@ skills-lock.json
 .omo
 .tmp
 skill-schema.json
+_bmad
+_bmad-output
+.agents/skills
