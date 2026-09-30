@@ -3,7 +3,7 @@ name: bitrix-catalog
 description: "Use when building e-commerce features — product listings, prices, stock, offers — or when deciding which Catalog API to use. Covers Trade Catalog module — products, SKU/offers, prices, inventory, discounts, bundles, export/import, catalog API choice. Key terms — SKU, offer, price type, CCatalogProduct."
 metadata:
   type: knowledge
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # Trade Catalog Module
@@ -109,12 +109,12 @@ use Bitrix\Catalog\GroupTable;
 
 $base = GroupTable::getRow(['filter' => ['=BASE' => 'Y']]);
 
-PriceTable::add([
+\Bitrix\Catalog\Model\Price::add([
     'PRODUCT_ID' => $elementId,
     'CATALOG_GROUP_ID' => (int)$base['ID'],
     'PRICE' => 1990.00,
     'CURRENCY' => 'RUB',
-]);
+]); // PRICE_SCALE is derived from the currency rate
 
 $prices = PriceTable::getList([
     'filter' => ['=PRODUCT_ID' => $elementId],
