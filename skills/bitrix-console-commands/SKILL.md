@@ -3,7 +3,7 @@ name: bitrix-console-commands
 description: "Use when scaffolding code via make:*, running cron or queue workers, or writing custom CLI commands. Covers Bitrix CLI tools — php bitrix/bitrix.php, make:* generators (make:module, make:controller, make:entity, make:request...), kernel commands (orm:annotate, messenger:consume, translate:index), custom Symfony Console commands. Key terms — bitrix.php, make command, Symfony Console, CLI."
 metadata:
   type: knowledge
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # Bitrix Console Commands
@@ -41,7 +41,7 @@ Commands are interactive but support `-n` and mandatory parameters.
 | `make:module vendor.module` | Minimal skeleton: `install/` (index, version, mysql SQL stubs), `default_option.php`, `lang/ru/install/index.php` — **not** `.settings.php` / `lib/` |
 | `make:controller <Name> -m vendor.module --actions=crud` | Controller in `/lib/Infrastructure/Controller/` |
 | `make:controller <Name> -m vendor.module --actions=list,get -C Web` | Controller in `Web` context subspace |
-| `make:tablet my_post vendor.module` | ORM tablet in `/lib/Model/` |
+| `make:tablet my_post vendor.module` | ORM tablet in `/lib/Tablet/` |
 | `make:entity post -m vendor.module --fields=title,description` | Domain entity |
 | `make:service <Name> -m vendor.module` | Application layer service |
 | `make:request <Name> -m vendor.module --fields=title,body` | Request DTO for parameter validation |
@@ -81,7 +81,7 @@ After `make:module`, add `.settings.php`, `/lib/`, routes, etc. yourself or via 
 ## Built-in Utility Commands
 
 - `orm:annotate [-m modules] [--clean]` — generates PHPDoc annotations for ORM entities for IDE autocompletion.
-- `messenger:consume [queues...] [--sleep N] [--time-limit N]` — message queue processing. Queue names are **separate arguments** (`messenger:consume first second`), not a comma-separated string. There is **no** CLI `--limit` in main 26.650.100 (the option is commented out in the command); batch size is the queue config key `limit`. Requires `messenger.run_mode = cli`. Can be run via cron or Supervisor.
+- `messenger:consume [queues...] [--sleep N] [--time-limit N]` — message queue processing. Queue names are **separate arguments** (`messenger:consume first second`), not a comma-separated string. There is **no** CLI `--limit` (verified in main 26.400.0 — the option is commented out in the command); batch size is the queue config key `limit`. Requires `messenger.run_mode = cli`. Can be run via cron or Supervisor.
 - `translate:index [--path=...]` — indexing translations. Requires the **`translate`** module installed and loaded.
 - `update:modules [-m modules]`, `update:versions <file.json>`, `update:languages [-l codes]` — updates.
 
