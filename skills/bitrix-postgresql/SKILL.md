@@ -3,7 +3,7 @@ name: bitrix-postgresql
 description: Use when configuring or migrating to PostgreSQL Enterprise editions. Covers PostgreSQL support in Bitrix — PgsqlConnection, migration from MySQL, compatible code, module support matrix. Key terms — PostgreSQL, PgsqlConnection, migration, compatible-code.
 metadata:
   type: knowledge
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # PostgreSQL in Bitrix
@@ -39,7 +39,7 @@ Baseline: **main 23.0+**. Supported in **Enterprise for PostgreSQL** licenses (B
 
 ## Module Compatibility
 
-Not all kernel and marketplace modules support PostgreSQL. Incompatible modules are disabled during conversion wizard.
+Not all kernel and marketplace modules support PostgreSQL. The conversion wizard **blocks** on the compatibility step until incompatible modules are uninstalled (on a dev build marked via `bitrix/modules/perfmon/dev` it only warns and lets you continue).
 
 Check custom code:
 - MySQL-specific SQL (`LIMIT` syntax differences handled by SqlHelper, but raw SQL may break).
@@ -58,7 +58,7 @@ Check kernel module install folders: each supporting module should have matching
 
 ## Migration Methods
 
-1. **Wizard** — Admin conversion tool (lists disabled modules on step 1).
+1. **Wizard** — Admin conversion tool; step 0 lists incompatible modules and blocks until they are uninstalled (dev mode only warns).
 2. **CLI** — manual server-side migration via Performance Monitor module tools.
 
 ## Writing Compatible Code
