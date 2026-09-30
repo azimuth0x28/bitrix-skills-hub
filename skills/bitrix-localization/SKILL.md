@@ -3,7 +3,7 @@ name: bitrix-localization
 description: Use when adding phrases, overriding kernel/module/component phrases without forking, or building multi-language sites and JS translations. Covers Loc, lang/code/ language files, getMessage placeholders, culture formats, user_lang phrase overrides. Key terms — Loc, getMessage, lang file, user_lang, MESS, Culture, BX.message, loadMessages, i18n.
 metadata:
   type: knowledge
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # Localization
@@ -65,10 +65,10 @@ Loc::loadLanguageFile($_SERVER['DOCUMENT_ROOT'] . '/local/php_interface/custom.p
 ### Module Default Language
 
 ```php
-$lang = Loc::getDefaultLang(LANGUAGE_ID); // fallback from language settings: 'ru' → 'ru', 'ua' → 'ru'
+$lang = Loc::getDefaultLang(LANGUAGE_ID); // fallback from language settings: 'ru' → 'ru', 'ua' → 'en'
 ```
 
-Use this when forming language package names if the project language is broader than those supported in the module (`ua`, `kz` → "fall back" to `ru`).
+Use this when forming language package names if the project language is broader than those supported in the module (`ua`, `de` → `en`; `kz`, `by`, `uz` → `ru`).
 
 ## Lazy Loading and `BX_MESS_LOG`
 
@@ -150,7 +150,7 @@ $culture->getDateFormat();       // 'DD.MM.YYYY'
 $culture->getShortTimeFormat();  // 'HH:MI'
 $culture->getNameFormat();       // '#LAST_NAME# #NAME# #SECOND_NAME#'
 $culture->getNumberDecimals();
-$culture->getNumberDecSeparator();
+$culture->getNumberDecimalSeparator();
 $culture->getNumberThousandsSeparator();
 ```
 
@@ -160,10 +160,10 @@ Formatting:
 use Bitrix\Main\Type\DateTime;
 
 $date = new DateTime();
-echo $date->format($culture->getDateTimeFormat());
+echo $date->format(\Bitrix\Main\Type\Date::convertFormatToPhp($culture->getDateTimeFormat()));
 
 // Via classic helpers:
-echo \FormatDate($culture->getDateFormat(), $date->getTimestamp());
+echo \FormatDate(\Bitrix\Main\Type\Date::convertFormatToPhp($culture->getDateFormat()), $date->getTimestamp());
 echo \CurrencyFormat(1234.5, 'RUB');
 ```
 
@@ -175,10 +175,10 @@ PHP code publishes phrases in `BX.message(...)`:
 
 ```php
 \Bitrix\Main\Page\Asset::getInstance()->addString(
-    '<script>' . \Bitrix\Main\Web\Json::encode([
+    '<script>window.BX.message(' . \Bitrix\Main\Web\Json::encode([
         'VENDOR_POST_SAVE'   => Loc::getMessage('VENDOR_POST_SAVE'),
         'VENDOR_POST_CANCEL' => Loc::getMessage('VENDOR_POST_CANCEL'),
-    ]) . '</script>'
+    ]) . ');</script>'
 );
 ```
 
@@ -190,7 +190,8 @@ return [
     'css'      => 'style.css',
     'rel'      => ['main.core'],
     'lang_additional' => [
-        'VENDOR_POST_SAVE', 'VENDOR_POST_CANCEL',
+        'VENDOR_POST_SAVE'   => Loc::getMessage('VENDOR_POST_SAVE'),
+        'VENDOR_POST_CANCEL' => Loc::getMessage('VENDOR_POST_CANCEL'),
     ],
 ];
 ```
@@ -235,7 +236,7 @@ Indexes language files so that the *Settings → Localization → View Files* pa
 
 - Store phrases in `lang/ru/`, `lang/en/`, `lang/de/` — in the root of the PHP file that uses them.
 - In the module's `install/index.php`, include translations: `Loc::loadMessages(__FILE__)`.
-- Use `Loc::getDefaultLang(LANGUAGE_ID)` to "fall back" to the module's base language (`ru`) if `kz`/`ua` is missing.
+- Use `Loc::getDefaultLang(LANGUAGE_ID)` to "fall back" to the module's base language if a project language is missing (`kz`/`by`/`uz` → `ru`; `ua`/`de` → `en`).
 - Publish language names in the system via the *Interface Languages* form — it cannot be set from `.settings.php`.
 
 ## Antipatterns
