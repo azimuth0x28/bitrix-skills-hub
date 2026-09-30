@@ -26,6 +26,8 @@ If a built-in filter is missing, write a custom `ActionFilter\Base` — do not c
 
 ## `#[ActionAccess]` (module ACL)
 
+**Since main 26.400** (fallback: `ActionFilter\AccessCheck` via `configureActions()` — the class exists earlier).
+
 When the module already has an `access` controller (`Bitrix\Main\Access\AccessibleController` / `BaseAccessController`), check the action with `#[ActionAccess]` instead of a hand-rolled rights filter.
 
 The controller **must** implement `Bitrix\Main\Engine\Contract\AccessCheckControllerInterface` and return the access controller from `getAccessController()`. Otherwise `AccessCheck` throws `SystemException`.
@@ -64,6 +66,8 @@ Custom strategies implement `AccessCheckStrategyInterface::create()` + `check()`
 
 ## PHP 8 Attribute Filters (preferred)
 
+**Since main 25.750** — on older kernels use `configureActions()` with the underlying filter classes (`ActionFilter\HttpMethod`, `ActionFilter\Csrf`, `ActionFilter\Authentication` exist earlier).
+
 ```php
 use Bitrix\Main\Engine\ActionFilter;
 use Bitrix\Main\Engine\ActionFilter\Attribute\Rule\Prefilters;
@@ -75,12 +79,12 @@ use Bitrix\Main\Engine\ActionFilter\Attribute\Rule\DisablePrefilters;
 
 final class Post extends Controller
 {
-    #[HttpMethod([HttpMethod::METHOD_GET])]
+    #[HttpMethod([\Bitrix\Main\Engine\ActionFilter\HttpMethod::METHOD_GET])]
     #[DisablePrefilters([ActionFilter\Csrf::class])]
     public function listAction(): array { /* ... */ }
 
     #[Authentication]
-    #[HttpMethod([HttpMethod::METHOD_POST])]
+    #[HttpMethod([\Bitrix\Main\Engine\ActionFilter\HttpMethod::METHOD_POST])]
     #[Csrf]
     public function createAction(string $title): array { /* ... */ }
 

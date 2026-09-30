@@ -41,7 +41,7 @@ The plain form `vendor:module.<Controller>.<action>` resolves via **`defaultName
 
 Keep `*Action()` as **orchestration only**: accept input → call application service → map `Result` / errors → return data or response helper. No fat business logic, heavy transforms, or hidden side effects in the controller.
 
-Prefer **PHP 8 attributes** for filters. Use `configureActions()` only for compatibility or cases attributes cannot express.
+Prefer **PHP 8 attributes** for filters. Use `configureActions()` only for compatibility or cases attributes cannot express. The `Attribute\Rule\*` attribute layer is **Since main 25.750** — on older kernels fall back to `configureActions()` with the filter classes (`ActionFilter\HttpMethod`, `ActionFilter\Csrf`, `ActionFilter\Authentication` exist earlier).
 
 ```php
 <?php declare(strict_types=1);
@@ -59,7 +59,7 @@ use Vendor\Module\Application\Service\PostService;
 
 final class Post extends Controller
 {
-    #[HttpMethod([HttpMethod::METHOD_GET])]
+    #[HttpMethod([\Bitrix\Main\Engine\ActionFilter\HttpMethod::METHOD_GET])]
     #[DisablePrefilters([ActionFilter\Csrf::class])]
     public function getAction(int $id, PostService $postService): array
     {
@@ -74,7 +74,7 @@ final class Post extends Controller
     }
 
     #[Authentication]
-    #[HttpMethod([HttpMethod::METHOD_POST])]
+    #[HttpMethod([\Bitrix\Main\Engine\ActionFilter\HttpMethod::METHOD_POST])]
     public function createAction(
         string $title,
         string $body,
@@ -105,9 +105,8 @@ Action parameters are collected by the engine in the following order:
 
 1. **Scalar types** (`int`, `string`, `bool`, `float`, `array`) → from `GET`/`POST`/`FILES`.
 2. **Service objects** → from `ServiceLocator` by name/type.
-3. **`HttpRequest`, `Session`, `CurrentUser`** → from context.
-4. **Request DTO** via `Bitrix\Main\Validation\Engine\AutoWire\ValidationParameter` in `getAutoWiredParameters()` → mapping + validation (see `bitrix-validation`). This is an AutoWire `Parameter` subclass, **not** a PHP attribute.
-5. **ORM objects**, if the action accepts `EntityObject` — loaded by `id`.
+3. **`CurrentUser`** → from context. `HttpRequest` → via `$this->getRequest()`; `Session` is not an action parameter.
+4. **Request DTO** via `Bitrix\Main\Validation\Engine\AutoWire\ValidationParameter` in `getAutoWiredParameters()` → mapping + validation (see `bitrix-validation`). This is an AutoWire `Parameter` subclass, **not** a PHP attribute. **Since main 25.575.**
 
 Missing mandatory parameter → automatic error.
 
@@ -137,7 +136,7 @@ Do not hide action logic in `init()`, `__construct()`, `processBeforeAction()`, 
 - `Bitrix\Main\Engine\JsonPayload` — raw JSON body.
 - `Bitrix\Main\UI\PageNavigation` — pagination from request.
 
-Custom DTO autowiring via `getAutoWiredParameters()`.
+Custom DTO autowiring via `getAutoWiredParameters()`. **Since main 25.575.**
 
 ## Front-end Call
 

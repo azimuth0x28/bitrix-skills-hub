@@ -3,12 +3,12 @@ name: bitrix-controllers
 description: "Use when creating a new controller or editing an existing one (adding or changing actions, filters, autowiring, error handling) and when building AJAX/REST/routed endpoints. Engine Controller/JsonController: thin actions, filter attributes, CurrentUser, errors."
 metadata:
   type: knowledge
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # Bitrix Controllers
 
-Baseline: **main 23.0+**. Features newer than baseline are marked **Since**.
+Baseline: **main 23.0+**. Features newer than baseline are marked **Since**. The `Attribute\Rule\*` filter-attribute layer is **Since main 25.750**; `#[ActionAccess]` is **Since main 26.400** — the underlying `ActionFilter\*` classes exist earlier.
 
 Progressive disclosure: open **only** the rule files that match the task. Do not read every `rules/*.md`.
 
