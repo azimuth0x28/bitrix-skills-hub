@@ -3,7 +3,7 @@ name: bitrix-extensions
 description: Use when adding frontend code to modules, components, or admin pages. Covers Bitrix JS/CSS extensions — /local/js/ structure, bundle.config.js, config.php, Extension::load, @bitrix/chef build, CoreJS imports. Key terms — extension, bundle, Extension::load, bundle.config.js, config.php, CoreJS.
 metadata:
   type: knowledge
-  version: "1.1.0"
+  version: "1.1.1"
 ---
 
 # Bitrix JS/CSS Extensions
@@ -12,7 +12,7 @@ Baseline: **main 23.0+**. Extensions organize JavaScript and CSS into bundles lo
 
 ## Location
 
-- System: `/bitrix/js/<module>/<extension>/`
+- Kernel: `/bitrix/js/<module>/<extension>/`
 - User: `/local/js/<module>/<extension>/`
 - Module package (copied on install): `/local/modules/<module>/install/js/<module>/<extension>/` → deployed under `/bitrix/js/...` (or keep runtime sources in `/local/js/`)
 
