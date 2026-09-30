@@ -3,7 +3,7 @@ name: bitrix-database
 description: Use when ORM is insufficient — bulk ops, raw SQL, migrations, external DBs. Covers direct database work — Application::getConnection(), SqlHelper, SqlExpression, raw SQL via query()/queryExecute(), transactions, DDL, schema migrations. Key terms — Connection, SqlHelper, SqlExpression, transaction, raw SQL.
 metadata:
   type: knowledge
-  version: "1.1.0"
+  version: "1.2.0"
 ---
 
 # Direct Database Work
@@ -235,3 +235,15 @@ Use only in development (same pattern as kernel `$DBDebugToFile` in `start.php`)
 ## after_connect_d7.php
 
 Place post-connect hooks in `/local/php_interface/after_connect_d7.php` (charset, `sql_mode`, DB timezone). Included by `ConnectionPool` after a successful connect to the **default** connection — see skill `bitrix-project-structure`.
+
+## Checklist
+
+- [ ] No raw user input is interpolated into SQL strings — values go through `SqlHelper` escaping or `SqlExpression` placeholders.
+- [ ] `$binds` in `query`/`queryScalar`/`queryExecute` is never treated as prepared statements — SQL injection is protected via `SqlExpression`/`SqlHelper`.
+- [ ] `add`/`addMulti` unknown-column keys are caught by their `E_USER_WARNING`, not assumed to apply silently.
+- [ ] `Date` through `?` yields a date without time — `DateTime` is used whenever the time part matters; `?s` is plain escaping, not a site-format converter.
+- [ ] `convertToDbString($v, $len)` truncation is deliberate — the length limit is set consciously.
+- [ ] Transactions are kept short; no long-lived or interactive transactions.
+- [ ] SqlTracker logging runs in development only (kernel `$DBDebugToFile` pattern) and is off in production (`stopFileLog()` + `Connection::stopTracker()`).
+- [ ] `after_connect_d7.php` is relied on only for the **default** connection — additional connections get their own `include_after_connected`.
+- [ ] DDL/migrations live in `install/index.php` / `updater.php` — never executed ad-hoc on a hit.
