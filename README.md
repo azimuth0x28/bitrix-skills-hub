@@ -289,7 +289,7 @@ skills/<name>/
 └── references/   # template assets (some workflow skills): copied verbatim into the target project
 ```
 
-Fat skills use progressive disclosure: the agent opens `SKILL.md` first, then only the `rules/` files it needs. Skills are self-sufficient and anchored to the core: verified against **main 26.150.0**, baseline patterns **main 23.0+**.
+Fat skills use progressive disclosure: the agent opens `SKILL.md` first, then only the `rules/` files it needs. Skills are self-sufficient and anchored to the core: verified against **main 26.400.0**, baseline patterns **main 23.0+**.
 
 ## Versioning
 

@@ -144,3 +144,4 @@ Gate: `--fail-on high` exits 0. Grade C (medium findings only) — attach a writ
 
 - Any agent that reads files works here; verification tools are grep/read against Bitrix kernel source when available.
 - `.gitignore` covers agent/eval working folders (`.cursor`, `.tmp` eval snapshots, tier dirs). Keep run artifacts out of git.
+- `npx skills add` installs only the `skills/**` folders — it does **not** ship this repo-root `AGENTS.md`. A consumer must supply their own `AGENTS.md` (or run `bitrix-rules-create-global`) so the canon-checklist references inside skills resolve.
