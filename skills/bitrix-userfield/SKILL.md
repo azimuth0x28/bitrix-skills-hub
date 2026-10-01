@@ -2,7 +2,7 @@
 name: bitrix-userfield
 metadata:
   type: knowledge
-  version: "1.0.0"
+  version: "1.1.0"
 description: >-
   Use when adding a custom user field (UF) type for any binding — CRM, smart
   processes, iblock sections, HL-blocks, users — or the contract-to-handoff

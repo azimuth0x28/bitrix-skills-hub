@@ -1,10 +1,8 @@
 # End-to-End Workflow
-Ordered process for creating a custom UF type for the kernel-confirmed bindings — CRM entities,
-smart processes, iblock sections, HL-blocks, users — any portal, greenfield or long-lived. Iblock
-element characteristics are iblock properties, a different API (`entity-bindings.md`). Prints the
-order and the verifiable exits; every API detail lives in the knowledge rules (`type-class.md`,
-`entity-bindings.md`, `render-component.md`, `js-extension.md`, `crm-filter.md`,
-`bizproc-output.md`) — open as referenced; data safety and verification: `verification-recovery.md`.
+Ordered process for a custom UF type on the kernel-confirmed bindings (CRM entities, smart
+processes, iblock sections, HL-blocks, users). Prints the order and the verifiable exits; API
+details live in the knowledge rules (`type-class.md`, `render-component.md`, `js-extension.md`,
+`crm-filter.md`, `bizproc-output.md`); data safety and verification: `verification-recovery.md`.
 
 ## Field contract and identifiers
 
@@ -18,12 +16,11 @@ identifiers, each in its own slot:
 | `ENTITY_ID` | Entity binding | Portal | At contract time |
 | Numeric row ID | Field row (`b_user_field.ID`) | Portal | **After** the field is created |
 
-The `ENTITY_ID` shape differs per binding — take it from the binding matrix (`entity-bindings.md`);
-smart-process ids derive via
-`Container::getInstance()->getFactory($entityTypeId)->getUserFieldEntityId()` — the type's DB id
-differs from its `entityTypeId`. Record semantics, multiplicity, wanted integrations, and impact on
-existing data. **Exit:** the contract names all four identifiers distinctly; nothing is created
-before it; existing-field changes need the consent step of `verification-recovery.md`.
+The `ENTITY_ID` shape differs per binding — take it from the matrix (`entity-bindings.md`);
+smart-process ids derive via `Container::getInstance()->getFactory($entityTypeId)
+->getUserFieldEntityId()`. Record semantics, multiplicity, integrations, data impact. **Exit:**
+all four identifiers named distinctly; nothing created before it; existing-field changes need the
+consent step of `verification-recovery.md`.
 
 ## Native-type decision, branches, and environment discovery
 
@@ -51,13 +48,11 @@ filter surface; a custom one starts inert there). Both branches fix the **enviro
 
 **Mode B (defaults).** Recorded defaults are the exit. Scaffold a minimal custom module at
 `local/modules/<vendor>.<module>/` per the module canon (`make:module` when available, manual
-skeleton), choose vendor and namespace explicitly — the portal's name or a declared project vendor —
-place the class at `<module>/lib/UserField/Type/` (install skeleton below). No-module fallback:
-`local/php_interface/init.php` (runtime-only, see `Type class and registration`).
+skeleton), choose vendor and namespace explicitly, place the class at
+`<module>/lib/UserField/Type/`. No-module fallback: `local/php_interface/init.php` (runtime-only).
 
-An unverifiable fact is marked "verify in your project" and blocks the next stage. **Exit:** the
-mode is recorded with evidence — A: discovered conventions quoted from the portal; B: the chosen
-module path, vendor, and namespace as defaults.
+An unverifiable fact is marked "verify in your project" and blocks the next stage. **Exit:** mode
+recorded with evidence — A: conventions quoted from the portal; B: chosen module path, vendor, namespace.
 
 ## Type class and registration
 
@@ -132,4 +127,9 @@ the failing check and evidence in the handoff, never paper over it.
 | Settings and persistent state | `bitrix-settings`, `bitrix-storage` |
 | Service wiring / DI | `bitrix-service-locator` |
 
-Boundary: custom iblock element characteristics are **properties**, not UF — `bitrix-iblocks` (`entity-bindings.md`).
+## Checklist
+
+- [ ] Contract names all four identifiers distinctly; nothing created before it; mode recorded with evidence.
+- [ ] Every stage exit confirmed; a failing exit stops the run and lands in the handoff, never papered over.
+- [ ] Existing-field changes went through the consent/snapshot step; a save failure is fixed in `prepareSettings`, never by deleting the row.
+- [ ] Iblock element characteristics routed to `bitrix-iblocks` properties, never to the UF type class.

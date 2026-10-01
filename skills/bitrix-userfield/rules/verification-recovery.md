@@ -67,3 +67,11 @@ Notes: <verify-in-your-kernel / verify-in-your-project markers>
 
 The handoff is what the reviewer and the next session consume; a run may finish with pending
 portal-manual items but never with a skipped static item it could have run.
+
+## Checklist
+
+- [ ] Static checks run and listed; portal-manual checks pending, never claimed done.
+- [ ] Snapshot taken before any existing-field change; stored values never deleted to mask a problem.
+- [ ] Cleanup (if any) covered only created artifacts, with consent; no generic rollback that could drop populated columns, tables, or rows.
+- [ ] Original error causes propagated with context; no real message replaced by a generic one.
+- [ ] Kernel files untouched; the handoff block written with evidence for every stage.

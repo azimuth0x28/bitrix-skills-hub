@@ -106,3 +106,10 @@ Other module-level bindings — tasks (`TASKS_TASK`), calendar events (`CALENDAR
 and similar — work through the same mechanism: same UTS storage, same field editor, surfaces hosted
 by their own pages. Only the `ENTITY_ID` and the hosting page differ; no dedicated rule. Binding
 API and rights details follow the sibling canon when available: `bitrix-iblocks`, `bitrix-highloadblock`.
+
+## Checklist
+
+- [ ] `ENTITY_ID` in the kernel-confirmed set or verified in-kernel; smart-process id = type DB id, not its `entityTypeId`.
+- [ ] Storage per provider: UTS columns on `b_uts_<entity>` / HL `UF_*` on the HL table — `b_uts_hlblock_*` unused.
+- [ ] Iblock element work routed to `bitrix-iblocks` properties, not the UF type class; element-UF only with a demonstrated consumer.
+- [ ] The three rights (metadata / record value / referenced object) kept separate; names resolved only under the read right.
