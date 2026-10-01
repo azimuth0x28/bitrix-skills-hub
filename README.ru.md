@@ -218,6 +218,7 @@ cp -r bitrix-skills-hub/skills/bitrix-orm ваш-проект/.agents/skills/
 | --- | --- | --- |
 | [bitrix-iblocks](skills/bitrix-iblocks/SKILL.md) | Типы/элементы/секции инфоблоков, ORM compileEntity, свойства, SEO | Работа с инфоблоками, структурированные данные |
 | [bitrix-highloadblock](skills/bitrix-highloadblock/SKILL.md) | HighloadBlockTable, compileEntity, DataManager CRUD, UF, ORM-события | Кастомные сущности, динамические модели данных |
+| [bitrix-userfield](skills/bitrix-userfield/SKILL.md) | Кастомные типы пользовательских полей end to end: класс типа, регистрация, рендер, JS-пикер, CRM-фильтр, вывод в Бизнес-процессах | Добавление собственных типов пользовательских полей для любых привязок |
 | [bitrix-components](skills/bitrix-components/SKILL.md) | class.php, шаблоны, кеш, SEF, Controllerable AJAX | Создание или редактирование компонентов |
 | [bitrix-extensions](skills/bitrix-extensions/SKILL.md) | /local/js/, bundle.config.js, Extension::load, @bitrix/chef | Добавление фронтенд-кода в модули |
 | [bitrix-chef](skills/bitrix-chef/SKILL.md) | CLI @bitrix/chef: create/init/build/test/lint/diag, bundle.config(.ts\|.js), chef.config.ts, миграция с @bitrix/cli | Сборка JS-расширений, миграция с deprecated @bitrix/cli |

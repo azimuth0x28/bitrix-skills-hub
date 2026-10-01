@@ -218,6 +218,7 @@ Skills covering D7 core topics and adjacent areas. Each one is a self-contained 
 | --- | --- | --- |
 | [bitrix-iblocks](skills/bitrix-iblocks/SKILL.md) | Iblock types/elements/sections, ORM compileEntity, properties, SEO | Content iblock work, structured data |
 | [bitrix-highloadblock](skills/bitrix-highloadblock/SKILL.md) | HighloadBlockTable, compileEntity, DataManager CRUD, UF, ORM events | Custom entities, dynamic data models |
+| [bitrix-userfield](skills/bitrix-userfield/SKILL.md) | Custom UF types end to end: type class, registration, rendering, JS picker, CRM filter, BizProc output | Adding custom user-field types for any binding |
 | [bitrix-components](skills/bitrix-components/SKILL.md) | class.php, templates, cache, SEF, Controllerable AJAX | Building or editing components |
 | [bitrix-extensions](skills/bitrix-extensions/SKILL.md) | /local/js/ structure, bundle.config.js, Extension::load, @bitrix/chef | Adding frontend code to modules |
 | [bitrix-chef](skills/bitrix-chef/SKILL.md) | @bitrix/chef CLI: create/init/build/test/lint/diag, bundle.config(.ts\|.js), chef.config.ts, @bitrix/cli migration | Building Bitrix JS extensions, migrating from deprecated @bitrix/cli |

@@ -39,7 +39,7 @@ Skills are the canonical source of Bitrix domain rules — how the task is done 
 | Domain | Skills | Load when |
 |---|---|---|
 | Placement & kernel config | `bitrix-project-structure`, `bitrix-settings` | Placing code, `.settings.php`/`.settings_extra.php`, `Loader` & composer autoload wiring |
-| Data | `bitrix-orm`, `bitrix-database`, `bitrix-sprint-migration`, `bitrix-highloadblock`, `bitrix-iblocks` | ORM entities (`Table`/`DataManager`), `GetList` queries, raw SQL, migrations, Highloadblocks, iblock fields |
+| Data | `bitrix-orm`, `bitrix-database`, `bitrix-sprint-migration`, `bitrix-highloadblock`, `bitrix-iblocks`, `bitrix-userfield` | ORM entities (`Table`/`DataManager`), `GetList` queries, raw SQL, migrations, Highloadblocks, iblock fields, custom user-field types |
 | HTTP layer | `bitrix-controllers`, `bitrix-routing`, `bitrix-request-response`, `bitrix-validation`, `bitrix-rest` | AJAX/REST endpoints, `web.php` route registration, input validation, webhooks |
 | Services & runtime | `bitrix-service-locator`, `bitrix-result-and-errors`, `bitrix-events`, `bitrix-background-jobs`, `bitrix-datetime`, `bitrix-modules`, `bitrix-console-commands` | DI, result & error wrapping, events, agents/queues, datetime & timezone, module lifecycle, CLI |
 | Performance & state | `bitrix-caching`, `bitrix-storage`, `bitrix-performance`, `bitrix-postgresql` | Cache tags/TTL/layers, options state, high-load tuning, Postgres indexing & query plans |
