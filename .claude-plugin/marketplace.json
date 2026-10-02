@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
   "name": "azimuth0x28-marketplace",
-  "description": "AI coding assistant skills for developing with 1C-Bitrix / Bitrix Framework (D7) — 42 kernel-verified skills for agents.",
+  "description": "AI coding assistant skills for developing with 1C-Bitrix / Bitrix Framework (D7) — 51 kernel-verified skills for agents.",
   "owner": {
     "name": "azimuth0x28",
     "url": "https://github.com/azimuth0x28"
@@ -9,7 +9,7 @@
   "plugins": [
     {
       "name": "bitrix-skills",
-      "version": "1.4.1",
+      "version": "1.5.0",
       "source": {
         "source": "github",
         "repo": "azimuth0x28/bitrix-skills-hub"

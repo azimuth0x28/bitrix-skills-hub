@@ -1,7 +1,7 @@
 {
   "name": "bitrix-skills",
-  "version": "1.4.1",
-  "description": "AI coding assistant skills for developing with 1C-Bitrix / Bitrix Framework (D7) — 42 kernel-verified skills for agents.",
+  "version": "1.5.0",
+  "description": "AI coding assistant skills for developing with 1C-Bitrix / Bitrix Framework (D7) — 51 kernel-verified skills for agents.",
   "author": {
     "name": "azimuth0x28",
     "url": "https://github.com/azimuth0x28"
@@ -13,7 +13,7 @@
   "interface": {
     "displayName": "Bitrix Skills Hub",
     "shortDescription": "Bitrix D7 workflows for AI coding agents: ORM, iblocks, commerce, sessions, security, migrations.",
-    "longDescription": "Bitrix Skills Hub bundles 42 production skills for 1C-Bitrix / Bitrix Framework (D7), covering the kernel, content and UI, commerce, integrations, and skill lifecycle tooling.",
+    "longDescription": "Bitrix Skills Hub bundles 51 production skills for 1C-Bitrix / Bitrix Framework (D7), covering the kernel, content and UI, commerce, integrations, and skill lifecycle tooling.",
     "developerName": "azimuth0x28",
     "category": "Developer Tools",
     "capabilities": [
