@@ -57,7 +57,7 @@ if (preg_match('#^/page/#', $path)) {
 }
 ```
 
-- Reference implementation: `local/modules/acme.crmstagehints/lib/Integration/Main/PageDetector.php`.
+- Reference implementation: [`references/crm-page-detector.md`](../references/crm-page-detector.md) — a trimmed excerpt of a detector that matches both path candidates against both CRM roots.
 - **Never pin DOM selectors or URL shapes from source reading alone** — kernel-rendered markup and
   templates vary by version; fix them with a DOM probe on the live portal.
 - **Never register `/crm/...` in `/local/routes/web.php` or `urlrewrite.php`** — the `crm` module routes

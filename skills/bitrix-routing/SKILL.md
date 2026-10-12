@@ -3,7 +3,7 @@ name: bitrix-routing
 description: "Use when adding public or API URLs to a project, migrating legacy urlrewrite rules, or detecting CRM pages (kanban, detail, smart-process URLs). Covers routing setup and wiring, web.php routes/handlers, groups, URL generation, PublicPageController, site-guard, urlrewrite migration, CRM Router custom sections. Key terms — RoutingConfigurator, /local/routes, getCustomRoots, matchPage, /page/."
 metadata:
   type: knowledge
-  version: "1.1.1"
+  version: "1.2.0"
 ---
 
 # Routing in Bitrix
