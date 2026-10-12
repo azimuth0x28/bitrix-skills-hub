@@ -57,7 +57,7 @@ if (preg_match('#^/page/#', $path)) {
 }
 ```
 
-- Reference implementation: `local/modules/firstbit.crmstagehints/lib/Integration/Main/PageDetector.php`.
+- Reference implementation: `local/modules/acme.crmstagehints/lib/Integration/Main/PageDetector.php`.
 - **Never pin DOM selectors or URL shapes from source reading alone** — kernel-rendered markup and
   templates vary by version; fix them with a DOM probe on the live portal.
 - **Never register `/crm/...` in `/local/routes/web.php` or `urlrewrite.php`** — the `crm` module routes
