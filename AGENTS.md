@@ -17,7 +17,7 @@ skills/<name>/rules/*.md      # progressive-disclosure layers
 skills/<name>/references/     # template assets (workflow skills): copied verbatim into the target project
 skills/bitrix-knowledge-skill-creator/  # meta-skill: authoring spec for knowledge skills
 skills/bitrix-workflow-skill-creator/  # meta-skill: authoring spec for workflow/process skills
-skills/bitrix-skill-eval/     # meta-skill: Q1–Q10 rubric, blind-test protocol, hard gates
+skills/bitrix-skill-eval/     # meta-skill: Q1–Q11 rubric, blind-test protocol, hard gates
 skills/skill-validator/       # meta-skill: format validation + prism security scanning
 agents/bitrix-coder.md        # Bitrix canons for skill consumers (D7, DI, /local/, security)
 README.md / README.ru.md      # project docs + skill catalog
@@ -35,7 +35,7 @@ plugin.json                   # Antigravity plugin manifest (release version)
 | `agents/bitrix-coder.md` | How agents write Bitrix code on consumer projects (D7, DI, `/local/`, security, version policy) |
 | `skills/bitrix-knowledge-skill-creator/` | How to author knowledge skills (correct/incorrect usage of a dev aspect, best practices): structure, content layers, kernel verification |
 | `skills/bitrix-workflow-skill-creator/` | How to author workflow skills: decision tables, project facts, procedures, tool versions |
-| `skills/bitrix-skill-eval/` | How skill drafts are graded: blind test, Q1–Q10 rubric, hard gates |
+| `skills/bitrix-skill-eval/` | How skill drafts are graded: blind test, Q1–Q11 rubric, hard gates |
 | `skills/skill-validator/` | How to run mechanical checks (quick_validate.py, prism scan) before a PR |
 
 Skills reference the Bitrix canons (DI, `/local/`, security, version policy) from project rulebooks; neither skills nor this file duplicate them.
@@ -52,10 +52,10 @@ First classify the draft: a **knowledge skill** (teaches correct and incorrect u
 | 2. Domain surface discovery | `bitrix-knowledge-skill-creator` §9.0 | Enumerated classes, services, settings, events |
 | 3. Draft (router first, then `rules/*.md` one by one) | `bitrix-knowledge-skill-creator` §2–§8 | Partial delivery stays useful |
 | 4. Kernel verification (targeted greps, sibling cross-check) | `bitrix-knowledge-skill-creator` §9 | Every identifier confirmed |
-| 5. Evaluation (blind test, Q1–Q10, hard gates) | `bitrix-skill-eval` | Grades with `file:line` evidence |
+| 5. Evaluation (blind test, Q1–Q11, hard gates) | `bitrix-skill-eval` | Grades with `file:line` evidence |
 | 6. Acceptance + catalog registration | This file | PR green in CI (smoke + security), with catalog rows |
 
-**Acceptance bar** (from `bitrix-skill-eval` §4): mean ≥8.5 across Q1–Q10, zero invented identifiers (kernel ids for knowledge skills; paths, config keys, commands, tool versions for workflow skills), coverage ≥85% of the scenario-scoped domain surface, within the time cap. Below any of these — iterate (max three runs), then report the trend.
+**Acceptance bar** (from `bitrix-skill-eval` §4): mean ≥8.5 across Q1–Q11, zero invented identifiers (kernel ids for knowledge skills; paths, config keys, commands, tool versions for workflow skills), coverage ≥85% of the scenario-scoped domain surface, within the time cap. Below any of these — iterate (max three runs), then report the trend.
 
 Editing an existing skill: follow `bitrix-knowledge-skill-creator` (§1, §4, §8) and re-run kernel verification on every changed identifier.
 
@@ -93,9 +93,9 @@ Editing an existing skill: follow `bitrix-knowledge-skill-creator` (§1, §4, §
 
 ## Automated skill checks (new skills, before PR)
 
-A new skill passes two automated checks before a PR is opened; the procedure is packaged as the `skill-validator` skill. Both are local, read-only, and run against the final skill folder. The same gates run in CI on every PR (`.github/workflows/validate.yml`): the catalog smoke job and the prism security scan (`fail-on high`, action pinned by SHA).
+A new skill passes three automated checks before a PR is opened; the procedure is packaged as the `skill-validator` skill. All are local, read-only, and run against the final skill folder. The same gates run in CI on every PR (`.github/workflows/validate.yml`): the catalog smoke job, the prism security scan (`fail-on high`, action pinned by SHA), and the vendor-neutrality gate.
 
-Run the line-budget ratchet locally too: `bash .github/scripts/check-budgets.sh` (exit 0 = pass; a stale baseline entry fails). The version gate (`python3 .github/scripts/check-versions.py <base-sha>`) runs in CI on every PR against the base SHA — see "Skill versioning".
+Run the line-budget ratchet locally too: `bash .github/scripts/check-budgets.sh` (exit 0 = pass; a stale baseline entry fails). Run the vendor gate locally too: `bash skills/skill-validator/scripts/check-vendors.sh` (exit 0 = pass). The version gate (`python3 .github/scripts/check-versions.py <base-sha>`) runs in CI on every PR against the base SHA — see "Skill versioning".
 
 ### Format: skill-creator scripts
 
@@ -118,9 +118,21 @@ uvx --from prism-scanner prism scan skills/<name>/ --fail-on high # gate: exit c
 
 Gate: `--fail-on high` exits 0. Grade C (medium findings only) — attach a written justification to the PR; grade D or F — blocker. Known false positives: suppress via `.prismignore` with rule ID + justification, never by ignoring the exit code.
 
+### Vendor neutrality
+
+Vendor-position identifiers in skill texts use the neutral placeholder `Acme` (lowercase `acme` in ids, CamelCase `Acme` in namespaces) or the generic `vendor`. Only when the user assigned a vendor during authoring is another vendor used — then consistently, declared once as `metadata.vendor: "<name>"` in the skill's frontmatter. Any other concrete vendor in a vendor slot is a violation.
+
+```bash
+bash skills/skill-validator/scripts/check-vendors.sh   # exit code 0 = pass; allowlist, default-deny
+```
+
+Slots checked: module path prefix (`local/modules/<vendor>.`, `bitrix/modules/<vendor>.`), AJAX action prefix (`runAction('<vendor>:`, `action=<vendor>:`), and `includeModule('<vendor>.<module>')`. Namespace roots (`Bitrix\`, `Main\`) are platform namespaces, not slots. The canonical non-allowed vendor for negative tests and docs is `Contoso` — never a real brand. Details in the `skill-validator` skill.
+
 ## Before submitting a PR
 
-- [ ] Automated checks pass on the skill folder: `quick_validate.py` exits 0; `prism scan --fail-on high` exits 0 (see "Automated skill checks").
+- [ ] Automated checks pass on the skill folder: `quick_validate.py` exits 0; `prism scan --fail-on high` exits 0; `bash skills/skill-validator/scripts/check-vendors.sh` exits 0 (see "Automated skill checks").
+
+- [ ] Vendor neutrality: vendor slots hold only `Acme`/neutral placeholders, or the user-assigned vendor declared once in `metadata.vendor`.
 
 - [ ] `name` frontmatter = folder name; `metadata: {type: knowledge|workflow}` present; description situation-first per the creator spec (soft ≤350 / hard ≤400 chars) and live-prompt tested.
 - [ ] Line counts within budget (monolith 100–310; router ≤60; each `rules/*.md` 45–135). Cut, never pad.
@@ -135,6 +147,7 @@ Gate: `--fail-on high` exits 0. Grade C (medium findings only) — attach a writ
 ## Hard prohibitions
 
 - Never invent skill names, class identifiers, service ids, or version numbers.
+- Never put a concrete real vendor into a skill text — vendor slots hold the neutral placeholder `Acme`/`vendor`, or the vendor the user assigned, declared once in `metadata.vendor`.
 - Never let an eval draft overwrite a reference skill.
 - Never grade a skill from its author's self-assessment — grades need `file:line` evidence.
 - Never duplicate AGENTS.md canons inside skills or this file.

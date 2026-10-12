@@ -3,7 +3,7 @@ name: bitrix-workflow-skill-creator
 description: Use when creating, editing, or reviewing a workflow skill — a process, convention, or environment skill (code style, project rules, DevOps setup, review rules). Covers decision tables, verifiable procedures, project-fact verification, tool-version anchoring. Key terms — workflow skill, decision table, runbook, project facts, tool versions.
 metadata:
   type: workflow
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # Workflow Skill Authoring Conventions
@@ -78,6 +78,8 @@ Final `## Checklist` with `- [ ]` items that are verifiable completion criteria,
 ## 7. Cross-linking and style
 
 `bitrix-knowledge-skill-creator` §7–§8 apply unchanged: exact sibling names in backticks, canons referenced never duplicated, English imperative, tables for choices, fenced code with language tags. The optional mixed XML + Markdown body style of §8 applies to workflow skills on the same terms — procedures sit naturally in `<workflow>`/`<stage>` blocks, prohibitions in `<critical_rules>`; decision tables stay Markdown tables.
+
+- **Vendor neutrality.** Vendor-position identifiers — module ids `local/modules/<vendor>.<module>`, namespaces `<Vendor>\...`, extension/component ids `<vendor>.<module>.<name>`, AJAX action prefixes `<vendor>:` — use the neutral placeholder `Acme` (lowercase `acme` in ids, CamelCase `Acme` in namespaces) or the generic `vendor`. Never name a concrete real vendor. Only when the user explicitly assigns a vendor during authoring, use that vendor consistently and declare it in the frontmatter as `metadata.vendor: "<name>"`; with no such assignment the skill stays neutral.
 
 ## 8. Project verification (workflow-specific step)
 

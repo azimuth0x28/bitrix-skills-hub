@@ -270,7 +270,7 @@ Skills covering D7 core topics and adjacent areas. Each one is a self-contained 
 | --- | --- | --- |
 | [bitrix-knowledge-skill-creator](skills/bitrix-knowledge-skill-creator/SKILL.md) | Authoring conventions: morphology, frontmatter, baseline/Since, density | Creating knowledge skills (how to work correctly/incorrectly with kernel classes, ORM, module APIs; best practices) |
 | [bitrix-workflow-skill-creator](skills/bitrix-workflow-skill-creator/SKILL.md) | Workflow-skill conventions: decision tables, project facts, procedures, tool versions | Creating workflow/process skills (code style, devops setup, review rules) |
-| [bitrix-skill-eval](skills/bitrix-skill-eval/SKILL.md) | Blind test protocol, Q1-Q10 rubric, hard gates, density metric | Grading skill drafts |
+| [bitrix-skill-eval](skills/bitrix-skill-eval/SKILL.md) | Blind test protocol, Q1-Q11 rubric, hard gates, density metric | Grading skill drafts |
 | [skill-validator](skills/skill-validator/SKILL.md) | quick_validate.py (format), prism-scanner (security), grade gates | Pre-PR mechanical validation |
 
 ## Agent Personas
@@ -306,7 +306,7 @@ CI enforces the bump on every PR (`check-versions.py`, `check-budgets.sh`); `plu
 
 ## Adding your own
 
-Author a new skill through `bitrix-knowledge-skill-creator` (knowledge skills: correct/incorrect usage and best practices — the default) or `bitrix-workflow-skill-creator` (workflow skills: processes, conventions, environment setup). Run the finished draft through `skill-validator` (format + security) and `bitrix-skill-eval`: the blind test and the Q1-Q10 rubric filter out weak skills before they enter the catalog.
+Author a new skill through `bitrix-knowledge-skill-creator` (knowledge skills: correct/incorrect usage and best practices — the default) or `bitrix-workflow-skill-creator` (workflow skills: processes, conventions, environment setup). Run the finished draft through `skill-validator` (format + security) and `bitrix-skill-eval`: the blind test and the Q1-Q11 rubric filter out weak skills before they enter the catalog.
 
 ## Links
 

@@ -28,7 +28,7 @@ jobs:
         # Exit 0 expected — every README catalog entry matches a skills/ folder and SKILL.md exists.
 
   consistency:
-    name: Version & budget gates
+    name: Version, budget & vendor gates
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     permissions:
@@ -50,6 +50,9 @@ jobs:
 
       - name: Line budget gate (ratchet)
         run: bash .github/scripts/check-budgets.sh
+
+      - name: Vendor neutrality gate
+        run: bash skills/skill-validator/scripts/check-vendors.sh
 
   security:
     name: Skill security scan (prism)

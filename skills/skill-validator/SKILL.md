@@ -1,14 +1,14 @@
 ---
 name: skill-validator
-description: Use when a skill is ready for a PR, when asked to validate, or after mass edits. Covers mechanical validation of a skill folder — format check via vendored quick_validate.py, security scan via prism-scanner, grade A–F gates, .prismignore, batch validation. Key terms — quick_validate.py, vendored, offline, prism-scanner, --fail-on, .prismignore.
+description: Use when a skill is ready for a PR, when asked to validate, or after mass edits. Covers mechanical validation of a skill folder — format check via vendored quick_validate.py, security scan via prism-scanner, grade A–F gates, .prismignore, batch validation, vendor neutrality. Key terms — quick_validate.py, vendored, prism-scanner, --fail-on, .prismignore, check-vendors.sh, metadata.vendor.
 metadata:
   type: workflow
-  version: "1.1.0"
+  version: "1.2.0"
 ---
 
-# Skill Validation (Format + Security)
+# Skill Validation (Format + Security + Vendors)
 
-Mechanical gate for a skill folder before a PR. Editorial quality (blind test, Q1–Q10 rubric) is owned by `bitrix-skill-eval`; authoring rules by `bitrix-knowledge-skill-creator`; the PR gate policy lives in `AGENTS.md` ("Automated skill checks") — reference them, never duplicate.
+Mechanical gate for a skill folder before a PR. Editorial quality (blind test, Q1–Q11 rubric) is owned by `bitrix-skill-eval`; authoring rules by `bitrix-knowledge-skill-creator`; the PR gate policy lives in `AGENTS.md` ("Automated skill checks") — reference them, never duplicate.
 
 | Check | Tool | Command |
 | --- | --- | --- |
@@ -16,8 +16,9 @@ Mechanical gate for a skill folder before a PR. Editorial quality (blind test, Q
 | Security (static analysis, grade A–F) | [prism-scanner](https://github.com/aidongise-cell/prism-scanner) | `uvx --from prism-scanner prism scan skills/<name>/ --fail-on high` |
 | Version bump (changed skills) | `.github/scripts/check-versions.py` | `python3 .github/scripts/check-versions.py <base-sha>` |
 | Line budgets (ratchet) | `.github/scripts/check-budgets.sh` + `budget-baseline.txt` | `bash .github/scripts/check-budgets.sh` |
+| Vendor neutrality (allowlist) | `scripts/check-vendors.sh` — default-deny on concrete vendors | `bash skills/skill-validator/scripts/check-vendors.sh skills/<name>/` |
 
-Both tools are local, read-only, and never execute the scanned code.
+All these tools are local, read-only, and never execute the scanned code.
 
 ## Validate one skill
 
@@ -39,7 +40,15 @@ uvx --from prism-scanner prism scan skills/<name>/ --fail-on high
 
 Drop `--fail-on high` for the full report with the grade; add `--format json` for machine-readable findings.
 
-3. Budget + version gates (exit code 0 = pass):
+3. Vendor neutrality (exit code 0 = pass):
+
+```bash
+bash skills/skill-validator/scripts/check-vendors.sh skills/<name>/
+```
+
+A token in a vendor slot must be the neutral placeholder `acme`/`vendor`, or the vendor the skill declares as `metadata.vendor` in its `SKILL.md` frontmatter. The declaration covers the whole skill folder (`SKILL.md`, `rules/*`, `references/*`).
+
+4. Budget + version gates (exit code 0 = pass):
 
 ```bash
 bash .github/scripts/check-budgets.sh
@@ -48,7 +57,7 @@ python3 .github/scripts/check-versions.py <base-sha>
 
 Line budgets are ratcheted via `.github/scripts/budget-baseline.txt`; the version gate compares `metadata.version` between base and HEAD per AGENTS.md "Skill versioning".
 
-4. Report as a table: skill, check, grade, finding, action. State only observed output.
+5. Report as a table: skill, check, grade, finding, action. State only observed output.
 
 ## Interpret grades
 
@@ -77,6 +86,18 @@ Format-check messages map to fixes at the source — never weaken or bypass a ch
 
 Security findings carry a rule ID (`S*` behavior, `M*`/`P*` metadata and patterns, `R*` residue) and `file:line` — read them before reacting.
 
+## Vendor slots
+
+The gate checks three vendor slots; the token in each must be allowed (`acme`/`vendor`, or the skill's declared `metadata.vendor`):
+
+| Slot | Shape |
+| --- | --- |
+| Module path prefix | `local/modules/<vendor>.` and `bitrix/modules/<vendor>.` |
+| AJAX action prefix | `runAction('<vendor>:` and `action=<vendor>:` |
+| Module load id | `includeModule('<vendor>.<module>')` |
+
+Vendor findings print `file:line  vendor '<token>'  (<slot>)` — replace the token with `acme`/`vendor`, or declare the assigned vendor once as `metadata.vendor: "<vendor>"` in `SKILL.md`. **Never widen the allowlist to silence a finding.** Namespace roots (`Bitrix\`, `Main\`) are platform namespaces, not slots; a brand used only as a namespace root escapes the gate (known coverage limit).
+
 ## Known false positives
 
 - P6 "Prompt injection detected in skill description" fires on angle-bracket path templates like `` `/bitrix/js/<module>/<extension>/` `` — observed on `bitrix-extensions` (`SKILL.md:12`, grade F). Suppression path: `.prismignore` in the skill folder with the rule ID and a written justification. **Never suppress a finding by ignoring the exit code.**
@@ -84,12 +105,13 @@ Security findings carry a rule ID (`S*` behavior, `M*`/`P*` metadata and pattern
 
 ## Batch validation
 
-After mass edits, run both checks over every folder:
+After mass edits, run every check over each folder:
 
 ```bash
 for d in skills/*/; do
   uv run --with pyyaml skills/skill-validator/scripts/quick_validate.py "$d" >/dev/null 2>&1 || echo "FORMAT: $d"
   uvx --from prism-scanner prism scan "$d" --fail-on high >/dev/null 2>&1 || echo "SECURITY: $d"
+  bash skills/skill-validator/scripts/check-vendors.sh "$d" >/dev/null 2>&1 || echo "VENDOR: $d"
   bash .github/scripts/check-budgets.sh >/dev/null 2>&1 || echo "BUDGETS: $d"
 done
 ```
@@ -110,11 +132,19 @@ Every folder must appear in either the pass set or the report — a folder check
 - The vendored copy is pinned to upstream commit `34040c9c` (Apache-2.0, `scripts/LICENSE.txt`); upstream evolves independently — re-sync deliberately with a diff, never assume parity.
 - Sibling scripts in the upstream `scripts/` (`run_eval.py`, `run_loop.py`, `improve_description.py`, `generate_report.py`, `aggregate_benchmark.py`) shell out to `claude -p` — evaluation tooling owned by `bitrix-skill-eval`, out of scope here.
 - `package_skill.py` upstream packages `.skill` archives and imports `scripts.quick_validate` package-relative — it breaks when copied standalone and stays out of this skill.
+- `check-vendors.sh` is an allowlist, not a denylist: `acme`/`vendor` pass globally and everything else in a slot fails — a new concrete vendor is caught with no code change.
+- The declared vendor is read once from `SKILL.md` and applies to the whole folder; `rules/*.md` and `references/*` inherit it, and a folder without `SKILL.md` declares nothing.
+- `check-vendors.sh` skips every `scripts/` directory, so it never scans itself or the vendored `quick_validate.py`.
+- A module segment followed by a file extension (`bitrix/modules/error.log`) is a file path, not a vendor — `error` is not flagged.
+- Namespace roots (`Bitrix\`, `Main\`, `Sale\`...) are intentionally not scanned — they are platform namespaces; a brand used only there escapes the gate.
+- Canonical non-allowed vendor for negative tests and docs is `Contoso`; never a real brand. A literal slot-shaped example containing a non-allowed token inside a scanned skill self-flags — write `<vendor>` placeholders in examples.
 
 ## Checklist
 
 - [ ] Format command exits 0 on the final skill folder.
 - [ ] `prism scan --fail-on high` exits 0 on the final skill folder.
+- [ ] `check-vendors.sh` exits 0 on the final skill folder: every slot token is `acme`/`vendor` or the declared `metadata.vendor`.
+- [ ] Any `metadata.vendor` names a real product the user assigned, declared once in `SKILL.md`.
 - [ ] Grade C findings each carry a written justification in the PR.
 - [ ] Every `.prismignore` entry carries the rule ID and a justification.
 - [ ] No finding was resolved by ignoring or weakening a check.
