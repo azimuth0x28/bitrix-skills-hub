@@ -3,7 +3,7 @@ name: bitrix-crm-smart
 description: "Use when reading, filtering or updating CRM dynamic (smart process) items from code: search items by fields, replace users in fields, bulk transfer, stage/category filters. Covers Crm Service Container, Factory\\Dynamic, getDataClass, getUpdateOperation, Item, Context. Key terms — entityTypeId, getFactory, disableAllChecks, crm.type.factory, launch."
 metadata:
   type: knowledge
-  version: "1.1.0"
+  version: "1.2.0"
 ---
 
 # Smart processes (`crm` dynamic entities)
@@ -95,6 +95,19 @@ if (!$operationResult->isSuccess())
 | Business update (must be visible in UI)                | `getUpdateOperation()->launch()` — automation, timeline, counters, search fire |
 | True low-level batch, side effects explicitly unwanted | `getDataClass()::update()`                                                     |
 
+## Page detection (kanban, detail)
+
+Page type is detected from the URL, not from rendered markup. Match **both** path candidates —
+`HttpRequest::getRequestedPage()` (the page *after* urlrewrite) and the raw SEF path from
+`getRequestUri()` — against **both** roots: the standard `/crm/...` space and custom `/page/` sections
+whose roots come from `Container::getInstance()->getRouter()->getCustomRoots()`. Anchor every tail with
+`(?:/|$)` and keep the optional `type/\d+/` group for older kernels.
+
+- Kanban board: [`references/crm-kanban-detection.md`](references/crm-kanban-detection.md) — matches both path candidates against `.../kanban/` in both roots.
+- Detail card: [`references/crm-page-detector.md`](references/crm-page-detector.md) — matches both path candidates against `.../details/` in both roots.
+
+Full URL grammar and the `Router::matchPage`/`parseRequest` caveats: `bitrix-routing` → `rules/crm-pages.md`.
+
 ## Negative knowledge
 
 - Directory is `crm/lib/Service` (capital S) — `lib/service` does not exist.
@@ -113,4 +126,5 @@ if (!$operationResult->isSuccess())
 - [ ] `Context` set explicitly (`userId`, `SCOPE_TASK` for background runs).
 - [ ] `disableAllChecks()` used only for system commands.
 - [ ] Search fields validated (ORM exceptions surfaced per item, not swallowed).
+- [ ] Page detection matches both path candidates and both CRM roots; tails anchored `(?:/|$)`.
 - [ ] Lint clean (`php-cs-fixer` + `phpcs`, see `bitrix-codestyle`).
