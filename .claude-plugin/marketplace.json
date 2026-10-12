@@ -9,7 +9,7 @@
   "plugins": [
     {
       "name": "bitrix-skills",
-      "version": "1.5.0",
+      "version": "1.6.0",
       "source": {
         "source": "github",
         "repo": "azimuth0x28/bitrix-skills-hub"

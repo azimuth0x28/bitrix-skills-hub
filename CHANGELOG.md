@@ -3,6 +3,50 @@
 Все заметные изменения проекта. Формат — [Keep a Changelog](https://keepachangelog.com/ru/1.1.0/),
 версионирование — [SemVer](https://semver.org/lang/ru/).
 
+## [1.6.0] — 2026-10-12
+
+### Добавлено
+
+- **Гейт вендор-нейтральности.** Третья автоматическая проверка перед PR: скрипт
+  `skills/skill-validator/scripts/check-vendors.sh` падает, если в вендорном слоте (префикс пути
+  модуля, префикс AJAX-действия, id в `includeModule`) стоит конкретный вендор. Модель — allowlist,
+  default-deny: разрешены только нейтральный плейсхолдер `Acme`/`vendor` и вендор, объявленный в
+  навыке как `metadata.vendor`. Шаг добавлен в CI (`.github/workflows/validate.yml`, джоба
+  `consistency`).
+- **Критерий Q11 «Vendor neutrality»** в `bitrix-skill-eval` со своим hard gate; итоговая оценка —
+  среднее по Q1–Q11.
+- **Правило вендор-нейтральности в мета-скиллах** `bitrix-knowledge-skill-creator` и
+  `bitrix-workflow-skill-creator`: вендор по умолчанию нейтральный, назначенный пользователем
+  применяется только при явном выборе и фиксируется в `metadata.vendor`.
+- **Правило code references.** Любая ссылка на код в тексте навыка ведёт на ядро Bitrix или на
+  файл, который поставляет сам навык; код вендорных и кастомных модулей поставляется выдержкой в
+  `references/<name>.md` со ссылкой из тела. Исключение — навык под один конкретный проект.
+- **Правило no editing notes.** Текст навыка несёт только суть: без пояснений, что вендор обезличен,
+  путь переписан или пример урезан.
+- **Новые примеры-референсы:** `references/crm-page-detector.md` в `bitrix-routing` и
+  `bitrix-crm-smart`, `references/crm-kanban-detection.md` в `bitrix-crm-smart`.
+- **Детекция страниц** в `bitrix-crm-smart`: раздел «Page detection (kanban, detail)» со сверкой
+  обоих кандидатов пути против обоих корней CRM.
+
+### Изменено
+
+- Примеры в `bitrix-chef` и `bitrix-routing` переведены на нейтральный плейсхолдер вместо
+  конкретного вендора.
+- `bitrix-sprint-migration` объявляет `metadata.vendor: sprint` для задокументированного стороннего
+  модуля.
+- `AGENTS.md`: три автоматические проверки, подраздел «Vendor neutrality», пункт PR-чеклиста и
+  запрет в «Hard prohibitions».
+- Каталог и проза в `README.md` / `README.ru.md` выровнены на Q1–Q11.
+
+### Версии скиллов
+
+- **1.0.1** — `bitrix-chef`.
+- **1.1.0** — `bitrix-skill-eval`.
+- **1.1.1** — `bitrix-sprint-migration`.
+- **1.2.0** — `bitrix-routing`, `bitrix-crm-smart`, `skill-validator`.
+- **1.3.0** — `bitrix-workflow-skill-creator`.
+- **1.4.0** — `bitrix-knowledge-skill-creator`.
+
 ## [1.5.0] — 2026-10-02
 
 ### Добавлено
@@ -50,4 +94,5 @@
 - **1.2.0** — `bitrix-database`, `bitrix-localization`, `bitrix-orm` (крупнейшие правки,
   сопровождались переоценкой по протоколу `bitrix-skill-eval`).
 
+[1.6.0]: https://github.com/azimuth0x28/bitrix-skills-hub/compare/v1.5.0...v1.6.0
 [1.5.0]: https://github.com/azimuth0x28/bitrix-skills-hub/compare/v1.4.1...v1.5.0
