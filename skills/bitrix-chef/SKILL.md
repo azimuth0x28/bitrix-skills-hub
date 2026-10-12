@@ -1,7 +1,7 @@
 ---
 name: bitrix-chef
 description: Use when building, creating, or configuring Bitrix JS extensions with @bitrix/chef — scaffold, dev/production builds, tests, lint, diag — and when migrating from deprecated @bitrix/cli. Covers bundle.config(.ts|.js) schema and chef.config.ts rules. Key terms — chef build, chef init, chef create, bundle.config.ts, chef.config, resolveNodeModules.
-metadata: {type: knowledge, version: "1.0.0"}
+metadata: {type: knowledge, version: "1.0.1"}
 ---
 
 # @bitrix/chef — build tool for Bitrix JS extensions
@@ -79,8 +79,8 @@ return [
 
 ### Extension name and namespace
 
-- Name derives from the path: `local/js/ui/buttons/` → `ui.buttons`; in a module `install/js/crm-entity-selector/` → `firstbit.main.crm-entity-selector`. Project rule: extension IDs are `firstbit.<module>...`, bundle namespaces are `FirstBit.*`.
-- `namespace` defaults to `window` — exports become bare globals. **Always set `namespace` explicitly** (e.g. `FirstBit.Deputy.UI`).
+- Name derives from the path: `local/js/ui/buttons/` → `ui.buttons`; in a module `install/js/crm-entity-selector/` → `acme.main.crm-entity-selector`. Project rule: extension IDs are `acme.<module>...`, bundle namespaces are `Acme.*`.
+- `namespace` defaults to `window` — exports become bare globals. **Always set `namespace` explicitly** (e.g. `Acme.Deputy.UI`).
 - A missing dependency namespace at runtime is fatal unless `safeNamespaces: true` compiles `?.`/`??` into the IIFE argument list.
 
 ## bundle.config(.ts|.js)
@@ -94,7 +94,7 @@ export default {
     js: './dist/my.bundle.js',
     css: './dist/my.bundle.css',      // extract CSS instead of inlining into JS
   },
-  namespace: 'BX.FirstBit.Main.UI',
+  namespace: 'BX.Acme.Main.UI',
 };
 ```
 

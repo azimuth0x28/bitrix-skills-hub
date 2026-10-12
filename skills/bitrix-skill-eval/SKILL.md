@@ -1,9 +1,9 @@
 ---
 name: bitrix-skill-eval
-description: Use when grading skill drafts, running blind tests, deciding acceptance. Covers quality evaluation of Bitrix Framework skills — blind test protocol (frozen spec, verbatim prompt, time cap), Q1–Q10 grading rubric, hard gates, knowledge-point density, kernel verification. Key terms — Q1–Q10, knowledge point, density, hard gates, blind test.
+description: Use when grading skill drafts, running blind tests, deciding acceptance. Covers quality evaluation of Bitrix Framework skills — blind test protocol (frozen spec, verbatim prompt, time cap), Q1–Q11 grading rubric, hard gates, knowledge-point density, kernel verification. Key terms — Q1–Q11, knowledge point, density, hard gates, blind test.
 metadata:
   type: workflow
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # Bitrix Skill Quality Evaluation
@@ -37,7 +37,7 @@ A skill draft is the effect; the authoring spec is the treatment. Grading a draf
 
 A single deliverable file fits tighter caps; multi-file (router + rules) deliveries need headroom and benefit from the spec's incremental-delivery rule (router first, then rules files one by one — partial artifacts stay useful).
 
-## 3. Grading rubric (Q1–Q10, each 0–10)
+## 3. Grading rubric (Q1–Q11, each 0–10)
 
 | # | Criterion | 10 = | Automatic fail |
 | --- | --- | --- | --- |
@@ -51,8 +51,9 @@ A single deliverable file fits tighter caps; multi-file (router + rules) deliver
 | Q8 | Density | lines/knowledge-point ≤ reference; total lines ≤ 1.2× reference unless covering measurably more | >1.8× reference L/pt |
 | Q9 | Consistency | cross-links real, canons referenced without duplication, English imperative | — |
 | Q10 | Generation time | wall-clock start → last file delivered; faster is better at equal quality | over cap, or no file delivered |
+| Q11 | Vendor neutrality | every token in a vendor slot (module path prefix, AJAX action prefix, `includeModule` id) is allowed — `acme`/`vendor`, or the skill's declared `metadata.vendor`; no other concrete vendor | a non-allowed vendor in a vendor slot |
 
-**Overall** = mean of Q1–Q10. Hard gates independent of the mean: any invented identifier (Q4), coverage <60% (Q3), cap exceeded or nothing delivered (Q10) — any one fails the iteration regardless of the mean.
+**Overall** = mean of Q1–Q11. Hard gates independent of the mean: any invented identifier (Q4), coverage <60% (Q3), cap exceeded or nothing delivered (Q10), a non-allowed vendor in a vendor slot (Q11) — any one fails the iteration regardless of the mean.
 
 Q10 scale, as fractions of the cap: 10 = ≤70%; 8 = ≤80%; 6 = ≤100%; 0 = over cap or no file delivered. For multi-file deliveries grade the router by its own mtime (incremental delivery) and the whole set by the last mtime; a delivery that straddles the cap grades 6, and the pattern goes into the report.
 
@@ -132,7 +133,7 @@ Workflow-skill measure swaps (same Q numbers, same 0–10 scale, same hard gates
 | Q5 | Commands copy-runnable; config snippets complete for scope; step order explained where semantic | invented commands or config syntax |
 | Q9 | Cross-links exact; canons and the project's `AGENTS.md` conventions referenced, never duplicated | — |
 
-Unswapped criteria (Q2, Q6–Q8, Q10) and the acceptance bar (§4) apply unchanged. Hard gates map 1:1: invented project fact ↔ invented identifier. Blind test unchanged — freeze the workflow-creator snapshot as the spec. Draft verification (§6) targets project facts with the same `file:line` discipline; kernel version claims inside workflow drafts still flag per §6.3.
+Unswapped criteria (Q2, Q6–Q8, Q10–Q11) and the acceptance bar (§4) apply unchanged. Hard gates map 1:1: invented project fact ↔ invented identifier. Blind test unchanged — freeze the workflow-creator snapshot as the spec. Draft verification (§6) targets project facts with the same `file:line` discipline; kernel version claims inside workflow drafts still flag per §6.3.
 
 ## Pre-flight checklist for the evaluator
 
@@ -145,6 +146,7 @@ Unswapped criteria (Q2, Q6–Q8, Q10) and the acceptance bar (§4) apply unchang
 - [ ] No reference? Domain surface enumerated before launch; density graded against the 3–5 L/pt band.
 - [ ] Skill type (`metadata: {type: ...}`) present in the frontmatter and confirmed; workflow drafts graded with the §11 measure swaps.
 - [ ] Kernel checks recorded with `file:line`; unverifiable claims listed separately.
+- [ ] Vendor check run (`bash skills/skill-validator/scripts/check-vendors.sh`); every slot token allowed or declared via `metadata.vendor`.
 - [ ] Gaps classified spec-caused vs agent-caused before any spec patch.
 - [ ] Iteration log updated after every run.
 

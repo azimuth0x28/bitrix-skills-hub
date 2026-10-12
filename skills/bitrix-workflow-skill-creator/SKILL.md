@@ -3,7 +3,7 @@ name: bitrix-workflow-skill-creator
 description: Use when creating, editing, or reviewing a workflow skill — a process, convention, or environment skill (code style, project rules, DevOps setup, review rules). Covers decision tables, verifiable procedures, project-fact verification, tool-version anchoring. Key terms — workflow skill, decision table, runbook, project facts, tool versions.
 metadata:
   type: workflow
-  version: "1.0.0"
+  version: "1.3.0"
 ---
 
 # Workflow Skill Authoring Conventions
@@ -41,7 +41,7 @@ A workflow skill may reference kernel identifiers inside examples or config keys
 
 Same decision rule and budgets as `bitrix-knowledge-skill-creator` §1: monolith (100–310 lines) when the process fits one reading pass; router + `rules/*.md` (router ≤60, rules 45–135 each) when it spans 2+ independent layers (e.g. environment setup / daily workflow / release process). Deliver incrementally: router first, then rules files one by one. Size is a hard gate — cut, never pad.
 
-**Template assets (`references/`).** A workflow skill that installs files into the target project may ship a `references/` directory: template assets copied verbatim into the project, with placeholder substitution as the only allowed edit. They serve the target project, agent reading — the 45–135 rules budget does not apply. Name a template that mirrors a special file so agents do not auto-load it from inside the skill folder (e.g. `AGENTS.md.template` → installed as `AGENTS.md`). Creator skills may also ship agent-facing reference material in `references/` (this skill bundles `references/skill-anatomy.md`, see Base skill dependency) — same budget exemption.
+**Template assets (`references/`).** A workflow skill that installs files into the target project may ship a `references/` directory: template assets copied verbatim into the project, with placeholder substitution as the only allowed edit. They serve the target project, agent reading — the 45–135 rules budget does not apply. Name a template that mirrors a special file so agents do not auto-load it from inside the skill folder (e.g. `AGENTS.md.template` → installed as `AGENTS.md`). Creator skills may also ship agent-facing reference material in `references/` (this skill bundles `references/skill-anatomy.md`, see Base skill dependency) — same budget exemption. `references/` also holds trimmed excerpts of non-core code the skill cites (§7).
 
 ## 3. Frontmatter and templates
 
@@ -78,6 +78,11 @@ Final `## Checklist` with `- [ ]` items that are verifiable completion criteria,
 ## 7. Cross-linking and style
 
 `bitrix-knowledge-skill-creator` §7–§8 apply unchanged: exact sibling names in backticks, canons referenced never duplicated, English imperative, tables for choices, fenced code with language tags. The optional mixed XML + Markdown body style of §8 applies to workflow skills on the same terms — procedures sit naturally in `<workflow>`/`<stage>` blocks, prohibitions in `<critical_rules>`; decision tables stay Markdown tables.
+
+- **Vendor neutrality.** Vendor-position identifiers — module ids `local/modules/<vendor>.<module>`, namespaces `<Vendor>\...`, extension/component ids `<vendor>.<module>.<name>`, AJAX action prefixes `<vendor>:` — use the neutral placeholder `Acme` (lowercase `acme` in ids, CamelCase `Acme` in namespaces) or the generic `vendor`. Never name a concrete real vendor. Only when the user explicitly assigns a vendor during authoring, use that vendor consistently and declare it in the frontmatter as `metadata.vendor: "<name>"`; with no such assignment the skill stays neutral.
+
+- **Code references.** Every pointer to source code in skill text — a path, `file:line`, a class or namespace, a link, however worded — resolves to Bitrix core code (`bitrix/modules/<kernel-module>/...`) or to a file the skill itself ships. Vendor and custom-module source (`local/modules/<vendor>.<module>/...`, `bitrix/modules/<vendor>.<module>/...`) exists in one project; the agent cannot read it, so a bare pointer dangles. Bundle the lines the reference needs in `references/<name>.md` and link that file from the body (`[PageDetector](references/page-detector.md)`); `references/` is budget-exempt. **Exception:** a skill authored for a single specific project only — evident from the authoring task, or the user stating the skill is local and non-public — may cite that project's own code directly.
+- **No editing notes.** Skill text carries substantive content only. Never write that a vendor was neutralized, a path rewritten, an example trimmed, or code renamed — the reader needs the code and what it does, not how the text was made. A `references/` excerpt opens with what it shows (the class, its purpose), never with how it was adapted.
 
 ## 8. Project verification (workflow-specific step)
 

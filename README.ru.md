@@ -270,7 +270,7 @@ cp -r bitrix-skills-hub/skills/bitrix-orm ваш-проект/.agents/skills/
 | --- | --- | --- |
 | [bitrix-knowledge-skill-creator](skills/bitrix-knowledge-skill-creator/SKILL.md) | Конвенции авторства: морфология, frontmatter, baseline/Since, плотность | Создание скиллов-знаний (правильная и неправильная работа с классами ядра, ORM, API модулей; лучшие практики) |
 | [bitrix-workflow-skill-creator](skills/bitrix-workflow-skill-creator/SKILL.md) | Конвенции для процессных скиллов: таблицы решений, проектные факты, процедуры, версии инструментов | Создание процессных скиллов (code style, DevOps, правила ревью) |
-| [bitrix-skill-eval](skills/bitrix-skill-eval/SKILL.md) | Протокол слепого теста, рубрика Q1-Q10, хард-гейты, метрика плотности | Оценка черновиков скиллов |
+| [bitrix-skill-eval](skills/bitrix-skill-eval/SKILL.md) | Протокол слепого теста, рубрика Q1-Q11, хард-гейты, метрика плотности | Оценка черновиков скиллов |
 | [skill-validator](skills/skill-validator/SKILL.md) | quick_validate.py (формат), prism-scanner (безопасность), грейд-гейты | Механическая проверка перед PR |
 
 ## Агентские персоны
@@ -306,7 +306,7 @@ CI проверяет поднятие версии в каждом PR (`check-v
 
 ## Как добавить свой
 
-Новый скилл создавайте через `bitrix-knowledge-skill-creator` (скиллы-знания: правильная и неправильная работа с аспектом разработки, лучшие практики — тип по умолчанию) или `bitrix-workflow-skill-creator` (процессные скиллы: конвенции, code style, окружение). Готовый черновик прогоните через `skill-validator` (формат + безопасность) и `bitrix-skill-eval`: слепой тест и рубрика Q1-Q10 отсеивают слабые скиллы до попадания в каталог.
+Новый скилл создавайте через `bitrix-knowledge-skill-creator` (скиллы-знания: правильная и неправильная работа с аспектом разработки, лучшие практики — тип по умолчанию) или `bitrix-workflow-skill-creator` (процессные скиллы: конвенции, code style, окружение). Готовый черновик прогоните через `skill-validator` (формат + безопасность) и `bitrix-skill-eval`: слепой тест и рубрика Q1-Q11 отсеивают слабые скиллы до попадания в каталог.
 
 ## Ссылки
 

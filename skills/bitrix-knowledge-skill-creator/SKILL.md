@@ -3,7 +3,7 @@ name: bitrix-knowledge-skill-creator
 description: Use when creating, editing, or reviewing a knowledge skill. Covers authoring conventions — correct and incorrect usage of a development aspect, best practices for kernel and module APIs (patterns, prohibitions, negative knowledge, morphology, density). Key terms — SKILL.md, rules/, router, baseline, Since, API matrix, kernel verification.
 metadata:
   type: workflow
-  version: "1.1.0"
+  version: "1.4.0"
 ---
 
 # Knowledge Skill Authoring Conventions
@@ -93,6 +93,7 @@ Router invariants:
 - `name` equals the folder name exactly.
 - `metadata: {type: knowledge}` — the type is declared in the frontmatter (`workflow` for process skills, which follow `bitrix-workflow-skill-creator`); the validator allows the `metadata` key and does not inspect nested keys.
 - `metadata: {type: knowledge, version: "1.0.0"}` for a new skill — later edits bump the version per AGENTS.md "Skill versioning" (semver); reference it, never restate the bump table.
+- `metadata: {vendor: "<name>"}` — declare it only when the user explicitly assigns a vendor during authoring; the skill then uses that vendor consistently and the vendor check accepts it. With no assignment the skill stays neutral (`acme`/`vendor`), per §8.
 - The description is the trigger surface. The trigger clause leads — a `Use when <situation>` first; situation before domain, always. **The situation is the operation the user asks for** ("create a controller", "change a filter", "new module"), not the topic ("controllers", "filters", "modules") — a user prompt matches the situation, not the domain label. Topic coverage and key terms follow. Template:
 
 ```
@@ -153,6 +154,10 @@ Final `## Checklist` with `- [ ]` items that are verifiable completion criteria,
   - Mixed-style discipline: XML lives in the body only — frontmatter stays plain YAML (allowed keys, angle-bracket-free description); 2-space indent per nesting level, ≤2–3 levels, one semantic role per tag, `lowercase_with_underscores` tag names, double-quoted attributes, Markdown inside tags.
   - Mixed-style content: every §5 layer stays present and findable — `<workflow>`/`<stage>` blocks satisfy the procedures layer, `<critical_rules>` with bold rule text satisfies prohibitions at the error site, a checks block satisfies the checklist; a single XML block must be self-sufficient like an H2 section.
   - Structure lines count toward the §1 budget and the Q8 density band — XML earns its lines with boundaries the task actually needs, or it goes.
+- **Vendor neutrality.** Vendor-position identifiers — module ids `local/modules/<vendor>.<module>`, namespaces `<Vendor>\...`, extension/component ids `<vendor>.<module>.<name>`, AJAX action prefixes `<vendor>:` — use the neutral placeholder `Acme` (lowercase `acme` in ids, CamelCase `Acme` in namespaces) or the generic `vendor`. Never name a concrete real vendor. Only when the user explicitly assigns a vendor during authoring, use that vendor consistently and declare it in the frontmatter as `metadata.vendor: "<name>"`; with no such assignment the skill stays neutral.
+
+- **Code references.** Every pointer to source code in skill text — a path, `file:line`, a class or namespace, a link, however worded — resolves to Bitrix core code (`bitrix/modules/<kernel-module>/...`) or to a file the skill itself ships. Vendor and custom-module source (`local/modules/<vendor>.<module>/...`, `bitrix/modules/<vendor>.<module>/...`) exists in one project; the agent cannot read it, so a bare pointer dangles. Bundle the lines the reference needs in `references/<name>.md` and link that file from the body (`[PageDetector](references/page-detector.md)`); `references/` is budget-exempt. **Exception:** a skill authored for a single specific project only — evident from the authoring task, or the user stating the skill is local and non-public — may cite that project's own code directly.
+- **No editing notes.** Skill text carries substantive content only. Never write that a vendor was neutralized, a path rewritten, an example trimmed, or code renamed — the reader needs the code and what it does, not how the text was made. A `references/` excerpt opens with what it shows (the class, its purpose), never with how it was adapted.
 
 ## 9. Kernel verification (Bitrix-specific step)
 
