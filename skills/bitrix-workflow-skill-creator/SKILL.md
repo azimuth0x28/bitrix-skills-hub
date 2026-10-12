@@ -3,7 +3,7 @@ name: bitrix-workflow-skill-creator
 description: Use when creating, editing, or reviewing a workflow skill — a process, convention, or environment skill (code style, project rules, DevOps setup, review rules). Covers decision tables, verifiable procedures, project-fact verification, tool-version anchoring. Key terms — workflow skill, decision table, runbook, project facts, tool versions.
 metadata:
   type: workflow
-  version: "1.2.0"
+  version: "1.3.0"
 ---
 
 # Workflow Skill Authoring Conventions
@@ -82,6 +82,7 @@ Final `## Checklist` with `- [ ]` items that are verifiable completion criteria,
 - **Vendor neutrality.** Vendor-position identifiers — module ids `local/modules/<vendor>.<module>`, namespaces `<Vendor>\...`, extension/component ids `<vendor>.<module>.<name>`, AJAX action prefixes `<vendor>:` — use the neutral placeholder `Acme` (lowercase `acme` in ids, CamelCase `Acme` in namespaces) or the generic `vendor`. Never name a concrete real vendor. Only when the user explicitly assigns a vendor during authoring, use that vendor consistently and declare it in the frontmatter as `metadata.vendor: "<name>"`; with no such assignment the skill stays neutral.
 
 - **Code references.** Every pointer to source code in skill text — a path, `file:line`, a class or namespace, a link, however worded — resolves to Bitrix core code (`bitrix/modules/<kernel-module>/...`) or to a file the skill itself ships. Vendor and custom-module source (`local/modules/<vendor>.<module>/...`, `bitrix/modules/<vendor>.<module>/...`) exists in one project; the agent cannot read it, so a bare pointer dangles. Bundle the lines the reference needs in `references/<name>.md` and link that file from the body (`[PageDetector](references/page-detector.md)`); `references/` is budget-exempt. **Exception:** a skill authored for a single specific project only — evident from the authoring task, or the user stating the skill is local and non-public — may cite that project's own code directly.
+- **No editing notes.** Skill text carries substantive content only. Never write that a vendor was neutralized, a path rewritten, an example trimmed, or code renamed — the reader needs the code and what it does, not how the text was made. A `references/` excerpt opens with what it shows (the class, its purpose), never with how it was adapted.
 
 ## 8. Project verification (workflow-specific step)
 
